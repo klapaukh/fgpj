@@ -10,4 +10,6 @@ run-log.txt
 *.project
 *.jpg
 .settings/
+.#*
+*.swo
 

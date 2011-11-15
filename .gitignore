@@ -1,0 +1,13 @@
+bin/
+*~
+*.pnm
+*#
+$*
+*.gen
+run-log.txt
+.classpath
+*.swp
+*.project
+*.jpg
+.settings/
+

@@ -14,6 +14,7 @@ public class Line extends Function {
 	/**
 	 * 
 	 */
+	public static int kind;
 	public static final long serialVersionUID = 6154965376115885411L;
 
 	private int x1, x2, y1, y2;
@@ -52,8 +53,8 @@ public class Line extends Function {
 	public Function generate(String name, GPConfig conf) {
 
 		if (name.equals("")) {
-			// return (Function)NodeFactory.newNode(getName());
-			return new Line(conf);
+			 return (Function)NodeFactory.newNode(getKind());
+//			return new Line(conf);
 		} else if (name.startsWith(getName())) {
 			int x1, x2, y1, y2;
 			Scanner scan = new Scanner(name);
@@ -62,8 +63,8 @@ public class Line extends Function {
 			x2 = scan.nextInt();
 			y1 = scan.nextInt();
 			y2 = scan.nextInt();
-//			return ((Line) NodeFactory.newNode(getName())).init(x1, x2, y1, y2);
-			return  new Line(x1, x2, y1, y2,conf);
+			return ((Line) NodeFactory.newNode(getKind())).init(x1, x2, y1, y2);
+//			return  new Line(x1, x2, y1, y2,conf);
 		}
 
 		return null;
@@ -106,9 +107,9 @@ public class Line extends Function {
 		return this;
 	}
 
-	public Node copy() {
-//		Function tmp = ((Line) NodeFactory.newNode(getName())).init(x1, x2, y1, y2);
-		Function tmp =  new Line(x1, x2, y1, y2,config);
+	public Function copy() {
+		Function tmp = ((Line) NodeFactory.newNode(getKind())).init(x1, x2, y1, y2);
+//		Function tmp =  new Line(x1, x2, y1, y2,config);
 
 		for (int i = 0; i < getMaxArgs(); i++) {
 			tmp.setArgN(i, getArgN(i).copy());
@@ -118,8 +119,19 @@ public class Line extends Function {
 	}
 
 	@Override
-	public Node getNew(GPConfig config) {
+	public Line getNew(GPConfig config) {
 		return new Line(config);
+	}
+
+	@Override
+	public Line setKind(int kind) {
+		Line.kind = kind;
+		return this;
+	}
+
+	@Override
+	public int getKind() {
+		return kind;
 	}
 
 }

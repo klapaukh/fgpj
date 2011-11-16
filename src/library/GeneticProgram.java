@@ -110,8 +110,7 @@ public class GeneticProgram {
 
 	// Recursively deletes the tree whose root is pointed to by theRoot.
 	public void deleteTree(Node theRoot) {
-//		NodeFactory.delete(theRoot);
-//		theRoot.`
+		NodeFactory.delete(theRoot);
 	}
 
 	public int getDepth(int place) {

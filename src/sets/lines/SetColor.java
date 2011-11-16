@@ -13,6 +13,7 @@ public class SetColor extends Terminal {
 	/**
 	 * 
 	 */
+	public static int kind;
 	public static final long serialVersionUID = -7950230195747877164L;
 	private Color col;
 	public GPConfig config;
@@ -31,8 +32,8 @@ public class SetColor extends Terminal {
 
 	public Terminal generate(String name, GPConfig conf) {
 		if (name.equals("")){
-//			return (Terminal)NodeFactory.newNode(getName());
-			return new SetColor(conf);
+			return (Terminal)NodeFactory.newNode(getKind());
+//			return new SetColor(conf);
 		}
 		else if (name.startsWith(getName())) {
 			int r, g, b, a;
@@ -44,7 +45,8 @@ public class SetColor extends Terminal {
 			b = scan.nextInt();
 			a = scan.nextInt();
 
-			return new SetColor(new Color(r, g, b, a), conf);
+			return ((SetColor)NodeFactory.newNode(getKind())).init(new Color(r,g,b,a));
+//			return new SetColor(new Color(r, g, b, a), conf);
 		}
 
 		return null;
@@ -63,14 +65,14 @@ public class SetColor extends Terminal {
 				col.getAlpha()));
 	}
 
-	private Node init(Color col){
+	private SetColor init(Color col){
 		this.col = col;
 		return this;
 	}
 	
 	public Node copy() {
-//		return ((SetColor)NodeFactory.newNode(this.getName())).init(col);
-		return new SetColor(col, config);
+		return ((SetColor)NodeFactory.newNode(this.getKind())).init(col);
+//		return new SetColor(col, config);
 	}
 
 	@Override
@@ -78,4 +80,14 @@ public class SetColor extends Terminal {
 		return new SetColor(config);
 	}
 
+	@Override
+	public SetColor setKind(int kind) {
+		SetColor.kind = kind;
+		return this;
+	}
+
+	@Override
+	public int getKind() {
+		return kind;
+	}
 }

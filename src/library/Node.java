@@ -86,4 +86,16 @@ public abstract class Node implements Generable<Node>, Serializable {
 	public abstract void print(StringBuffer s);
 
 	public abstract Node copy();
+	
+	/**
+	 * Sets the kind of a node (this is used only for memory management)
+	 * @param kind The kind of the node - a unique int per type
+	 */
+	public abstract Node setKind(int kind);
+	
+	/**
+	 * Returns the kind of the node. Must be the same as the last setKind
+	 * @return the kind of the node
+	 */
+	public abstract int getKind();
 }

@@ -11,6 +11,7 @@ public class Null extends Terminal {
 	/**
 	 * 
 	 */
+	public static int kind;
 	public static final long serialVersionUID = 5747126155380314948L;
 
 	public Null(GPConfig conf) {
@@ -19,11 +20,11 @@ public class Null extends Terminal {
 
 	public Terminal generate(String name, GPConfig conf) {
 		if (name.equals("")) {
-//			return (Terminal) NodeFactory.newNode(getName());
-			return  new Null(conf);
+			return (Terminal) NodeFactory.newNode(getKind());
+//			return  new Null(conf);
 		} else if (name.startsWith("null")) {
-//			return (Terminal) NodeFactory.newNode(getName());
-			return new Null(conf);
+			return (Terminal) NodeFactory.newNode(getKind());
+//			return new Null(conf);
 		}
 		return null;
 	}
@@ -39,13 +40,23 @@ public class Null extends Terminal {
 	}
 
 	public Node copy() {
-//		return NodeFactory.newNode(getName());
+		return NodeFactory.newNode(getKind());
+//		return new Null(config);
+	}
+
+	@Override
+	public Null getNew(GPConfig config) {
 		return new Null(config);
 	}
 
 	@Override
-	public Node getNew(GPConfig config) {
-		return new Null(config);
+	public Null setKind(int kind) {
+		Null.kind = kind;
+		return this;
 	}
 
+	@Override
+	public int getKind() {
+		return kind;
+	}
 }

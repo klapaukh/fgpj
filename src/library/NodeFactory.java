@@ -1,66 +1,72 @@
 package library;
-//
-//import java.util.HashMap;
-//import java.util.LinkedList;
-//import java.util.List;
-//import java.util.Map;
-//
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 public class NodeFactory {
-//
-//	private Map<String, List<Node>> nodes;
-//	private static final NodeFactory n = new NodeFactory();
-//	private GPConfig conf;
-//	private int hit,miss;
-//	
-//	private NodeFactory(){
-//		nodes = new HashMap<String,List<Node>>();
-//		hit = miss = 0;
-//	}
-//
-//	public static void delete(Node node){
-//		if(node == null) return;
-//		List<Node> l = n.nodes.get(node.getName());
-//		node.setParent(null);
-//		node.setDepth(0);
-//		l.add(node);
-//		if(node instanceof Function){
-//			//need to maul it's children
-//			Function f = (Function) node;
-//			for(int i=0;i<f.maxArgs;i++){
-//				delete(f.getArgN(i));
-//			}
-//			f.unhook();
-//		}
-//		
-//		//all done
-//	}
-//	
-////	public static Node newNode(String name){
-////		
-////		List<Node> l = n.nodes.get(name);
-////		if(l.size() == 1){
-////			n.miss++;
-////			return l.get(0).getNew(n.conf);
-////		}else{
-////			n.hit++;
-////			return l.remove(l.size()-1);
-////		}
-////	}
-//	
-//	public static void setConfig(GPConfig conf){
-//		n.conf = conf;
-//	}
-//	
-//	public static void teach(Node node){
-//		List<Node> l = n.nodes.get(node.getName());
-//		if(l == null){
-//			l = new LinkedList<Node>();
-//			l.add(node);
-//			n.nodes.put(node.getName(), l);
-//		}
-//	}
-//	
-//	public static void report(){
-//		System.out.println("% cache hits: " + (100*n.hit/(n.hit+n.miss)));
-//	}
+
+	private Queue<Node>[] nodes;
+	private static final NodeFactory n = new NodeFactory();
+	private GPConfig conf;
+	private int hit, miss;
+	private int kinds = 0;
+
+	private NodeFactory() {
+		hit = miss = 0;
+	}
+
+	public static void delete(Node node) {
+		if (node == null)
+			return;
+		node.setParent(null);
+		node.setDepth(0);
+		if (node instanceof Function) {
+			// need to maul it's children
+			Function f = (Function) node;
+			for (int i = 0; i < f.maxArgs; i++) {
+				delete(f.getArgN(i));
+			}
+			f.unhook();
+		}
+		n.nodes[node.getKind()].offer(node);
+
+		// all done
+	}
+
+	public static Node newNode(int kind) {
+
+		Queue<Node> l = n.nodes[kind];
+		if (l.size() == 1) {
+			n.miss++;
+			return l.peek().getNew(n.conf);
+		} else {
+			n.hit++;
+			return l.poll();
+		}
+	}
+
+	public static void setConfig(GPConfig conf) {
+		n.conf = conf;
+	}
+
+	public static void teach(Node node) {
+		node.setKind(n.kinds++);
+		Queue<Node>[] t = n.nodes;
+		n.nodes = new Queue[n.kinds];
+		int i=0;
+		for (; t != null && i < t.length; i++) {
+			n.nodes[i] = t[i];
+		}
+		n.nodes[i] = new LinkedList<Node>();
+		n.nodes[i].add(node);
+	}
+
+	public static void report() {
+		System.out.printf("%s cache hits: %.2f\n", "%",(double)(100.0 * n.hit / (double)(n.hit + n.miss)));
+		System.out.println(n.kinds + " different kinds");
+		for (int i = 0; i < n.nodes.length; i++) {
+			System.out.printf("\t%d:%d\n", i,n.nodes[i].size());
+		}
+	}
 }

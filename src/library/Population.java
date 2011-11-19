@@ -282,6 +282,8 @@ public class Population {
 				return true;
 			}
 
+			config.configModifier.ModifyConfig();
+			
 			nextGeneration();
 		}
 		assignFitness(); // Evaluate the programs and assign their fitness values

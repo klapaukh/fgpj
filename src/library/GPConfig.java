@@ -24,6 +24,8 @@ public class GPConfig {
 	public Fitness fitnessObject;
 
 	public ProgramGenerator programGenerator;
+	
+	public ConfigModifier configModifier;
 
 	public GPConfig() {
 		this(1);
@@ -57,6 +59,7 @@ public class GPConfig {
 		selectionOperator = (c.selectionOperator);
 		fitnessObject = (c.fitnessObject);
 		programGenerator = (c.programGenerator);
+		configModifier = c.configModifier;
 
 		int i;
 		Node tmp;
@@ -76,7 +79,7 @@ public class GPConfig {
 	}
 
 	// Initialises the random number generator, the crossover operator,
-	// the mutation operator, and the selection operator to the standard
+	// the mutation operator, the selection operator, and the config modifier to the standard
 	// base objects.
 	public void defaultInit() {
 		try {
@@ -88,6 +91,10 @@ public class GPConfig {
 		crossoverOperator = new Crossover();
 		mutationOperator = new Mutation();
 		selectionOperator = new Selection();
+		configModifier = new ConfigModifier(this) {
+			@Override
+			public void ModifyConfig() {}
+		};
 	}
 
 }

@@ -30,14 +30,14 @@ public class SetColor extends Terminal {
 		col = c;
 	}
 
-	public Terminal generate(GPConfig conf) {
-		return (Terminal)NodeFactory.newNode(getKind());
+	public SetColor generate(GPConfig conf) {
+		return (SetColor)NodeFactory.newNode(getKind());
 //		return new SetColor(conf);
 	}
 	
-	public Terminal generate(String name, GPConfig conf) {
+	public SetColor generate(String name, GPConfig conf) {
 		if (name.equals("")){
-			return (Terminal)NodeFactory.newNode(getKind());
+			return (SetColor)NodeFactory.newNode(getKind());
 //			return new SetColor(conf);
 		}
 		else if (name.startsWith(getName())) {
@@ -81,7 +81,7 @@ public class SetColor extends Terminal {
 	}
 
 	@Override
-	public Node getNew(GPConfig config) {
+	public SetColor getNew(GPConfig config) {
 		return new SetColor(config);
 	}
 

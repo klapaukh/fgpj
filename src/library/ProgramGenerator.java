@@ -6,9 +6,10 @@ import java.util.List;
 public class ProgramGenerator {
 	private GPConfig config;
 
-	private NodeVector growTable[];
+	private NodeVector<Node> growTable[];
 
-	private NodeVector fullTable[];
+	private NodeVector<Node> fullTable[];
+
 
 	@SuppressWarnings("unchecked")
 	public ProgramGenerator(GPConfig conf) {
@@ -20,16 +21,16 @@ public class ProgramGenerator {
 
 		int maxDepth = config.maxDepth;
 
-		growTable = (NodeVector[]) new NodeVector[maxDepth];
-		fullTable = (NodeVector[]) new NodeVector[maxDepth];
+		growTable = (NodeVector<Node>[]) new NodeVector[maxDepth];
+		fullTable = (NodeVector<Node>[]) new NodeVector[maxDepth];
 
 		for (i = 0; i < maxDepth; i++) {
-			growTable[i] = new NodeVector();
-			fullTable[i] = new NodeVector();
+			growTable[i] = new NodeVector<Node>();
+			fullTable[i] = new NodeVector<Node>();
 			growTable[i].setGPConfig(config);
 			fullTable[i].setGPConfig(config);
 		}
-		NodeVector.Element elem ;
+		NodeVector<Node>.Element elem ;
 
 		// Add in the terminals at the bottom of the tree
 		for (i = 0; i < numTerminals; i++) {

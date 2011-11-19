@@ -51,15 +51,15 @@ public class Line extends Function {
 	}
 
 	@Override
-	public Node generate(GPConfig conf) {
-		 return (Function)NodeFactory.newNode(getKind());
+	public Line generate(GPConfig conf) {
+		 return (Line)NodeFactory.newNode(getKind());
 //			return new Line(conf);
 	}
 	
-	public Function generate(String name, GPConfig conf) {
+	public Line generate(String name, GPConfig conf) {
 
 		if (name.equals("")) {
-			 return (Function)NodeFactory.newNode(getKind());
+			 return (Line)NodeFactory.newNode(getKind());
 //			return new Line(conf);
 		} else if (name.startsWith(getName())) {
 			int x1, x2, y1, y2;

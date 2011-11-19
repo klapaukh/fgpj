@@ -1,7 +1,6 @@
 package library;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 public class NodeFactory {
@@ -50,6 +49,7 @@ public class NodeFactory {
 		n.conf = conf;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void teach(Node node) {
 		node.setKind(n.kinds++);
 		Queue<Node>[] t = n.nodes;

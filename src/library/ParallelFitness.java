@@ -13,6 +13,7 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 	private Worker<T>[] workers;
 
 
+	@SuppressWarnings("unchecked")
 	public ParallelFitness(GPConfig conf, T fitness) {
 		super(conf);
 		this.fitness = fitness;

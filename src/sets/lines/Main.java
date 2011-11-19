@@ -44,8 +44,8 @@ public class Main {
 		Population pop = new Population(100, 100, "run-log.txt", symConfig);
 
 		// Set the rates of mutation etc
-		pop.setMutationRate(0.28);
-		pop.setCrossoverRate(0.70);
+		pop.setMutationRate(0.70);
+		pop.setCrossoverRate(0.28);
 		pop.setElitismRate(0.02);
 
 		// Set the return type for our programs
@@ -82,7 +82,7 @@ public class Main {
 		symConfig.programGenerator = new ProgramGenerator(symConfig);
 		// Set the fitness class to be used
 
-		symConfig.fitnessObject = new ImageFitness(symConfig);
+		symConfig.fitnessObject = new DistributedImageFitness(symConfig);
 		// symConfig.fitnessObject = new ImageFitness(symConfig);
 		// Initialise the fitness
 		symConfig.fitnessObject.initFitness();
@@ -114,7 +114,7 @@ public class Main {
 
 			/* Do 20 generations, returns true if solution is found */
 
-			if (pop.evolve(20)) {
+			if (pop.evolve(10000)) {
 				System.out.println("Found solution");
 			} else {
 				System.out.println("Didn't find solution");
@@ -127,9 +127,8 @@ public class Main {
 
 			// cout << "Writing results to out.txt..." << endl;
 
-			// ((DistributedImageFitness*)(symConfig.fitnessObject))->getResult(pop.getBest(),SIZE);
-//			((DistributedImageFitness)(symConfig.fitnessObject)).getResult(pop.getBest(),100);
-			((ImageFitness)(symConfig.fitnessObject)).getResult(pop.getBest(),100);
+			((DistributedImageFitness)(symConfig.fitnessObject)).getResult(pop.getBest(),100);
+//			((ImageFitness)(symConfig.fitnessObject)).getResult(pop.getBest(),100);
 			// cout <<"Results written" <<endl;
 		} catch (Exception e) {
 			e.printStackTrace();

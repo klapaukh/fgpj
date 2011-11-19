@@ -11,7 +11,7 @@ import library.GeneticProgram;
 public class DistributedImageFitness extends Fitness {
 	private ImageFitness imfit;
 	private int gen;
-	private final static int numThreads = 64;
+	private final static int numThreads = 8;
 	private CyclicBarrier eval, main;
 	private Worker[] workers;
 

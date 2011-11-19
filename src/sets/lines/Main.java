@@ -7,6 +7,7 @@ import java.util.Scanner;
 import library.GPConfig;
 import library.GeneticProgram;
 import library.NodeFactory;
+import library.ParallelFitness;
 import library.Population;
 import library.ProgramGenerator;
 
@@ -81,7 +82,7 @@ public class Main {
 		symConfig.programGenerator = new ProgramGenerator(symConfig);
 		// Set the fitness class to be used
 
-		symConfig.fitnessObject = new DistributedImageFitness(symConfig);
+		symConfig.fitnessObject = new ParallelFitness<ImageFitness>(symConfig,new ImageFitness(symConfig));
 		// symConfig.fitnessObject = new ImageFitness(symConfig);
 		// Initialise the fitness
 		symConfig.fitnessObject.initFitness();
@@ -126,7 +127,8 @@ public class Main {
 
 			// cout << "Writing results to out.txt..." << endl;
 
-			((DistributedImageFitness)(symConfig.fitnessObject)).getResult(pop.getBest(),100);
+			((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).fitness.getResult(pop.getBest(),100);
+			((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).finish();
 //			((ImageFitness)(symConfig.fitnessObject)).getResult(pop.getBest(),100);
 			// cout <<"Results written" <<endl;
 		} catch (Exception e) {

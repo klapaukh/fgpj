@@ -19,6 +19,11 @@ public class NodeVector<T extends Node> {
 		config = null;
 		vec = new ArrayList<Element>();
 	}
+	
+	public NodeVector(GPConfig conf) {
+		config = conf;
+		vec = new ArrayList<Element>();
+	}
 
 	public void setGPConfig(GPConfig conf) {
 		config = conf;

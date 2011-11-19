@@ -11,9 +11,9 @@ public class GPConfig {
 
 	public int maxDepth;
 
-	public FuncSet funcSet;
+	public NodeVector<Function> funcSet;
 
-	public TermSet termSet;
+	public NodeVector<Terminal> termSet;
 
 	public Crossover crossoverOperator;
 
@@ -34,8 +34,8 @@ public class GPConfig {
 		this.numParts = numParts;
 		minDepth = 0;
 		maxDepth = 0;
-		funcSet = new FuncSet(this);
-		termSet = new TermSet(this);
+		funcSet = new NodeVector<Function>(this);
+		termSet = new NodeVector<Terminal>(this);
 	}
 
 	public int getNumParts() {
@@ -49,8 +49,8 @@ public class GPConfig {
 		numParts = (c.numParts);
 		minDepth = (c.minDepth);
 		maxDepth = (c.maxDepth);
-		funcSet = new FuncSet(this);
-		termSet = new TermSet(this);
+		funcSet = new NodeVector<Function>(this);
+		termSet = new NodeVector<Terminal>(this);
 		randomNumGenerator = (c.randomNumGenerator);
 		crossoverOperator = (c.crossoverOperator);
 		mutationOperator = (c.mutationOperator);

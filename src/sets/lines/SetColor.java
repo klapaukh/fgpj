@@ -30,6 +30,11 @@ public class SetColor extends Terminal {
 		col = c;
 	}
 
+	public Terminal generate(GPConfig conf) {
+		return (Terminal)NodeFactory.newNode(getKind());
+//		return new SetColor(conf);
+	}
+	
 	public Terminal generate(String name, GPConfig conf) {
 		if (name.equals("")){
 			return (Terminal)NodeFactory.newNode(getKind());

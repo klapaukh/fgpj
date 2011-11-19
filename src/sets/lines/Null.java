@@ -18,15 +18,13 @@ public class Null extends Terminal {
 		super(ReturnImage.TYPENUM, "null", conf);
 	}
 
+	public Terminal generate(GPConfig conf) {
+		return (Terminal) NodeFactory.newNode(getKind());
+//		return  new Null(conf);
+}
+	
 	public Terminal generate(String name, GPConfig conf) {
-		if (name.equals("")) {
-			return (Terminal) NodeFactory.newNode(getKind());
-//			return  new Null(conf);
-		} else if (name.startsWith("null")) {
-			return (Terminal) NodeFactory.newNode(getKind());
-//			return new Null(conf);
-		}
-		return null;
+			return generate(conf);
 	}
 
 	public void evaluate(ReturnData out) {

@@ -1,9 +1,8 @@
 package library;
 
-import java.io.Serializable;
 import java.util.Vector;
 
-public abstract class Node implements Generable<Node>, Serializable {
+public abstract class Node {
 	private int returnType; // The type number of the return type for this node
 
 	private int depth; // The depth of this node in the program tree
@@ -98,4 +97,8 @@ public abstract class Node implements Generable<Node>, Serializable {
 	 * @return the kind of the node
 	 */
 	public abstract int getKind();
+	
+	
+	 public abstract <T extends Node> T generate(String s, GPConfig conf);
+	 public abstract <T extends Node> T generate(GPConfig conf);
 }

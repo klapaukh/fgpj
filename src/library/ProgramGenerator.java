@@ -6,9 +6,9 @@ import java.util.List;
 public class ProgramGenerator {
 	private GPConfig config;
 
-	private NodeVector<Node> growTable[];
+	private NodeVector growTable[];
 
-	private NodeVector<Node> fullTable[];
+	private NodeVector fullTable[];
 
 	@SuppressWarnings("unchecked")
 	public ProgramGenerator(GPConfig conf) {
@@ -20,16 +20,16 @@ public class ProgramGenerator {
 
 		int maxDepth = config.maxDepth;
 
-		growTable = (NodeVector<Node>[]) new NodeVector[maxDepth];
-		fullTable = (NodeVector<Node>[]) new NodeVector[maxDepth];
+		growTable = (NodeVector[]) new NodeVector[maxDepth];
+		fullTable = (NodeVector[]) new NodeVector[maxDepth];
 
 		for (i = 0; i < maxDepth; i++) {
-			growTable[i] = new NodeVector<Node>();
-			fullTable[i] = new NodeVector<Node>();
+			growTable[i] = new NodeVector();
+			fullTable[i] = new NodeVector();
 			growTable[i].setGPConfig(config);
 			fullTable[i].setGPConfig(config);
 		}
-		NodeVector<Node>.Element elem ;
+		NodeVector.Element elem ;
 
 		// Add in the terminals at the bottom of the tree
 		for (i = 0; i < numTerminals; i++) {
@@ -57,7 +57,7 @@ public class ProgramGenerator {
 			// Add the functions
 			for (i = 0; i < numFunctions; i++) {
 				Function tmpFunc = (Function) config.funcSet.getGenFunction(i)
-						.generate("", config);
+						.generate(config);
 				boolean valid = true;
 
 				for (int arg = 0; arg < tmpFunc.getMaxArgs(); arg++) {
@@ -66,7 +66,7 @@ public class ProgramGenerator {
 
 					for (int tSize = 0; tSize < growTable[curDepth - 1].size(); tSize++) {
 						Node tmpNode = growTable[curDepth - 1]
-								.getElement(tSize).g.generate("", config);
+								.getElement(tSize).g.generate(config);
 
 						if (argNReturnType == tmpNode.getReturnType()) {
 							found = true;
@@ -94,7 +94,7 @@ public class ProgramGenerator {
 			// Add the functions
 			for (i = 0; i < numFunctions; i++) {
 				Function tmpFunc = (Function) config.funcSet.getGenFunction(i)
-						.generate("", config);
+						.generate(config);
 				boolean valid = true;
 
 				for (int arg = 0; arg < tmpFunc.getMaxArgs(); arg++) {
@@ -103,7 +103,7 @@ public class ProgramGenerator {
 
 					for (int tSize = 0; tSize < fullTable[curDepth - 1].size(); tSize++) {
 						Node tmpNode = fullTable[curDepth - 1]
-								.getElement(tSize).g.generate("", config);
+								.getElement(tSize).g.generate(config);
 
 						if (argNReturnType == tmpNode.getReturnType()) {
 							found = true;

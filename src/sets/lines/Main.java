@@ -65,6 +65,10 @@ public class Main {
 		// Do the default initialisation of the configuration
 		symConfig.defaultInit();
 
+		//TODO Testing memory management
+		NodeFactory.setConfig(symConfig);
+		
+		
 		// Add the terminals we need
 		symConfig.termSet.addNodeToSet(ReturnImage.TYPENUM, new Null(symConfig));
 		symConfig.termSet.addNodeToSet(ReturnColor.TYPENUM, new SetColor(symConfig));
@@ -72,11 +76,6 @@ public class Main {
 		// Add the functions we need
 		symConfig.funcSet.addNodeToSet(ReturnImage.TYPENUM, new Line(symConfig));
 
-		//TODO Testing memory management
-		NodeFactory.setConfig(symConfig);
-		NodeFactory.teach(new Line(symConfig));
-		NodeFactory.teach(new Null(symConfig));
-		NodeFactory.teach(new SetColor(symConfig));
 		
 		// Create the program generator
 		symConfig.programGenerator = new ProgramGenerator(symConfig);
@@ -114,7 +113,7 @@ public class Main {
 
 			/* Do 20 generations, returns true if solution is found */
 
-			if (pop.evolve(10000)) {
+			if (pop.evolve(20)) {
 				System.out.println("Found solution");
 			} else {
 				System.out.println("Didn't find solution");

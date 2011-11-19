@@ -50,6 +50,12 @@ public class Line extends Function {
 		}
 	}
 
+	@Override
+	public Node generate(GPConfig conf) {
+		 return (Function)NodeFactory.newNode(getKind());
+//			return new Line(conf);
+	}
+	
 	public Function generate(String name, GPConfig conf) {
 
 		if (name.equals("")) {
@@ -133,5 +139,7 @@ public class Line extends Function {
 	public int getKind() {
 		return kind;
 	}
+
+
 
 }

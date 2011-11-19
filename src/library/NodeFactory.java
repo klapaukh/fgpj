@@ -59,7 +59,7 @@ public class NodeFactory {
 			n.nodes[i] = t[i];
 		}
 		n.nodes[i] = new LinkedList<Node>();
-		n.nodes[i].add(node);
+		n.nodes[i].add(node.getNew(node.config));
 	}
 
 	public static void report() {

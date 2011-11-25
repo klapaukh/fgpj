@@ -25,11 +25,10 @@ public class GPConfig {
 	private int minDepth;
 
 	private int maxDepth;
-	
+
 	private double mutationRate;
 	private double crossoverRate;
 	private double elitismRate;
-
 
 	public final NodeVector<Function> funcSet;
 
@@ -50,8 +49,8 @@ public class GPConfig {
 	/**
 	 * Initialise a GPConfig with 1 root, mindepth of 1 and maxdepth of 10
 	 */
-	public GPConfig() {
-		this(1, 1, 10);
+	public GPConfig(double mutationRate, double crossoverRate, double elitismRate) {
+		this(1, 1, 10, mutationRate, crossoverRate, elitismRate);
 	}
 
 	/**
@@ -64,11 +63,13 @@ public class GPConfig {
 	 * @param maxDepth
 	 *            The maximum depth of a program
 	 */
-	public GPConfig(int numParts, int minDepth, int maxDepth) {
+	public GPConfig(int numParts, int minDepth, int maxDepth, double mutationRate, double crossoverRate,
+			double elitismRate) {
 		if (numParts < 1) throw new IllegalArgumentException("Num Parts < 1: " + numParts);
 		this.numParts = numParts;
 		this.minDepth = minDepth;
 		this.maxDepth = maxDepth;
+		this.setRates(mutationRate, crossoverRate, elitismRate);
 		funcSet = new NodeVector<Function>(this);
 		termSet = new NodeVector<Terminal>(this);
 	}
@@ -108,30 +109,31 @@ public class GPConfig {
 		this.minDepth = min;
 	}
 
-	
-	public double elitismRate(){
+	public double elitismRate() {
 		return elitismRate;
 	}
-	
-	public double mutationRate(){
+
+	public double mutationRate() {
 		return mutationRate;
 	}
-	
-	public double crossoverRate(){
+
+	public double crossoverRate() {
 		return crossoverRate;
 	}
-	
-	public void elitismRate(double rate){
-		this.elitismRate = rate ;
+
+	public void setRates(double mutationRate, double crossoverRate, double elitismRate) {
+
+		double total = mutationRate + crossoverRate + elitismRate;
+
+		if (Double.compare(total, 1.0) != 0) {
+			throw new IllegalArgumentException("rates for mutation, crossover, and elitism don't add up to 1.0");
+		}
+
+		this.mutationRate = mutationRate;
+		this.crossoverRate = crossoverRate;
+		this.elitismRate = elitismRate;
 	}
-	
-	public void mutationRate(double rate){
-		this.mutationRate = rate;
-	}
-	
-	public void crossoverRate(double rate){
-		this.crossoverRate = rate;
-	}
+
 	/**
 	 * Initialises the random number generator, the crossover operator, the mutation operator, the selection operator,
 	 * and the config modifier to the standard base objects.

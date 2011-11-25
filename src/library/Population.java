@@ -19,7 +19,6 @@ public class Population {
 	private List<GeneticProgram> pop; // The population, and array of pointers to programs
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 
-
 	// Number of evaluations carried out so far
 	private long evaluations;
 
@@ -44,12 +43,6 @@ public class Population {
 
 	// The return type for all the programs in this population
 	private int returnType;
-
-	private int numForMutation;
-
-	private int numForCrossover;
-
-	private int numForElitism;
 
 	// What generation number are we currently processing.
 	private int generationNumber;
@@ -118,8 +111,6 @@ public class Population {
 		}
 	}
 
-
-
 	public List<GeneticProgram> getPopulation() {
 		return pop;
 	}
@@ -148,35 +139,11 @@ public class Population {
 	}
 
 	public void generateInitialPopulation() {
-		config.programGenerator.generateInitialPopulation(pop, numIndividuals, 	returnType);
+		config.programGenerator.generateInitialPopulation(pop, numIndividuals, returnType);
 
 	}
 
-	public void correctRates() {
-		int total = numForMutation + numForCrossover + numForElitism;
-
-		if (total > numIndividuals) {
-			throw new RuntimeException(
-					"Population::correctRates Error, rates for mutation, crossover, and elitism add up to > 1.0");
-		}
-
-		if ((numForCrossover % 2) != 0) {
-			numForCrossover--;
-			total--;
-		}
-
-		numForElitism += (numIndividuals - total);
-
-		if ((numIndividuals - total) != 0) {
-			System.err.println("**** Warning Population::correctRates()***");
-			System.err.println("Mutation/crossover/elitism rates have been adjusted.");
-			System.err.println("This is usually caused by rounding errors, however it can");
-			System.err.println("also be caused by not having the rates add up to 1.0");
-			System.err.println("or specifying rates which produce an odd");
-			System.err.println("number of individuals for crossover.");
-			System.err.println("See the Population class for more details.");
-		}
-	}
+	
 
 	public boolean evolve(int numGenerations) {
 		int i = 0;
@@ -191,7 +158,6 @@ public class Population {
 			/*
 			 * Decimation The actual removal of individuals from the bottom of the population and the freeing of the
 			 * memory is carried out in the numGenerationBeforeDecimation method.
-			 * 
 			 */
 			if (performDecimation) {
 				/*
@@ -215,7 +181,7 @@ public class Population {
 			}
 
 			config.configModifier.ModifyConfig();
-			
+
 			nextGeneration();
 		}
 		assignFitness(); // Evaluate the programs and assign their fitness values
@@ -233,17 +199,16 @@ public class Population {
 
 		nextPop = new ArrayList<GeneticProgram>(numIndividuals);
 
-		correctRates();
 
 		adjustFitness();
 
 		// copy some individuals (elitism)
-		for (i = 0; i < numForElitism; i++) {
+		for (i = 0; i < getNumForElitism(); i++) {
 			nextPop.add(pop.get(i).copy());
 		}
 
 		// crossover some individuals
-		for (i = 0; i < numForCrossover; i += 2) {
+		for (i = 0; i < getNumForCrossover(); i += 2) {
 			indiv1 = config.selectionOperator.select(pop, numIndividuals, config);
 			indiv2 = config.selectionOperator.select(pop, numIndividuals, config);
 			nextPop.add(pop.get(indiv1).copy());
@@ -254,7 +219,7 @@ public class Population {
 		}
 
 		// mutate some individuals
-		for (i = 0; i < numForMutation; i++) {
+		for (i = 0; i < getNumForMutation(); i++) {
 			indiv1 = config.selectionOperator.select(pop, numIndividuals, config);
 			nextPop.add(pop.get(indiv1).copy());
 			config.mutationOperator.mutate(nextPop.get(nextPop.size() - 1), config);
@@ -337,11 +302,6 @@ public class Population {
 		numIndividuals = num;
 
 		pop = tmp;
-
-		numForMutation = (int) (numIndividuals * config.mutationRate());
-		numForCrossover = (int) (numIndividuals * config.crossoverRate());
-		numForElitism = (int) (numIndividuals * config.elitismRate());
-
 	}
 
 	public int getNumIndividuals() {
@@ -370,69 +330,28 @@ public class Population {
 		return returnType;
 	}
 
-	public void setMutationRate(double rate) {
-		config.mutationRate(rate);
-		numForMutation = (int) (numIndividuals * rate);
-	}
-
 	public double getMutationRate() {
 		return config.mutationRate();
 	}
 
-	public void setNumForMutation(int num) {
-		numForMutation = num;
-		config.mutationRate((double) numForMutation / (double) numIndividuals);
-
-		if (numForMutation > numIndividuals)
-			throw new IllegalArgumentException(
-					"num greater than numIndividuals");
-	}
-
 	public int getNumForMutation() {
-		return numForMutation;
-	}
-
-	public void setCrossoverRate(double rate) {
-		config.crossoverRate(rate);
-		numForCrossover = (int) (rate * numIndividuals);
+		return (int) (numIndividuals * config.mutationRate());
 	}
 
 	public double getCrossoverRate() {
 		return config.crossoverRate();
 	}
 
-	public void setNumForCrossover(int num) {
-		numForCrossover = num;
-		config.crossoverRate ((double) numForCrossover / (double) numIndividuals);
-
-		if (numForCrossover > numIndividuals)
-			throw new IllegalArgumentException(
-					"num greater than numIndividuals");
-	}
-
 	public int getNumForCrossover() {
-		return numForCrossover;
-	}
-
-	public void setElitismRate(double rate) {
-		config.elitismRate(rate);
-		numForElitism = (int) (rate * numIndividuals);
+		return (int) (numIndividuals * config.crossoverRate());
 	}
 
 	public double getElitismRate() {
 		return config.elitismRate();
 	}
 
-	public void setNumForElitism(int num) {
-		numForElitism = num;
-		config.elitismRate((double) numForElitism / (double) numIndividuals);
-
-		if (numForElitism > numIndividuals)
-			throw new IllegalArgumentException("num greater than numIndividuals");
-	}
-
 	public int getNumForElitism() {
-		return numForElitism;
+		return (int) (numIndividuals * config.elitismRate());
 	}
 
 	public void assignFitness() {
@@ -510,7 +429,6 @@ public class Population {
 
 			outputFile.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -525,6 +443,9 @@ public class Population {
 
 			int iValue = 0;
 			double dValue = 0.0;
+			double mutationRate = 0.0;
+			double crossoverRate = 0.0;
+			double elitismRate = 0.0;
 			String line;
 
 			// First loop reads the header info in the pop file
@@ -559,19 +480,21 @@ public class Population {
 					dValue = Double.parseDouble(line.substring("mutationRate".length() + 1));
 					System.err.println("Setting mutationRate to supplied value " + dValue);
 					;
-					this.setMutationRate(dValue);
+					mutationRate = dValue;
 				} else if (line.startsWith("crossoverRate")) {
 					dValue = Double.parseDouble(line.substring("crossoverRate".length() + 1));
 					System.err.println("Setting crossoverRate to supplied value " + dValue);
-					this.setCrossoverRate(dValue);
+					crossoverRate = dValue;
 				} else if (line.startsWith("elitismRate")) {
 					dValue = Double.parseDouble(line.substring("elitismRate".length() + 1));
 					System.err.println("Setting elitismRate to supplied value " + dValue);
-					this.setElitismRate(dValue);
+					elitismRate = dValue;
 				} else {
 					System.err.println("Ignoring line " + line);
 				}
 			}
+
+			config.setRates(mutationRate, crossoverRate, elitismRate);
 
 			while (true) {
 				if (individual > this.numIndividuals) break;

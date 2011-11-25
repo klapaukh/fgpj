@@ -41,15 +41,10 @@ public class Main {
 
 		//Create the setting for a new GP run
 		//1 root node, min program depth 1, and max depth 8
-		GPConfig symConfig = new GPConfig(1,1,8);
+		GPConfig symConfig = new GPConfig(1,1,8,0.7,0.28,0.02);
 	
 		// Declare a population, giving the size and a log file name
 		Population pop = new Population(100, 100, "run-log.txt", symConfig);
-
-		// Set the rates of mutation etc
-		pop.setMutationRate(0.70);
-		pop.setCrossoverRate(0.28);
-		pop.setElitismRate(0.02);
 
 		// Set the return type for our programs
 		pop.setReturnType(ReturnImage.TYPENUM);

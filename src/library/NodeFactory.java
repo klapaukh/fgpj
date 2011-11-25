@@ -7,7 +7,6 @@ public class NodeFactory {
 
 	private Queue<Node>[] nodes;
 	private static final NodeFactory n = new NodeFactory();
-	private GPConfig conf;
 	private int hit, miss;
 	private int kinds = 0;
 
@@ -33,20 +32,16 @@ public class NodeFactory {
 		// all done
 	}
 
-	public static Node newNode(int kind) {
+	public static Node newNode(int kind, GPConfig conf) {
 
 		Queue<Node> l = n.nodes[kind];
 		if (l.size() == 1) {
 			n.miss++;
-			return l.peek().getNew(n.conf);
+			return l.peek().getNew(conf);
 		} else {
 			n.hit++;
 			return l.poll();
 		}
-	}
-
-	public static void setConfig(GPConfig conf) {
-		n.conf = conf;
 	}
 
 	@SuppressWarnings("unchecked")

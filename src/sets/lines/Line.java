@@ -52,14 +52,14 @@ public class Line extends Function {
 
 	@Override
 	public Line generate(GPConfig conf) {
-		 return (Line)NodeFactory.newNode(getKind());
+		 return (Line)NodeFactory.newNode(getKind(),conf);
 //			return new Line(conf);
 	}
 	
 	public Line generate(String name, GPConfig conf) {
 
 		if (name.equals("")) {
-			 return (Line)NodeFactory.newNode(getKind());
+			 return (Line)NodeFactory.newNode(getKind(),conf);
 //			return new Line(conf);
 		} else if (name.startsWith(getName())) {
 			int x1, x2, y1, y2;
@@ -69,7 +69,7 @@ public class Line extends Function {
 			x2 = scan.nextInt();
 			y1 = scan.nextInt();
 			y2 = scan.nextInt();
-			return ((Line) NodeFactory.newNode(getKind())).init(x1, x2, y1, y2);
+			return ((Line) NodeFactory.newNode(getKind(),conf)).init(x1, x2, y1, y2);
 //			return  new Line(x1, x2, y1, y2,conf);
 		}
 
@@ -114,7 +114,7 @@ public class Line extends Function {
 	}
 
 	public Function copy() {
-		Function tmp = ((Line) NodeFactory.newNode(getKind())).init(x1, x2, y1, y2);
+		Function tmp = ((Line) NodeFactory.newNode(getKind(),config)).init(x1, x2, y1, y2);
 //		Function tmp =  new Line(x1, x2, y1, y2,config);
 
 		for (int i = 0; i < getMaxArgs(); i++) {

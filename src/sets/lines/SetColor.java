@@ -20,8 +20,9 @@ public class SetColor extends Terminal {
 
 	public SetColor(GPConfig conf) {
 		super(ReturnColor.TYPENUM, "setcolor", conf);
-		col = new Color((int) Math.abs(conf.randomNumGenerator.nextLong() % 256), (int) Math.abs(conf.randomNumGenerator.nextLong() % 256),
-				(int) Math.abs(conf.randomNumGenerator.nextLong() % 256), (int) Math.abs(conf.randomNumGenerator.nextLong() % 256));
+		col = new Color((int) Math.abs(conf.randomNumGenerator.nextLong() % 256),
+				(int) Math.abs(conf.randomNumGenerator.nextLong() % 256), (int) Math.abs(conf.randomNumGenerator
+						.nextLong() % 256), (int) Math.abs(conf.randomNumGenerator.nextLong() % 256));
 
 	}
 
@@ -31,16 +32,15 @@ public class SetColor extends Terminal {
 	}
 
 	public SetColor generate(GPConfig conf) {
-		return (SetColor)NodeFactory.newNode(getKind());
-//		return new SetColor(conf);
+		return (SetColor) NodeFactory.newNode(getKind(), conf);
+		// return new SetColor(conf);
 	}
-	
+
 	public SetColor generate(String name, GPConfig conf) {
-		if (name.equals("")){
-			return (SetColor)NodeFactory.newNode(getKind());
-//			return new SetColor(conf);
-		}
-		else if (name.startsWith(getName())) {
+		if (name.equals("")) {
+			return (SetColor) NodeFactory.newNode(getKind(), conf);
+			// return new SetColor(conf);
+		} else if (name.startsWith(getName())) {
 			int r, g, b, a;
 			name = name.substring(getName().length());
 			Scanner scan = new Scanner(name);
@@ -50,8 +50,8 @@ public class SetColor extends Terminal {
 			b = scan.nextInt();
 			a = scan.nextInt();
 
-			return ((SetColor)NodeFactory.newNode(getKind())).init(new Color(r,g,b,a));
-//			return new SetColor(new Color(r, g, b, a), conf);
+			return ((SetColor) NodeFactory.newNode(getKind(), conf)).init(new Color(r, g, b, a));
+			// return new SetColor(new Color(r, g, b, a), conf);
 		}
 
 		return null;
@@ -70,14 +70,14 @@ public class SetColor extends Terminal {
 				col.getAlpha()));
 	}
 
-	private SetColor init(Color col){
+	private SetColor init(Color col) {
 		this.col = col;
 		return this;
 	}
-	
+
 	public Node copy() {
-		return ((SetColor)NodeFactory.newNode(this.getKind())).init(col);
-//		return new SetColor(col, config);
+		return ((SetColor) NodeFactory.newNode(this.getKind(), config)).init(col);
+		// return new SetColor(col, config);
 	}
 
 	@Override

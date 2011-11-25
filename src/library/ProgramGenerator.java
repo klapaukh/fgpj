@@ -2,14 +2,12 @@ package library;
 
 import java.util.List;
 
-
 public class ProgramGenerator {
 	private GPConfig config;
 
 	private NodeVector<Node> growTable[];
 
 	private NodeVector<Node> fullTable[];
-
 
 	@SuppressWarnings("unchecked")
 	public ProgramGenerator(GPConfig conf) {
@@ -30,11 +28,11 @@ public class ProgramGenerator {
 			growTable[i].setGPConfig(config);
 			fullTable[i].setGPConfig(config);
 		}
-		NodeVector<Node>.Element elem ;
+		NodeVector<Node>.Element elem;
 
 		// Add in the terminals at the bottom of the tree
 		for (i = 0; i < numTerminals; i++) {
-			elem= growTable[0].new Element();
+			elem = growTable[0].new Element();
 			elem.returnType = config.termSet.getNodeReturnType(i);
 			elem.g = config.termSet.getGenFunction(i);
 
@@ -48,7 +46,7 @@ public class ProgramGenerator {
 		for (curDepth = 1; curDepth < maxDepth; curDepth++) {
 			// Add the terminals
 			for (i = 0; i < numTerminals; i++) {
-				elem= growTable[0].new Element();
+				elem = growTable[0].new Element();
 				elem.returnType = config.termSet.getNodeReturnType(i);
 				elem.g = config.termSet.getGenFunction(i);
 
@@ -57,8 +55,7 @@ public class ProgramGenerator {
 
 			// Add the functions
 			for (i = 0; i < numFunctions; i++) {
-				Function tmpFunc = (Function) config.funcSet.getGenFunction(i)
-						.generate(config);
+				Function tmpFunc = (Function) config.funcSet.getGenFunction(i).generate(config);
 				boolean valid = true;
 
 				for (int arg = 0; arg < tmpFunc.getMaxArgs(); arg++) {
@@ -66,8 +63,7 @@ public class ProgramGenerator {
 					int argNReturnType = tmpFunc.getArgNReturnType(arg);
 
 					for (int tSize = 0; tSize < growTable[curDepth - 1].size(); tSize++) {
-						Node tmpNode = growTable[curDepth - 1]
-								.getElement(tSize).g.generate(config);
+						Node tmpNode = growTable[curDepth - 1].getElement(tSize).g.generate(config);
 
 						if (argNReturnType == tmpNode.getReturnType()) {
 							found = true;
@@ -82,7 +78,7 @@ public class ProgramGenerator {
 				}
 
 				if (valid) {
-					elem= growTable[0].new Element();
+					elem = growTable[0].new Element();
 					elem.returnType = tmpFunc.getReturnType();
 					elem.g = config.funcSet.getGenFunction(i);
 					growTable[curDepth].addElement(elem);
@@ -94,8 +90,7 @@ public class ProgramGenerator {
 		for (curDepth = 1; curDepth < maxDepth; curDepth++) {
 			// Add the functions
 			for (i = 0; i < numFunctions; i++) {
-				Function tmpFunc = (Function) config.funcSet.getGenFunction(i)
-						.generate(config);
+				Function tmpFunc = (Function) config.funcSet.getGenFunction(i).generate(config);
 				boolean valid = true;
 
 				for (int arg = 0; arg < tmpFunc.getMaxArgs(); arg++) {
@@ -103,8 +98,7 @@ public class ProgramGenerator {
 					int argNReturnType = tmpFunc.getArgNReturnType(arg);
 
 					for (int tSize = 0; tSize < fullTable[curDepth - 1].size(); tSize++) {
-						Node tmpNode = fullTable[curDepth - 1]
-								.getElement(tSize).g.generate(config);
+						Node tmpNode = fullTable[curDepth - 1].getElement(tSize).g.generate(config);
 
 						if (argNReturnType == tmpNode.getReturnType()) {
 							found = true;
@@ -119,7 +113,7 @@ public class ProgramGenerator {
 				}
 
 				if (valid) {
-					elem= growTable[0].new Element();
+					elem = growTable[0].new Element();
 					elem.returnType = tmpFunc.getReturnType();
 					elem.g = config.funcSet.getGenFunction(i);
 					fullTable[curDepth].addElement(elem);
@@ -128,9 +122,7 @@ public class ProgramGenerator {
 		}
 	}
 
-	public void generateInitialPopulation(List<GeneticProgram> pop,
-			int numIndividuals, 
-			int expectedReturnType) {
+	public void generateInitialPopulation(List<GeneticProgram> pop, int numIndividuals, int expectedReturnType) {
 		Node tmp;
 		int indivPerSize = 0;
 		int tmpSize = config.minDepth() - 1;
@@ -140,8 +132,7 @@ public class ProgramGenerator {
 		int sizeIncrement = 0;
 		int numIndividualsForRamping = numIndividuals / 2;
 
-		if (config.minDepth() > config.maxDepth())
-			throw new RuntimeException("minSize is greater than maxSize");
+		if (config.minDepth() > config.maxDepth()) throw new RuntimeException("minSize is greater than maxSize");
 
 		if (sizeSteps <= 0) {
 			sizeIncrement = 0;
@@ -156,28 +147,24 @@ public class ProgramGenerator {
 			// then we can't use all the sizes when ramping
 			indivPerSize = 1;
 			sizeIncrement = sizeSteps / numIndividualsForRamping;
-			if ((sizeSteps % numIndividualsForRamping) > 0)
-				sizeIncrement++;
+			if ((sizeSteps % numIndividualsForRamping) > 0) sizeIncrement++;
 		}
 
 		for (indiv = 0; indiv < numIndividualsForRamping; indiv++) {
 			if ((indiv % indivPerSize) == 0) {
 				tmpSize += sizeIncrement;
-				if (tmpSize >= config.maxDepth())
-					tmpSize = (config.maxDepth() - 1);
+				if (tmpSize >= config.maxDepth()) tmpSize = (config.maxDepth() - 1);
 			}
 
 			try {
 				// TODO dodgy
 				for (int i = 0; i < config.getNumParts(); i++) {
-					tmp = createGrowProgram(0, tmpSize, pop.get(indiv)
-							.getReturnType());
+					tmp = createGrowProgram(0, tmpSize, pop.get(indiv).getReturnType());
 					pop.get(indiv).setRoot(tmp, i);
 				}
 			} catch (Exception error) {
 				error.printStackTrace();
-				if ((tmpSize += sizeIncrement) >= config.maxDepth())
-					tmpSize = (config.maxDepth() - 1);
+				if ((tmpSize += sizeIncrement) >= config.maxDepth()) tmpSize = (config.maxDepth() - 1);
 
 				indiv--;
 				continue;
@@ -189,14 +176,12 @@ public class ProgramGenerator {
 		for (; indiv < numIndividuals; indiv++) {
 			if ((indiv % indivPerSize) == 0) {
 				tmpSize += sizeIncrement;
-				if (tmpSize >= config.maxDepth())
-					tmpSize = (config.maxDepth() - 1);
+				if (tmpSize >= config.maxDepth()) tmpSize = (config.maxDepth() - 1);
 			}
 
 			try {
 				for (int i = 0; i < config.getNumParts(); i++) {
-					tmp = createFullProgram(0, tmpSize, pop.get(indiv)
-							.getReturnType());
+					tmp = createFullProgram(0, tmpSize, pop.get(indiv).getReturnType());
 					pop.get(indiv).setRoot(tmp, i);
 				}
 			} catch (Exception error) {
@@ -205,8 +190,7 @@ public class ProgramGenerator {
 							"ProgramGenerator::generateInitialPopulation \nUnrecoverable error\nUnable to generate program. Check depth limits and for insufficient terminals and functions\n");
 				}
 
-				if ((tmpSize += sizeIncrement) >= config.maxDepth())
-					tmpSize = (config.maxDepth() - 1);
+				if ((tmpSize += sizeIncrement) >= config.maxDepth()) tmpSize = (config.maxDepth() - 1);
 
 				indiv--;
 				continue;
@@ -214,8 +198,7 @@ public class ProgramGenerator {
 		}
 	}
 
-	public Node createFullProgram(int curDepth, int maxDepth,
-			int expectedReturnType) {
+	public Node createFullProgram(int curDepth, int maxDepth, int expectedReturnType) {
 		int depth;
 		Node node = null;
 
@@ -227,8 +210,7 @@ public class ProgramGenerator {
 		node = fullTable[depth].getRandomTypedElement(expectedReturnType);
 
 		if (node == null) {
-			System.err
-					.println("Warning, unable to create Full program for this set of Functions and Terminals");
+			System.err.println("Warning, unable to create Full program for this set of Functions and Terminals");
 			return createGrowProgram(curDepth, maxDepth, expectedReturnType);
 		}
 
@@ -236,16 +218,14 @@ public class ProgramGenerator {
 			Function func = (Function) (node);
 
 			for (int i = 0; i < func.getMaxArgs(); i++) {
-				func.setArgN(i, createFullProgram(curDepth + 1, maxDepth, func
-						.getArgNReturnType(i)));
+				func.setArgN(i, createFullProgram(curDepth + 1, maxDepth, func.getArgNReturnType(i)));
 			}
 		}
 
 		return node;
 	}
 
-	public Node createGrowProgram(int curDepth, int maxDepth,
-			int expectedReturnType) {
+	public Node createGrowProgram(int curDepth, int maxDepth, int expectedReturnType) {
 		int i;
 		int depth;
 		Node node;
@@ -257,15 +237,13 @@ public class ProgramGenerator {
 
 		node = growTable[depth].getRandomTypedElement(expectedReturnType);
 
-		if (node == null)
-			throw new RuntimeException("getRandomNode returned NULL");
+		if (node == null) throw new RuntimeException("getRandomNode returned NULL");
 
 		if (node.getMaxArgs() > 0) {
 			Function func = (Function) (node);
 
 			for (i = 0; i < node.getMaxArgs(); i++) {
-				func.setArgN(i, createGrowProgram(curDepth + 1, maxDepth, func
-						.getArgNReturnType(i)));
+				func.setArgN(i, createGrowProgram(curDepth + 1, maxDepth, func.getArgNReturnType(i)));
 			}
 		}
 		return node;

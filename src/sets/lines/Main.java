@@ -53,20 +53,13 @@ public class Main {
 		// Write out the population every N generations
 		pop.setLogFrequency(100000);
 
-		//TODO Testing memory management
-		NodeFactory.setConfig(symConfig);
-		
-		
 		// Add the terminals we need
 		symConfig.termSet.addNodeToSet(ReturnImage.TYPENUM, new Null(symConfig));
 		symConfig.termSet.addNodeToSet(ReturnColor.TYPENUM, new SetColor(symConfig));
 
 		// Add the functions we need
 		symConfig.funcSet.addNodeToSet(ReturnImage.TYPENUM, new Line(symConfig));
-
 		
-		// Create the program generator
-		symConfig.programGenerator = new ProgramGenerator(symConfig);
 		// Set the fitness class to be used
 
 //		symConfig.fitnessObject = new ParallelFitness<ImageFitness>(symConfig,new ImageFitness(symConfig));

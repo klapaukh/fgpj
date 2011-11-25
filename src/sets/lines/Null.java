@@ -19,7 +19,7 @@ public class Null extends Terminal {
 	}
 
 	public Terminal generate(GPConfig conf) {
-		return (Terminal) NodeFactory.newNode(getKind());
+		return (Terminal) NodeFactory.newNode(getKind(),conf);
 //		return  new Null(conf);
 }
 	
@@ -38,7 +38,7 @@ public class Null extends Terminal {
 	}
 
 	public Node copy() {
-		return NodeFactory.newNode(getKind());
+		return NodeFactory.newNode(getKind(),config);
 //		return new Null(config);
 	}
 

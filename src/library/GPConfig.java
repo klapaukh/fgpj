@@ -88,7 +88,7 @@ public class GPConfig {
 		this.setRates(mutationRate, crossoverRate, elitismRate);
 		funcSet = new NodeVector<Function>(this);
 		termSet = new NodeVector<Terminal>(this);
-		
+
 		defaultInit();
 	}
 
@@ -198,8 +198,8 @@ public class GPConfig {
 	}
 
 	/**
-	 * Initialises the random number generator, the crossover operator, the mutation operator, the selection operator,
-	 * and the config modifier to the standard base objects.
+	 * Initialises the random number generator, program generator (ramped half-half), the crossover operator, the
+	 * mutation operator, the selection operator (roulette wheel), and the config modifier to the standard base objects.
 	 * 
 	 */
 	private void defaultInit() {
@@ -213,6 +213,7 @@ public class GPConfig {
 		crossoverOperator = new Crossover();
 		mutationOperator = new Mutation();
 		selectionOperator = new Selection();
+		programGenerator = new ProgramGenerator(this);
 		configModifier = new ConfigModifier(this) {
 			@Override
 			public void ModifyConfig() {

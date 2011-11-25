@@ -1,57 +1,58 @@
 package library;
 
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CyclicBarrier;
-
 
 public class ParallelFitness<T extends Fitness> extends Fitness {
 	public final T fitness;
 	private int gen;
-	private final static int numThreads = 8;
-	private CyclicBarrier eval, main;
+	private final int numThreads;
 	private Worker<T>[] workers;
+	private Queue<Job> jobs;
+	private CyclicBarrier end, start;
+	private int stepSize;
 
+	public ParallelFitness(GPConfig conf, T fitness) {
+		this(conf, fitness, 4, 10);
+	}
 
 	@SuppressWarnings("unchecked")
-	public ParallelFitness(GPConfig conf, T fitness) {
+	public ParallelFitness(GPConfig conf, T fitness, int numThreads, int stepSize) {
 		super(conf);
+		this.stepSize = 10;
+		this.jobs = new ConcurrentLinkedQueue<Job>();
+		this.numThreads = numThreads;
 		this.fitness = fitness;
+		this.start = new CyclicBarrier(numThreads + 1);
+		this.end = new CyclicBarrier(numThreads + 1);
 		gen = 0;
 		workers = new Worker[numThreads];
 	}
 
 	public void initFitness() {
 		fitness.initFitness();
-		eval = new CyclicBarrier(numThreads + 1);
-		main = new CyclicBarrier(numThreads + 1);
 
 		// start threads
 		for (int i = 0; i < numThreads; i++) {
-			workers[i] = new Worker<T>(eval, main,fitness);
+			workers[i] = new Worker<T>(start, end, jobs, fitness);
 			workers[i].start();
 		}
 	}
 
-	public void assignFitness(List<GeneticProgram> pop, int popSize) {
-		// set all things
-		int numJobs = popSize / numThreads;
-		int excessJobs = popSize % numThreads;
-
-		int min = 0, max;
-		for (int i = 0; i < numThreads; i++) {
-			max = min + numJobs;
-			if (i < excessJobs) {
-				max += 1;
-			}
-			//System.out.println("Worker " + i + " min: " + min + " max: " + max);
-			workers[i].setParams(pop, min, max);
-			min = max;
+	public void assignFitness(List<GeneticProgram> pop) {
+		int min = 0, max = stepSize;
+		while (max < pop.size()) {
+			jobs.offer(new Job(min, max, pop));
+			max = Math.min(max + stepSize, pop.size());
+			min += stepSize;
 		}
 
 		try {
-			main.await(); // wake up all threads
-			eval.await(); // go to sleep yourself
+			start.await(); // wake up all threads
+			end.await(); // go to sleep yourself
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (BrokenBarrierException e) {
@@ -64,8 +65,8 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 	// There is no possible solution worthy of an early end point.
 	// May need to be reinabled, but in principle, this is human guided not controlled
 	// So it probably shouldn't terminate eary
-	public boolean solutionFound(List<GeneticProgram> pop, int popSize) {
-		return fitness.solutionFound(pop, popSize);
+	public boolean solutionFound(List<GeneticProgram> pop) {
+		return fitness.solutionFound(pop);
 	}
 
 	public boolean isBetter(GeneticProgram gp1, GeneticProgram gp2) {
@@ -88,68 +89,74 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 		return fitness.worst();
 	}
 
-	// I realise, I am intentionally making square images.
 	public void finish() {
 		for (int i = 0; i < workers.length; i++) {
-			workers[i].done();
+			jobs.offer(new Job(-1, -1, null));
 		}
 		try {
-			main.await();
+			start.await();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (BrokenBarrierException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private static class Worker<F extends Fitness> extends Thread {
 
-		private List<GeneticProgram> l;
-		private int min, max;
-		private boolean done;
-		private CyclicBarrier eval, main;
+		private Queue<Job> jobs;
 		private F fitness;
+		private CyclicBarrier start, end;
 
-		public Worker(CyclicBarrier eval, CyclicBarrier main, F fit) {
-			this.eval = eval;
-			this.main = main;
-			this.fitness =fit;
+		public Worker(CyclicBarrier start, CyclicBarrier end, Queue<Job> jobs, F fit) {
+			this.jobs = jobs;
+			this.fitness = fit;
+			this.start = start;
+			this.end = end;
 
-		}
-
-		public void setParams(List<GeneticProgram> l, int min, int max) {
-			this.l = l;
-			this.min = min;
-			this.max = max;
-			done = false;
-		}
-
-		public void done() {
-			done = true;
 		}
 
 		public void run() {
-			try {
-				main.await();
-			} catch (BrokenBarrierException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			while (!done) {
-				fitness.assignFitness(l.subList(min, max), max - min);
 
+			while (true) {
 				try {
-					eval.await();
-					main.await();
+					start.await();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				} catch (BrokenBarrierException e) {
 					e.printStackTrace();
+				}
+				while (true) {
+					Job j;
+					j = jobs.poll();
+					if (j == null) {
+						break;
+					}
+					if (j.min == -1) {
+						return;
+					}
+					fitness.assignFitness(j.pop.subList(j.min, j.max));
+				}
+				try {
+					end.await();
 				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (BrokenBarrierException e) {
 					e.printStackTrace();
 				}
 			}
 		}
 	}
 
+	private static class Job {
+		public final int min;
+		public final int max;
+		public final List<GeneticProgram> pop;
+
+		public Job(int mn, int mx, List<GeneticProgram> list) {
+			this.min = mn;
+			this.max = mx;
+			this.pop = list;
+		}
+	}
 }

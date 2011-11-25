@@ -52,13 +52,13 @@ public class ImageFitness extends Fitness {
 		scan.close();
 	}
 
-	public void assignFitness(List<GeneticProgram> pop, int popSize) {
+	public void assignFitness(List<GeneticProgram> pop) {
 		int i;
 
 		double totalFitness;
 
 		// outerloop - selects a program
-		for (i = 0; i < popSize; i++) {
+		for (i = 0; i < pop.size(); i++) {
 			// initialise fitness to zero
 			totalFitness = 0;
 			
@@ -136,7 +136,7 @@ public class ImageFitness extends Fitness {
 	// There is no possible solution worthy of an early end point.
 	// May need to be reinabled, but in principle, this is human guided not controlled
 	// So it probably shouldn't terminate eary
-	public boolean solutionFound(List<GeneticProgram> pop, int popSize) {
+	public boolean solutionFound(List<GeneticProgram> pop) {
 		return false;
 	}
 

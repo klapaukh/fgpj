@@ -277,7 +277,7 @@ public class Population {
 
 			// If the solution has been found quit and return true to
 			// indicate success
-			if (config.fitnessObject.solutionFound(pop, numIndividuals)) {
+			if (config.fitnessObject.solutionFound(pop)) {
 				logFile.println("Solution found!");
 				return true;
 			}
@@ -514,7 +514,7 @@ public class Population {
 	}
 
 	public void assignFitness() {
-		config.fitnessObject.assignFitness(pop, numIndividuals);
+		config.fitnessObject.assignFitness(pop);
 	}
 
 	private void sortPopulation() {

@@ -19,7 +19,7 @@ public abstract class Fitness {
 	 * Pure virtual function. This class must be subclassed and evaluate must be
 	 * implemented in the subclass.
 	 */
-	public abstract void assignFitness(List<GeneticProgram> pop, int popSize);
+	public abstract void assignFitness(List<GeneticProgram> pop);
 
 	/**
 	 * isBetter and isWorse return true if the first program is better or worse
@@ -47,6 +47,6 @@ public abstract class Fitness {
 	 * Pure virtual function. The class must be subclassed and solutionFound
 	 * must be implemented in the subclass.
 	 */
-	public abstract boolean solutionFound(List<GeneticProgram> pop, int popSize);
+	public abstract boolean solutionFound(List<GeneticProgram> pop);
 
 }

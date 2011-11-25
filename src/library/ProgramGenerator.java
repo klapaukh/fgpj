@@ -19,7 +19,7 @@ public class ProgramGenerator {
 
 		int i;
 
-		int maxDepth = config.maxDepth;
+		int maxDepth = config.maxDepth();
 
 		growTable = (NodeVector<Node>[]) new NodeVector[maxDepth];
 		fullTable = (NodeVector<Node>[]) new NodeVector[maxDepth];

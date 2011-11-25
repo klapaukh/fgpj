@@ -58,8 +58,8 @@ public class Crossover {
 
 			// Here we check that the crossover will produce trees which
 			// do not violate the maximum depth
-			if (((depth1 + point2.computeDepth(0)) <= config.maxDepth)
-					&& ((depth2 + point1.computeDepth(0)) <= config.maxDepth)) {
+			if (((depth1 + point2.computeDepth(0)) <= config.maxDepth())
+					&& ((depth2 + point1.computeDepth(0)) <= config.maxDepth())) {
 				valid = true;
 			} else {
 				gp1.computeSizeAndDepth();

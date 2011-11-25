@@ -39,7 +39,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		GPConfig symConfig = new GPConfig(1);
+		GPConfig symConfig = new GPConfig(1,1,8);
 	
 		// Declare a population, giving the size and a log file name
 		Population pop = new Population(100, 100, "run-log.txt", symConfig);
@@ -52,13 +52,9 @@ public class Main {
 		// Set the return type for our programs
 		pop.setReturnType(ReturnImage.TYPENUM);
 
-		// Set the depth limit for the system
-		symConfig.maxDepth = 8;
-		symConfig.minDepth = 1;
-
 		// Set the depth limit for the population
-		pop.setDepthLimit(symConfig.maxDepth);
-		pop.setMinDepth(symConfig.minDepth);
+		pop.setDepthLimit(symConfig.maxDepth());
+		pop.setMinDepth(symConfig.minDepth());
 
 		// Write out the population every N generations
 		pop.setLogFrequency(100000);

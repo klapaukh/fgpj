@@ -18,7 +18,7 @@ public class Mutation {
 
 		//Generate a new tree to replace the old one
 		newTree = config.programGenerator.createGrowProgram(tmp.getDepth()-1,
-				config.maxDepth-1,
+				config.maxDepth()-1,
 				tmp.getReturnType());
 
 		//If parent is not NULL then newTree is not at the root of

@@ -129,18 +129,18 @@ public class ProgramGenerator {
 	}
 
 	public void generateInitialPopulation(List<GeneticProgram> pop,
-			int numIndividuals, int minSize, int maxSize, int expectedSize,
+			int numIndividuals, 
 			int expectedReturnType) {
 		Node tmp;
 		int indivPerSize = 0;
-		int tmpSize = minSize - 1;
+		int tmpSize = config.minDepth() - 1;
 		int indiv = 0;
 
-		int sizeSteps = (maxSize - 1) - tmpSize;
+		int sizeSteps = (config.maxDepth() - 1) - tmpSize;
 		int sizeIncrement = 0;
 		int numIndividualsForRamping = numIndividuals / 2;
 
-		if (minSize > maxSize)
+		if (config.minDepth() > config.maxDepth())
 			throw new RuntimeException("minSize is greater than maxSize");
 
 		if (sizeSteps <= 0) {
@@ -163,8 +163,8 @@ public class ProgramGenerator {
 		for (indiv = 0; indiv < numIndividualsForRamping; indiv++) {
 			if ((indiv % indivPerSize) == 0) {
 				tmpSize += sizeIncrement;
-				if (tmpSize >= maxSize)
-					tmpSize = (maxSize - 1);
+				if (tmpSize >= config.maxDepth())
+					tmpSize = (config.maxDepth() - 1);
 			}
 
 			try {
@@ -176,21 +176,21 @@ public class ProgramGenerator {
 				}
 			} catch (Exception error) {
 				error.printStackTrace();
-				if ((tmpSize += sizeIncrement) >= maxSize)
-					tmpSize = (maxSize - 1);
+				if ((tmpSize += sizeIncrement) >= config.maxDepth())
+					tmpSize = (config.maxDepth() - 1);
 
 				indiv--;
 				continue;
 			}
 		}
 
-		tmpSize = minSize - 1;
+		tmpSize = config.minDepth() - 1;
 
 		for (; indiv < numIndividuals; indiv++) {
 			if ((indiv % indivPerSize) == 0) {
 				tmpSize += sizeIncrement;
-				if (tmpSize >= maxSize)
-					tmpSize = (maxSize - 1);
+				if (tmpSize >= config.maxDepth())
+					tmpSize = (config.maxDepth() - 1);
 			}
 
 			try {
@@ -200,13 +200,13 @@ public class ProgramGenerator {
 					pop.get(indiv).setRoot(tmp, i);
 				}
 			} catch (Exception error) {
-				if (tmpSize >= (maxSize - 1)) {
+				if (tmpSize >= (config.maxDepth() - 1)) {
 					throw new RuntimeException(
 							"ProgramGenerator::generateInitialPopulation \nUnrecoverable error\nUnable to generate program. Check depth limits and for insufficient terminals and functions\n");
 				}
 
-				if ((tmpSize += sizeIncrement) >= maxSize)
-					tmpSize = (maxSize - 1);
+				if ((tmpSize += sizeIncrement) >= config.maxDepth())
+					tmpSize = (config.maxDepth() - 1);
 
 				indiv--;
 				continue;

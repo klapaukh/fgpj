@@ -18,14 +18,7 @@ public class Population {
 
 	private List<GeneticProgram> pop; // The population, and array of pointers to programs
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
-	/*******************************************************************************************************************
-	 * The depth limit and the minimum depth for this population. Technically there is not limit to how deep the
-	 * depthLimit can be, however if your limit is set too deep you may run out of memory on your machine. There are
-	 * also other factors to consider, such as the arity of your functions (are your trees fat or skinny), and the
-	 * population size.
-	 ******************************************************************************************************************/
-	private int depthLimit;
-	private int minDepth;
+
 
 	// Number of evaluations carried out so far
 	private long evaluations;
@@ -75,8 +68,6 @@ public class Population {
 	protected GPConfig config; // The configuration of this Population
 
 	public Population(int size, String logFileName, GPConfig conf) {
-		depthLimit = (0);
-		minDepth = (0);
 		numIndividuals = (size);
 		performDecimation = (false);
 		bestFitness = (0.0);
@@ -109,8 +100,6 @@ public class Population {
 	}
 
 	public Population(int size, int initSize, String logFileName, GPConfig conf) {
-		depthLimit = (0);
-		minDepth = (0);
 		numIndividuals = (initSize);
 		initNumIndividuals = (size);
 		numGenerationBeforeDecimation = (0);
@@ -146,38 +135,7 @@ public class Population {
 		}
 	}
 
-	public Population(Population p)
 
-	{
-		depthLimit = (p.depthLimit);
-		minDepth = (p.minDepth);
-		numIndividuals = (p.numIndividuals);
-		initNumIndividuals = (p.initNumIndividuals);
-		numGenerationBeforeDecimation = (p.numGenerationBeforeDecimation);
-		performDecimation = (p.performDecimation);
-		bestFitness = (p.bestFitness);
-		worstFitness = (p.worstFitness);
-		avgFitness = (p.avgFitness);
-		avgDepth = (p.avgDepth);
-		avgSize = (p.avgSize);
-		returnType = (p.returnType);
-		mutationRate = (p.mutationRate);
-		numForMutation = (p.numForMutation);
-		crossoverRate = (p.crossoverRate);
-		numForCrossover = (p.numForCrossover);
-		elitismRate = (p.elitismRate);
-		numForElitism = (p.numForElitism);
-		generationNumber = (p.generationNumber);
-		loggingFrequency = (p.loggingFrequency);
-		config = (new GPConfig(p.config));
-		pop = new ArrayList<GeneticProgram>(numIndividuals);
-
-		for (int i = 0; i < numIndividuals; i++) {
-			pop.add(new GeneticProgram((p.pop.get(i))));
-		}
-		/* ToDo: Add code for logfilename */
-		logFile = p.logFile;
-	}
 
 	public List<GeneticProgram> getPopulation() {
 		return pop;
@@ -206,17 +164,8 @@ public class Population {
 		return tmp;
 	}
 
-	public void setDepthLimit(int d) {
-		depthLimit = d;
-	}
-
-	public void setMinDepth(int d) {
-		minDepth = d;
-	}
-
 	public void generateInitialPopulation() {
-		config.programGenerator.generateInitialPopulation(pop, numIndividuals, minDepth, depthLimit, depthLimit,
-				returnType);
+		config.programGenerator.generateInitialPopulation(pop, numIndividuals, 	returnType);
 
 	}
 
@@ -624,11 +573,11 @@ public class Population {
 				} else if (line.startsWith("depthLimit")) {
 					iValue = Integer.parseInt(line.substring("depthLimit".length() + 1));
 					System.err.println("Setting depthLimit to supplied value " + iValue);
-					this.setDepthLimit(iValue);
+					config.maxDepth(iValue);
 				} else if (line.startsWith("minDepth")) {
 					iValue = Integer.parseInt(line.substring("minDepth".length() + 1));
 					System.err.println("Setting minDepth to supplied value " + iValue);
-					this.setMinDepth(iValue);
+					config.minDepth(iValue);
 				} else if (line.startsWith("returnType")) {
 					iValue = Integer.parseInt(line.substring("returnType".length() + 1));
 					System.err.println("Setting returnType to supplied value " + iValue);
@@ -698,9 +647,9 @@ public class Population {
 		s.append('\n');
 		s.append("numIndividuals " + numIndividuals);
 		s.append('\n');
-		s.append("depthLimit " + depthLimit);
+		s.append("depthLimit " + config.maxDepth());
 		s.append('\n');
-		s.append("minDepth " + minDepth);
+		s.append("minDepth " + config.minDepth());
 		s.append('\n');
 		s.append("returnType " + returnType);
 		s.append('\n');

@@ -10,6 +10,10 @@ import java.util.Random;
  * terminal and function sets, the program generator, the settings, and an algorithm to change itself as it goes along
  * (which can just do nothing for standard GP).
  * 
+ * The depth limit for the population technically does not have limit to how deep the depthLimit can be, however if your
+ * limit is set too deep you may run out of memory on your machine. There are also other factors to consider, such as
+ * the arity of your functions (are your trees fat or skinny), and the population size.
+ * 
  * @author Roma
  * 
  */
@@ -22,9 +26,9 @@ public class GPConfig {
 
 	private int maxDepth;
 
-	public NodeVector<Function> funcSet;
+	public final NodeVector<Function> funcSet;
 
-	public NodeVector<Terminal> termSet;
+	public final NodeVector<Terminal> termSet;
 
 	public Crossover crossoverOperator;
 
@@ -39,12 +43,22 @@ public class GPConfig {
 	public ConfigModifier configModifier;
 
 	/**
-	 * 
+	 * Initialise a GPConfig with 1 root, mindepth of 1 and maxdepth of 10
 	 */
 	public GPConfig() {
-		this(1,1,10);
+		this(1, 1, 10);
 	}
 
+	/**
+	 * Make a new GPConfig with the specified settings
+	 * 
+	 * @param numParts
+	 *            The number of root nodes each GP program has
+	 * @param minDepth
+	 *            The minimum depth of a program
+	 * @param maxDepth
+	 *            The maximum depth of a program
+	 */
 	public GPConfig(int numParts, int minDepth, int maxDepth) {
 		if (numParts < 1) throw new IllegalArgumentException("Num Parts < 1: " + numParts);
 		this.numParts = numParts;
@@ -62,65 +76,37 @@ public class GPConfig {
 	public int getNumParts() {
 		return numParts;
 	}
-	
+
 	/**
 	 * Get the min depth
 	 * 
 	 * @return min depth of tree
 	 */
-	public int minDepth(){
+	public int minDepth() {
 		return minDepth();
 	}
 
 	/**
-	 *  Get the maximum tree depth
+	 * Get the maximum tree depth
+	 * 
 	 * @return max tree depth
 	 */
-	public int maxDepth(){
+	public int maxDepth() {
 		return maxDepth;
 	}
 
-	/**
-	 * Copy Constructor Makes a complete copy of the function set and the terminal set too. The function set and
-	 * terminal set will new objects
-	 * 
-	 * @param c
-	 *            the GPConfig that this will be an exact copy of
-	 */
-	public GPConfig(GPConfig c) {
-		numParts = (c.numParts);
-		minDepth = (c.minDepth);
-		maxDepth = (c.maxDepth);
-		funcSet = new NodeVector<Function>(this);
-		termSet = new NodeVector<Terminal>(this);
-		randomNumGenerator = (c.randomNumGenerator);
-		crossoverOperator = (c.crossoverOperator);
-		mutationOperator = (c.mutationOperator);
-		selectionOperator = (c.selectionOperator);
-		fitnessObject = (c.fitnessObject);
-		programGenerator = (c.programGenerator);
-		configModifier = c.configModifier;
-
-		int i;
-		Node tmp;
-		if (c.funcSet.size() > 0) {
-			for (i = 0; i < c.funcSet.size(); i++) {
-				tmp = c.funcSet.getNodeByNumber(i);
-				funcSet.addNodeToSet(tmp.getReturnType(), c.funcSet.getGenFunction(i));
-			}
-		}
-
-		if (c.termSet.size() > 0) {
-			for (i = 0; i < c.termSet.size(); i++) {
-				tmp = c.termSet.getNodeByNumber(i);
-				termSet.addNodeToSet(tmp.getReturnType(), c.termSet.getGenFunction(i));
-			}
-		}
+	public void maxDepth(int max) {
+		this.maxDepth = max;
 	}
 
+	public void minDepth(int min) {
+		this.minDepth = min;
+	}
+
+	
 	/**
-	 * Initialises the random number generator, the crossover operator,
-	 * the mutation operator, the selection operator, and the config modifier to the standard base objects.
+	 * Initialises the random number generator, the crossover operator, the mutation operator, the selection operator,
+	 * and the config modifier to the standard base objects.
 	 * 
 	 */
 	public void defaultInit() {

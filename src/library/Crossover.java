@@ -19,9 +19,9 @@ public class Crossover {
 		int depth1, depth2;
 		int count = 0;
 
-		int par1 = (int) Math.abs(config.randomNumGenerator.randNum() % config
+		int par1 = (int) Math.abs(config.randomNumGenerator.nextLong() % config
 				.getNumParts());
-		int par2 = (int) Math.abs(config.randomNumGenerator.randNum() % config
+		int par2 = (int) Math.abs(config.randomNumGenerator.nextLong() % config
 				.getNumParts());
 		// The following loop will continually try to find two valid crossover
 		// points by selecting a node from each of the trees. It will try up

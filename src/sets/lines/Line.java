@@ -24,10 +24,10 @@ public class Line extends Function {
 	{
 
 		super(ReturnImage.TYPENUM, 4, "line", conf);
-		x1 = (int) Math.abs((conf.randomNumGenerator.randNum() % ImageFitness.SIZE));
-		x2 = (int) Math.abs(conf.randomNumGenerator.randNum() % ImageFitness.SIZE);
-		y1 = (int) Math.abs(conf.randomNumGenerator.randNum() % ImageFitness.SIZE);
-		y2 = (int) Math.abs(conf.randomNumGenerator.randNum() % ImageFitness.SIZE);
+		x1 = (int) Math.abs((conf.randomNumGenerator.nextLong() % ImageFitness.SIZE));
+		x2 = (int) Math.abs(conf.randomNumGenerator.nextLong() % ImageFitness.SIZE);
+		y1 = (int) Math.abs(conf.randomNumGenerator.nextLong() % ImageFitness.SIZE);
+		y2 = (int) Math.abs(conf.randomNumGenerator.nextLong() % ImageFitness.SIZE);
 
 		setArgNReturnType(0, ReturnColor.TYPENUM);
 		for (int i = 1; i < maxArgs; i++) {

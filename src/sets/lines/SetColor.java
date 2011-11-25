@@ -20,8 +20,8 @@ public class SetColor extends Terminal {
 
 	public SetColor(GPConfig conf) {
 		super(ReturnColor.TYPENUM, "setcolor", conf);
-		col = new Color((int) Math.abs(conf.randomNumGenerator.randNum() % 256), (int) Math.abs(conf.randomNumGenerator.randNum() % 256),
-				(int) Math.abs(conf.randomNumGenerator.randNum() % 256), (int) Math.abs(conf.randomNumGenerator.randNum() % 256));
+		col = new Color((int) Math.abs(conf.randomNumGenerator.nextLong() % 256), (int) Math.abs(conf.randomNumGenerator.nextLong() % 256),
+				(int) Math.abs(conf.randomNumGenerator.nextLong() % 256), (int) Math.abs(conf.randomNumGenerator.nextLong() % 256));
 
 	}
 

@@ -1,6 +1,9 @@
 package library;
 
+import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Random;
 
 public class GPConfig {
 	public Random randomNumGenerator;
@@ -83,7 +86,7 @@ public class GPConfig {
 	// base objects.
 	public void defaultInit() {
 		try {
-			randomNumGenerator = new Random();
+			randomNumGenerator = new Random(ByteBuffer.wrap(SecureRandom.getInstance("SHA1PRNG").generateSeed(8)).getLong());
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			randomNumGenerator = new Random(System.currentTimeMillis());

@@ -68,7 +68,7 @@ public class NodeVector<T extends Node> {
 	}
 
 	public T getRandomElement() {
-		int pos = (int) Math.abs(config.randomNumGenerator.randNum() % vec.size());
+		int pos = (int) Math.abs(config.randomNumGenerator.nextLong() % vec.size());
 
 		if ((pos >= 0) && (pos < vec.size()))
 			return vec.get(pos).g.generate(config);
@@ -89,7 +89,7 @@ public class NodeVector<T extends Node> {
 			}
 		}
 		if (tmpStore.size() != 0) {
-			pos = (int) Math.abs(config.randomNumGenerator.randNum() % tmpStore.size());
+			pos = (int) Math.abs(config.randomNumGenerator.nextLong() % tmpStore.size());
 			ret = tmpStore.get(pos).g.generate(config);
 		}
 

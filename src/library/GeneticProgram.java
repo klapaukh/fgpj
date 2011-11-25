@@ -156,7 +156,7 @@ public class GeneticProgram {
 		root[place].addToVector(nodeList);
 
 		if (nodeList.size() != 0) {
-			int index = (int) Math.abs(config.randomNumGenerator.randNum() % nodeList
+			int index = (int) Math.abs(config.randomNumGenerator.nextLong() % nodeList
 					.size());
 			return nodeList.get(index);
 		} else
@@ -177,7 +177,7 @@ public class GeneticProgram {
 		root[place].addToVector(nodeList, typeNum);
 
 		if (nodeList.size() != 0) {
-			index = (int) Math.abs(config.randomNumGenerator.randNum() % nodeList
+			index = (int) Math.abs(config.randomNumGenerator.nextLong() % nodeList
 					.size());
 			return nodeList.get(index);
 		} else

@@ -15,7 +15,7 @@ public class Selection {
 	      totalFitness += pop.get(i).getFitness();
 	   } 
 
-	   double tmpRand = config.randomNumGenerator.randReal();
+	   double tmpRand = config.randomNumGenerator.nextDouble();
 	   randValue = totalFitness * tmpRand; 
 
 	   cumulFitness = totalFitness;

@@ -65,14 +65,12 @@ public class GeneticProgram {
 	// The evaluate method evaluates(executes) this program
 	public void evaluate(ReturnData out[]) {
 		for (int i = 0; i < numParts; i++) {
-			if (root[i] == null)
-				throw new RuntimeException("Root node is NULL");
+			if (root[i] == null) throw new RuntimeException("Root node is NULL");
 		}
 		for (int i = 0; i < numParts; i++) {
 			if (out[i].getTypeNum() != root[i].getReturnType()) {
 				// int j = out[i].getTypeNum();
-				throw new RuntimeException(
-						"Return type of root node does not match return type of out");
+				throw new RuntimeException("Return type of root node does not match return type of out");
 			}
 		}
 
@@ -90,20 +88,17 @@ public class GeneticProgram {
 		}
 		root[place] = value;
 
-		if (root[place] != null)
-			computeSizeAndDepth(place);
+		if (root[place] != null) computeSizeAndDepth(place);
 	}
 
 	public Node getRoot(int place) {
-		if (place < 0 || place >= numParts)
-			throw new IllegalArgumentException("Invalid place value");
+		if (place < 0 || place >= numParts) throw new IllegalArgumentException("Invalid place value");
 		return root[place];
 	}
 
 	// Delete the current tree.
 	public void deleteTree(int place) {
-		if (place < 0 || place >= numParts)
-			throw new IllegalArgumentException("Invalid place of value");
+		if (place < 0 || place >= numParts) throw new IllegalArgumentException("Invalid place of value");
 		deleteTree(root[place]);
 		root[place] = null;
 	}
@@ -136,8 +131,7 @@ public class GeneticProgram {
 			throw new RuntimeException("Invalid place value: " + place);
 		}
 
-		if (root[place] == null)
-			throw new RuntimeException("Root " + place + " is null");
+		if (root[place] == null) throw new RuntimeException("Root " + place + " is null");
 
 		size[place] = root[place].computeSize();
 		depth[place] = root[place].computeDepth(0);
@@ -150,17 +144,15 @@ public class GeneticProgram {
 		}
 		Vector<Node> nodeList = new Vector<Node>();
 		int place = p;
-		//int place = (int) (config.randomNumGenerator.randNum() % numParts);
-		//p = place;
+		// int place = (int) (config.randomNumGenerator.randNum() % numParts);
+		// p = place;
 
 		root[place].addToVector(nodeList);
 
 		if (nodeList.size() != 0) {
-			int index = (int) Math.abs(config.randomNumGenerator.nextLong() % nodeList
-					.size());
+			int index = (int) Math.abs(config.randomNumGenerator.nextLong() % nodeList.size());
 			return nodeList.get(index);
-		} else
-			return null;
+		} else return null;
 	}
 
 	// Get a random node from the program tree that returns typeNum
@@ -171,22 +163,18 @@ public class GeneticProgram {
 		Vector<Node> nodeList = new Vector<Node>();
 		int index;
 		int place = p;
-		//int place = (int) (config.randomNumGenerator.randNum() % numParts);
-		
+		// int place = (int) (config.randomNumGenerator.randNum() % numParts);
 
 		root[place].addToVector(nodeList, typeNum);
 
 		if (nodeList.size() != 0) {
-			index = (int) Math.abs(config.randomNumGenerator.nextLong() % nodeList
-					.size());
+			index = (int) Math.abs(config.randomNumGenerator.nextLong() % nodeList.size());
 			return nodeList.get(index);
-		} else
-			return null;
+		} else return null;
 	}
 
 	public void print(StringBuffer s) {
-		if (root == null)
-			throw new RuntimeException("Root node is NULL");
+		if (root == null) throw new RuntimeException("Root node is NULL");
 
 		s.append(numParts);
 		s.append(" ");
@@ -213,11 +201,8 @@ public class GeneticProgram {
 		// this is usually caused by a double overflowing and
 		// wrapping to a negative value
 		if (f < 0.0) {
-			System.err
-					.println("GeneticProgram::setFitness : Warning: Fitness overflow "
-							+ f);
-		} else
-			fitness = f;
+			System.err.println("GeneticProgram::setFitness : Warning: Fitness overflow " + f);
+		} else fitness = f;
 	}
 
 	public double getFitness() {
@@ -248,8 +233,7 @@ public class GeneticProgram {
 				rootTmp = root[i].copy();
 				tmp.setRoot(rootTmp, i);
 			} else {
-				System.err
-						.println("**** Warning GeneticProgram::copy() ******");
+				System.err.println("**** Warning GeneticProgram::copy() ******");
 				System.err.println("Copying program will NULL root");
 
 				tmp.setRoot(null, i);
@@ -261,8 +245,7 @@ public class GeneticProgram {
 	}
 
 	/***************************************************************************
-	 * parseProgram based on function parseTree originally written by Peter
-	 * Wilson
+	 * parseProgram based on function parseTree originally written by Peter Wilson
 	 **************************************************************************/
 	public void parseProgram(String programString) {
 		Node[] tmpRoot = null;

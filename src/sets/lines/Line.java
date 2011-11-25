@@ -52,15 +52,15 @@ public class Line extends Function {
 
 	@Override
 	public Line generate(GPConfig conf) {
-		 return (Line)NodeFactory.newNode(getKind(),conf);
-//			return new Line(conf);
+		return (Line) NodeFactory.newNode(getKind(), conf);
+		// return new Line(conf);
 	}
-	
+
 	public Line generate(String name, GPConfig conf) {
 
 		if (name.equals("")) {
-			 return (Line)NodeFactory.newNode(getKind(),conf);
-//			return new Line(conf);
+			return (Line) NodeFactory.newNode(getKind(), conf);
+			// return new Line(conf);
 		} else if (name.startsWith(getName())) {
 			int x1, x2, y1, y2;
 			Scanner scan = new Scanner(name);
@@ -69,16 +69,15 @@ public class Line extends Function {
 			x2 = scan.nextInt();
 			y1 = scan.nextInt();
 			y2 = scan.nextInt();
-			return ((Line) NodeFactory.newNode(getKind(),conf)).init(x1, x2, y1, y2);
-//			return  new Line(x1, x2, y1, y2,conf);
+			return ((Line) NodeFactory.newNode(getKind(), conf)).init(x1, x2, y1, y2);
+			// return new Line(x1, x2, y1, y2,conf);
 		}
 
 		return null;
 	}
 
 	public void evaluate(ReturnData out) {
-		if (out.getTypeNum() != (ReturnImage.TYPENUM))
-			throw new IllegalArgumentException("Incorrect ReturnData type");
+		if (out.getTypeNum() != (ReturnImage.TYPENUM)) throw new IllegalArgumentException("Incorrect ReturnData type");
 		ReturnImage i = (ReturnImage) out;
 		ReturnColor c = new ReturnColor();
 		getArgN(0).evaluate(c);
@@ -114,8 +113,8 @@ public class Line extends Function {
 	}
 
 	public Function copy() {
-		Function tmp = ((Line) NodeFactory.newNode(getKind(),config)).init(x1, x2, y1, y2);
-//		Function tmp =  new Line(x1, x2, y1, y2,config);
+		Function tmp = ((Line) NodeFactory.newNode(getKind(), config)).init(x1, x2, y1, y2);
+		// Function tmp = new Line(x1, x2, y1, y2,config);
 
 		for (int i = 0; i < getMaxArgs(); i++) {
 			tmp.setArgN(i, getArgN(i).copy());
@@ -139,7 +138,5 @@ public class Line extends Function {
 	public int getKind() {
 		return kind;
 	}
-
-
 
 }

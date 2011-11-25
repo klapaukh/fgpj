@@ -16,10 +16,12 @@ public class SetColor extends Terminal {
 	public static int kind;
 	public static final long serialVersionUID = -7950230195747877164L;
 	private Color col;
-	public GPConfig config;
 
 	public SetColor(GPConfig conf) {
 		super(ReturnColor.TYPENUM, "setcolor", conf);
+		if (conf == null) {
+			System.out.println("BOO");
+		}
 		col = new Color((int) Math.abs(conf.randomNumGenerator.nextLong() % 256),
 				(int) Math.abs(conf.randomNumGenerator.nextLong() % 256), (int) Math.abs(conf.randomNumGenerator
 						.nextLong() % 256), (int) Math.abs(conf.randomNumGenerator.nextLong() % 256));
@@ -28,6 +30,9 @@ public class SetColor extends Terminal {
 
 	public SetColor(Color c, GPConfig conf) {
 		super(ReturnColor.TYPENUM, "setcolor", conf);
+		if (conf == null) {
+			System.out.println("BOO");
+		}
 		col = c;
 	}
 

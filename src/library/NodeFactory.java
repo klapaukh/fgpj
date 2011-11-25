@@ -15,8 +15,7 @@ public class NodeFactory {
 	}
 
 	public static void delete(Node node) {
-		if (node == null)
-			return;
+		if (node == null) return;
 		node.setParent(null);
 		node.setDepth(0);
 		if (node instanceof Function) {
@@ -49,7 +48,7 @@ public class NodeFactory {
 		node.setKind(n.kinds++);
 		Queue<Node>[] t = n.nodes;
 		n.nodes = new Queue[n.kinds];
-		int i=0;
+		int i = 0;
 		for (; t != null && i < t.length; i++) {
 			n.nodes[i] = t[i];
 		}
@@ -58,10 +57,10 @@ public class NodeFactory {
 	}
 
 	public static void report() {
-		System.out.printf("%s cache hits: %.2f\n", "%",(double)(100.0 * n.hit / (double)(n.hit + n.miss)));
+		System.out.printf("%s cache hits: %.2f\n", "%", (double) (100.0 * n.hit / (double) (n.hit + n.miss)));
 		System.out.println(n.kinds + " different kinds");
 		for (int i = 0; i < n.nodes.length; i++) {
-			System.out.printf("\t%s:%d\n", n.nodes[i].peek().getName(),n.nodes[i].size());
+			System.out.printf("\t%s:%d\n", n.nodes[i].peek().getName(), n.nodes[i].size());
 		}
 	}
 }

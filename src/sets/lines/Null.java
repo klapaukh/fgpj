@@ -19,17 +19,16 @@ public class Null extends Terminal {
 	}
 
 	public Terminal generate(GPConfig conf) {
-		return (Terminal) NodeFactory.newNode(getKind(),conf);
-//		return  new Null(conf);
-}
-	
+		return (Terminal) NodeFactory.newNode(getKind(), conf);
+		// return new Null(conf);
+	}
+
 	public Terminal generate(String name, GPConfig conf) {
-			return generate(conf);
+		return generate(conf);
 	}
 
 	public void evaluate(ReturnData out) {
-		if (out.getTypeNum() != (ReturnImage.TYPENUM))
-			throw new IllegalArgumentException("Incorrect ReturnData type");
+		if (out.getTypeNum() != (ReturnImage.TYPENUM)) throw new IllegalArgumentException("Incorrect ReturnData type");
 
 	}
 
@@ -38,8 +37,8 @@ public class Null extends Terminal {
 	}
 
 	public Node copy() {
-		return NodeFactory.newNode(getKind(),config);
-//		return new Null(config);
+		return NodeFactory.newNode(getKind(), config);
+		// return new Null(config);
 	}
 
 	@Override

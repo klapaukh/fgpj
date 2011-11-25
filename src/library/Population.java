@@ -143,8 +143,6 @@ public class Population {
 
 	}
 
-	
-
 	public boolean evolve(int numGenerations) {
 		int i = 0;
 		evaluations = 0;
@@ -198,7 +196,6 @@ public class Population {
 		if ((generationNumber % loggingFrequency) == 0) writeToFile();
 
 		nextPop = new ArrayList<GeneticProgram>(numIndividuals);
-
 
 		adjustFitness();
 

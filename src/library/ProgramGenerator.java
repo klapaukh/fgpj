@@ -9,120 +9,12 @@ public class ProgramGenerator {
 
 	private NodeVector<Node> fullTable[];
 
-	@SuppressWarnings("unchecked")
 	public ProgramGenerator(GPConfig conf) {
 		config = conf;
-		int numFunctions = config.funcSet.size();
-		int numTerminals = config.termSet.size();
-
-		int i;
-
-		int maxDepth = config.maxDepth();
-
-		growTable = (NodeVector<Node>[]) new NodeVector[maxDepth];
-		fullTable = (NodeVector<Node>[]) new NodeVector[maxDepth];
-
-		for (i = 0; i < maxDepth; i++) {
-			growTable[i] = new NodeVector<Node>();
-			fullTable[i] = new NodeVector<Node>();
-			growTable[i].setGPConfig(config);
-			fullTable[i].setGPConfig(config);
-		}
-		NodeVector<Node>.Element elem;
-
-		// Add in the terminals at the bottom of the tree
-		for (i = 0; i < numTerminals; i++) {
-			elem = growTable[0].new Element();
-			elem.returnType = config.termSet.getNodeReturnType(i);
-			elem.g = config.termSet.getGenFunction(i);
-
-			growTable[0].addElement(elem);
-			fullTable[0].addElement(elem);
-		}
-
-		int curDepth = 0;
-
-		// grow table creation
-		for (curDepth = 1; curDepth < maxDepth; curDepth++) {
-			// Add the terminals
-			for (i = 0; i < numTerminals; i++) {
-				elem = growTable[0].new Element();
-				elem.returnType = config.termSet.getNodeReturnType(i);
-				elem.g = config.termSet.getGenFunction(i);
-
-				growTable[curDepth].addElement(elem);
-			}
-
-			// Add the functions
-			for (i = 0; i < numFunctions; i++) {
-				Function tmpFunc = (Function) config.funcSet.getGenFunction(i).generate(config);
-				boolean valid = true;
-
-				for (int arg = 0; arg < tmpFunc.getMaxArgs(); arg++) {
-					boolean found = false;
-					int argNReturnType = tmpFunc.getArgNReturnType(arg);
-
-					for (int tSize = 0; tSize < growTable[curDepth - 1].size(); tSize++) {
-						Node tmpNode = growTable[curDepth - 1].getElement(tSize).g.generate(config);
-
-						if (argNReturnType == tmpNode.getReturnType()) {
-							found = true;
-							break;
-						}
-					}
-
-					if (!found) {
-						valid = false;
-						break;
-					}
-				}
-
-				if (valid) {
-					elem = growTable[0].new Element();
-					elem.returnType = tmpFunc.getReturnType();
-					elem.g = config.funcSet.getGenFunction(i);
-					growTable[curDepth].addElement(elem);
-				}
-			}
-		}
-
-		// full table creation
-		for (curDepth = 1; curDepth < maxDepth; curDepth++) {
-			// Add the functions
-			for (i = 0; i < numFunctions; i++) {
-				Function tmpFunc = (Function) config.funcSet.getGenFunction(i).generate(config);
-				boolean valid = true;
-
-				for (int arg = 0; arg < tmpFunc.getMaxArgs(); arg++) {
-					boolean found = false;
-					int argNReturnType = tmpFunc.getArgNReturnType(arg);
-
-					for (int tSize = 0; tSize < fullTable[curDepth - 1].size(); tSize++) {
-						Node tmpNode = fullTable[curDepth - 1].getElement(tSize).g.generate(config);
-
-						if (argNReturnType == tmpNode.getReturnType()) {
-							found = true;
-							break;
-						}
-					}
-
-					if (!found) {
-						valid = false;
-						break;
-					}
-				}
-
-				if (valid) {
-					elem = growTable[0].new Element();
-					elem.returnType = tmpFunc.getReturnType();
-					elem.g = config.funcSet.getGenFunction(i);
-					fullTable[curDepth].addElement(elem);
-				}
-			}
-		}
 	}
 
 	public void generateInitialPopulation(List<GeneticProgram> pop, int numIndividuals, int expectedReturnType) {
+		generateTables();
 		Node tmp;
 		int indivPerSize = 0;
 		int tmpSize = config.minDepth() - 1;
@@ -247,5 +139,119 @@ public class ProgramGenerator {
 			}
 		}
 		return node;
+	}
+
+	@SuppressWarnings("unchecked")
+	void generateTables() {
+
+		int numFunctions = config.funcSet.size();
+		int numTerminals = config.termSet.size();
+
+		int i;
+
+		int maxDepth = config.maxDepth();
+
+		growTable = (NodeVector<Node>[]) new NodeVector[maxDepth];
+		fullTable = (NodeVector<Node>[]) new NodeVector[maxDepth];
+
+		for (i = 0; i < maxDepth; i++) {
+			growTable[i] = new NodeVector<Node>();
+			fullTable[i] = new NodeVector<Node>();
+			growTable[i].setGPConfig(config);
+			fullTable[i].setGPConfig(config);
+		}
+		NodeVector<Node>.Element elem;
+
+		// Add in the terminals at the bottom of the tree
+		for (i = 0; i < numTerminals; i++) {
+			elem = growTable[0].new Element();
+			elem.returnType = config.termSet.getNodeReturnType(i);
+			elem.g = config.termSet.getGenFunction(i);
+
+			growTable[0].addElement(elem);
+			fullTable[0].addElement(elem);
+		}
+
+		int curDepth = 0;
+
+		// grow table creation
+		for (curDepth = 1; curDepth < maxDepth; curDepth++) {
+			// Add the terminals
+			for (i = 0; i < numTerminals; i++) {
+				elem = growTable[0].new Element();
+				elem.returnType = config.termSet.getNodeReturnType(i);
+				elem.g = config.termSet.getGenFunction(i);
+
+				growTable[curDepth].addElement(elem);
+			}
+
+			// Add the functions
+			for (i = 0; i < numFunctions; i++) {
+				Function tmpFunc = (Function) config.funcSet.getGenFunction(i).generate(config);
+				boolean valid = true;
+
+				for (int arg = 0; arg < tmpFunc.getMaxArgs(); arg++) {
+					boolean found = false;
+					int argNReturnType = tmpFunc.getArgNReturnType(arg);
+
+					for (int tSize = 0; tSize < growTable[curDepth - 1].size(); tSize++) {
+						Node tmpNode = growTable[curDepth - 1].getElement(tSize).g.generate(config);
+
+						if (argNReturnType == tmpNode.getReturnType()) {
+							found = true;
+							break;
+						}
+					}
+
+					if (!found) {
+						valid = false;
+						break;
+					}
+				}
+
+				if (valid) {
+					elem = growTable[0].new Element();
+					elem.returnType = tmpFunc.getReturnType();
+					elem.g = config.funcSet.getGenFunction(i);
+					growTable[curDepth].addElement(elem);
+				}
+			}
+		}
+
+		// full table creation
+		for (curDepth = 1; curDepth < maxDepth; curDepth++) {
+			// Add the functions
+			for (i = 0; i < numFunctions; i++) {
+				Function tmpFunc = (Function) config.funcSet.getGenFunction(i).generate(config);
+				boolean valid = true;
+
+				for (int arg = 0; arg < tmpFunc.getMaxArgs(); arg++) {
+					boolean found = false;
+					int argNReturnType = tmpFunc.getArgNReturnType(arg);
+
+					for (int tSize = 0; tSize < fullTable[curDepth - 1].size(); tSize++) {
+						Node tmpNode = fullTable[curDepth - 1].getElement(tSize).g.generate(config);
+
+						if (argNReturnType == tmpNode.getReturnType()) {
+							found = true;
+							break;
+						}
+					}
+
+					if (!found) {
+						valid = false;
+						break;
+					}
+				}
+
+				if (valid) {
+					elem = growTable[0].new Element();
+					elem.returnType = tmpFunc.getReturnType();
+					elem.g = config.funcSet.getGenFunction(i);
+					fullTable[curDepth].addElement(elem);
+				}
+			}
+		}
+
 	}
 }

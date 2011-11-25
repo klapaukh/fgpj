@@ -45,15 +45,10 @@ public class Population {
 	// The return type for all the programs in this population
 	private int returnType;
 
-	// Below are the member variables for mutation, crossover, and
-	// elitism rates.
-	private double mutationRate;
 	private int numForMutation;
 
-	private double crossoverRate;
 	private int numForCrossover;
 
-	private double elitismRate;
 	private int numForElitism;
 
 	// What generation number are we currently processing.
@@ -76,12 +71,6 @@ public class Population {
 		avgDepth = (0.0);
 		avgSize = (0.0);
 		returnType = (-1);
-		mutationRate = (0.0);
-		numForMutation = (0);
-		crossoverRate = (0.0);
-		numForCrossover = (0);
-		elitismRate = (0.0);
-		numForElitism = (0);
 		generationNumber = (0);
 		loggingFrequency = (1);
 		config = (conf);
@@ -110,12 +99,6 @@ public class Population {
 		avgDepth = (0.0);
 		avgSize = (0.0);
 		returnType = (-1);
-		mutationRate = (0.0);
-		numForMutation = (0);
-		crossoverRate = (0.0);
-		numForCrossover = (0);
-		elitismRate = (0.0);
-		numForElitism = (0);
 		generationNumber = (0);
 		loggingFrequency = (1);
 		config = (conf);
@@ -355,9 +338,9 @@ public class Population {
 
 		pop = tmp;
 
-		numForMutation = (int) (numIndividuals * mutationRate);
-		numForCrossover = (int) (numIndividuals * crossoverRate);
-		numForElitism = (int) (numIndividuals * elitismRate);
+		numForMutation = (int) (numIndividuals * config.mutationRate());
+		numForCrossover = (int) (numIndividuals * config.crossoverRate());
+		numForElitism = (int) (numIndividuals * config.elitismRate());
 
 	}
 
@@ -388,24 +371,21 @@ public class Population {
 	}
 
 	public void setMutationRate(double rate) {
-		mutationRate = rate;
+		config.mutationRate(rate);
 		numForMutation = (int) (numIndividuals * rate);
-
-		if (numForMutation > numIndividuals)
-			throw new RuntimeException("Population::setMutationRate Error, numForMutation greater than numIndividuals");
 	}
 
 	public double getMutationRate() {
-		return mutationRate;
+		return config.mutationRate();
 	}
 
 	public void setNumForMutation(int num) {
 		numForMutation = num;
-		mutationRate = ((double) numForMutation) / ((double) numIndividuals);
+		config.mutationRate((double) numForMutation / (double) numIndividuals);
 
 		if (numForMutation > numIndividuals)
-			throw new RuntimeException(
-					"Population::setNumForMutation Error, numForMutation greater than numIndividuals");
+			throw new IllegalArgumentException(
+					"num greater than numIndividuals");
 	}
 
 	public int getNumForMutation() {
@@ -413,25 +393,21 @@ public class Population {
 	}
 
 	public void setCrossoverRate(double rate) {
-		crossoverRate = rate;
+		config.crossoverRate(rate);
 		numForCrossover = (int) (rate * numIndividuals);
-
-		if (numForCrossover > numIndividuals)
-			throw new RuntimeException(
-					"Population::setCrossoverRate Error, numForCrossover greater than numIndividuals");
 	}
 
 	public double getCrossoverRate() {
-		return crossoverRate;
+		return config.crossoverRate();
 	}
 
 	public void setNumForCrossover(int num) {
 		numForCrossover = num;
-		crossoverRate = ((double) numForCrossover) / ((double) numIndividuals);
+		config.crossoverRate ((double) numForCrossover / (double) numIndividuals);
 
 		if (numForCrossover > numIndividuals)
-			throw new RuntimeException(
-					"Population::setNumForCrossover Error, numForCrossover greater than numIndividuals");
+			throw new IllegalArgumentException(
+					"num greater than numIndividuals");
 	}
 
 	public int getNumForCrossover() {
@@ -439,23 +415,20 @@ public class Population {
 	}
 
 	public void setElitismRate(double rate) {
-		elitismRate = rate;
+		config.elitismRate(rate);
 		numForElitism = (int) (rate * numIndividuals);
-
-		if (numForElitism > numIndividuals)
-			throw new RuntimeException("Population::setElitismRate Error, numForElitism greater than numIndividuals");
 	}
 
 	public double getElitismRate() {
-		return elitismRate;
+		return config.elitismRate();
 	}
 
 	public void setNumForElitism(int num) {
 		numForElitism = num;
-		elitismRate = ((double) numForElitism) / ((double) numIndividuals);
+		config.elitismRate((double) numForElitism / (double) numIndividuals);
 
 		if (numForElitism > numIndividuals)
-			throw new RuntimeException("Population::setNumForElitism Error, numForElitism greater than numIndividuals");
+			throw new IllegalArgumentException("num greater than numIndividuals");
 	}
 
 	public int getNumForElitism() {
@@ -653,11 +626,11 @@ public class Population {
 		s.append('\n');
 		s.append("returnType " + returnType);
 		s.append('\n');
-		s.append("mutationRate " + mutationRate);
+		s.append("mutationRate " + config.mutationRate());
 		s.append('\n');
-		s.append("crossoverRate " + crossoverRate);
+		s.append("crossoverRate " + config.crossoverRate());
 		s.append('\n');
-		s.append("elitismRate " + elitismRate);
+		s.append("elitismRate " + config.elitismRate());
 		s.append('\n');
 		s.append("Population at generation " + generationNumber);
 		s.append('\n');

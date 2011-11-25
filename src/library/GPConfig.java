@@ -25,6 +25,11 @@ public class GPConfig {
 	private int minDepth;
 
 	private int maxDepth;
+	
+	private double mutationRate;
+	private double crossoverRate;
+	private double elitismRate;
+
 
 	public final NodeVector<Function> funcSet;
 
@@ -83,7 +88,7 @@ public class GPConfig {
 	 * @return min depth of tree
 	 */
 	public int minDepth() {
-		return minDepth();
+		return minDepth;
 	}
 
 	/**
@@ -104,6 +109,29 @@ public class GPConfig {
 	}
 
 	
+	public double elitismRate(){
+		return elitismRate;
+	}
+	
+	public double mutationRate(){
+		return mutationRate;
+	}
+	
+	public double crossoverRate(){
+		return crossoverRate;
+	}
+	
+	public void elitismRate(double rate){
+		this.elitismRate = rate ;
+	}
+	
+	public void mutationRate(double rate){
+		this.mutationRate = rate;
+	}
+	
+	public void crossoverRate(double rate){
+		this.crossoverRate = rate;
+	}
 	/**
 	 * Initialises the random number generator, the crossover operator, the mutation operator, the selection operator,
 	 * and the config modifier to the standard base objects.

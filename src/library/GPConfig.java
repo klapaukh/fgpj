@@ -10,7 +10,8 @@ import java.util.Random;
  * terminal and function sets, the program generator, the settings, and an algorithm to change itself as it goes along
  * (which can just do nothing for standard GP).
  * 
- * The depth limit for the population is needed due to memory and time constraints.  Trees can get very big, very quickly.
+ * The depth limit for the population is needed due to memory and time constraints. Trees can get very big, very
+ * quickly. The mutation, crossover and elitism rates must sum to 1.
  * 
  * @author Roma
  * 
@@ -47,14 +48,21 @@ public class GPConfig {
 	public ConfigModifier configModifier;
 
 	/**
-	 * Initialise a GPConfig with 1 root, mindepth of 1 and maxdepth of 10
+	 * Initialise a GPConfig with 1 root, mindepth of 1 and maxdepth of 10. The rates must add to 1.
+	 * 
+	 * @param mutationRate
+	 *            The mutation rate
+	 * @param crossoverRate
+	 *            The crossover rate
+	 * @param elitismRate
+	 *            The elitism rate
 	 */
 	public GPConfig(double mutationRate, double crossoverRate, double elitismRate) {
 		this(1, 1, 10, mutationRate, crossoverRate, elitismRate);
 	}
 
 	/**
-	 * Make a new GPConfig with the specified settings
+	 * Make a new GPConfig with the specified settings. The rates must add to 1.
 	 * 
 	 * @param numParts
 	 *            The number of root nodes each GP program has
@@ -62,6 +70,12 @@ public class GPConfig {
 	 *            The minimum depth of a program
 	 * @param maxDepth
 	 *            The maximum depth of a program
+	 * @param mutationRate
+	 *            The mutation rate
+	 * @param crossoverRate
+	 *            The crossover rate
+	 * @param elitismRate
+	 *            The elitism rate
 	 */
 	public GPConfig(int numParts, int minDepth, int maxDepth, double mutationRate, double crossoverRate,
 			double elitismRate) {
@@ -84,52 +98,90 @@ public class GPConfig {
 	}
 
 	/**
-	 * Get the min depth
+	 * Get the program depth
 	 * 
-	 * @return min depth of tree
+	 * @return min depth of program
 	 */
 	public int minDepth() {
 		return minDepth;
 	}
 
 	/**
-	 * Get the maximum tree depth
+	 * Get the maximum program depth
 	 * 
-	 * @return max tree depth
+	 * @return max program depth
 	 */
 	public int maxDepth() {
 		return maxDepth;
 	}
 
+	/**
+	 * Set the maximum program depth
+	 * 
+	 * @param max
+	 *            the maximum program depth
+	 */
+
 	public void maxDepth(int max) {
 		this.maxDepth = max;
 	}
 
+	/**
+	 * Set the minimum program depth
+	 * 
+	 * @param min
+	 *            the new minimun program depth
+	 */
 	public void minDepth(int min) {
 		this.minDepth = min;
 	}
 
+	/**
+	 * Get the elitism rate in [0,1.0]
+	 * 
+	 * @return the elitism rate
+	 */
 	public double elitismRate() {
 		return elitismRate;
 	}
 
+	/**
+	 * Get the mutation rate in [0,1.0]
+	 * 
+	 * @return the mutation rate
+	 */
 	public double mutationRate() {
 		return mutationRate;
 	}
 
+	/**
+	 * Get the crossover rate in [0,1.0]
+	 * 
+	 * @return The crossover rate
+	 */
 	public double crossoverRate() {
 		return crossoverRate;
 	}
 
+	/**
+	 * Set the rates for each of the genetic operators. The rates must add to 1.
+	 * 
+	 * @param mutationRate
+	 *            The mutation rate
+	 * @param crossoverRate
+	 *            The crossover rate
+	 * @param elitismRate
+	 *            The elitism rate
+	 */
 	public void setRates(double mutationRate, double crossoverRate, double elitismRate) {
 
 		double total = mutationRate + crossoverRate + elitismRate;
 
 		if (Double.compare(total, 1.0) != 0) {
 			System.err.println("Rates for mutation, crossover, and elitism don't add up to 1.0. Auto adjusting");
-			if(Double.compare(total, 0) == 0){
-				mutationRate = crossoverRate = elitismRate = 1.0/3.0;
-			}else{
+			if (Double.compare(total, 0) == 0) {
+				mutationRate = crossoverRate = elitismRate = 1.0 / 3.0;
+			} else {
 				mutationRate /= total;
 				crossoverRate /= total;
 				elitismRate /= total;

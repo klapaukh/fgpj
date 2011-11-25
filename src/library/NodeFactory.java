@@ -66,7 +66,7 @@ public class NodeFactory {
 		System.out.printf("%s cache hits: %.2f\n", "%",(double)(100.0 * n.hit / (double)(n.hit + n.miss)));
 		System.out.println(n.kinds + " different kinds");
 		for (int i = 0; i < n.nodes.length; i++) {
-			System.out.printf("\t%d:%d\n", i,n.nodes[i].size());
+			System.out.printf("\t%s:%d\n", n.nodes[i].peek().getName(),n.nodes[i].size());
 		}
 	}
 }

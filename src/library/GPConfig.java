@@ -10,9 +10,7 @@ import java.util.Random;
  * terminal and function sets, the program generator, the settings, and an algorithm to change itself as it goes along
  * (which can just do nothing for standard GP).
  * 
- * The depth limit for the population technically does not have limit to how deep the depthLimit can be, however if your
- * limit is set too deep you may run out of memory on your machine. There are also other factors to consider, such as
- * the arity of your functions (are your trees fat or skinny), and the population size.
+ * The depth limit for the population is needed due to memory and time constraints.  Trees can get very big, very quickly.
  * 
  * @author Roma
  * 
@@ -27,7 +25,9 @@ public class GPConfig {
 	private int maxDepth;
 
 	private double mutationRate;
+
 	private double crossoverRate;
+
 	private double elitismRate;
 
 	public final NodeVector<Function> funcSet;
@@ -126,7 +126,14 @@ public class GPConfig {
 		double total = mutationRate + crossoverRate + elitismRate;
 
 		if (Double.compare(total, 1.0) != 0) {
-			throw new IllegalArgumentException("rates for mutation, crossover, and elitism don't add up to 1.0");
+			System.err.println("Rates for mutation, crossover, and elitism don't add up to 1.0. Auto adjusting");
+			if(Double.compare(total, 0) == 0){
+				mutationRate = crossoverRate = elitismRate = 1.0/3.0;
+			}else{
+				mutationRate /= total;
+				crossoverRate /= total;
+				elitismRate /= total;
+			}
 		}
 
 		this.mutationRate = mutationRate;
@@ -144,7 +151,7 @@ public class GPConfig {
 			randomNumGenerator = new Random(ByteBuffer.wrap(SecureRandom.getInstance("SHA1PRNG").generateSeed(8))
 					.getLong());
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			System.err.println("SHA1PRNG not present for generating random seed. Using defaults");
 			randomNumGenerator = new Random();
 		}
 		crossoverOperator = new Crossover();

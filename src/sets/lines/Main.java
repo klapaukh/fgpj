@@ -53,9 +53,6 @@ public class Main {
 		// Write out the population every N generations
 		pop.setLogFrequency(100000);
 
-		// Do the default initialisation of the configuration
-		symConfig.defaultInit();
-
 		//TODO Testing memory management
 		NodeFactory.setConfig(symConfig);
 		

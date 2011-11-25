@@ -48,7 +48,8 @@ public class GPConfig {
 	public ConfigModifier configModifier;
 
 	/**
-	 * Initialise a GPConfig with 1 root, mindepth of 1 and maxdepth of 10. The rates must add to 1.
+	 * Initialise a GPConfig with 1 root, mindepth of 1 and maxdepth of 10. The rates must add to 1. Intialises the
+	 * config with all the default operators.
 	 * 
 	 * @param mutationRate
 	 *            The mutation rate
@@ -62,7 +63,8 @@ public class GPConfig {
 	}
 
 	/**
-	 * Make a new GPConfig with the specified settings. The rates must add to 1.
+	 * Make a new GPConfig with the specified settings. The rates must add to 1. Intialises the config with all the
+	 * default operators.
 	 * 
 	 * @param numParts
 	 *            The number of root nodes each GP program has
@@ -86,6 +88,8 @@ public class GPConfig {
 		this.setRates(mutationRate, crossoverRate, elitismRate);
 		funcSet = new NodeVector<Function>(this);
 		termSet = new NodeVector<Terminal>(this);
+		
+		defaultInit();
 	}
 
 	/**
@@ -198,7 +202,7 @@ public class GPConfig {
 	 * and the config modifier to the standard base objects.
 	 * 
 	 */
-	public void defaultInit() {
+	private void defaultInit() {
 		try {
 			randomNumGenerator = new Random(ByteBuffer.wrap(SecureRandom.getInstance("SHA1PRNG").generateSeed(8))
 					.getLong());

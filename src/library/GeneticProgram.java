@@ -322,5 +322,11 @@ public class GeneticProgram {
 
 		return tmpRoot;
 	}
+	
+	public String toString(){
+		StringBuffer s = new StringBuffer();
+		this.print(s);
+		return s.toString();
+	}
 
 }

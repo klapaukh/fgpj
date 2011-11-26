@@ -59,7 +59,7 @@ public class Main {
 
 		// Set the fitness class to be used
 
-		// symConfig.fitnessObject = new ParallelFitness<ImageFitness>(symConfig,new ImageFitness(symConfig));
+		// symConfig.fitnessObject = new ParallelFitness<ImageFitness>(new ImageFitness());
 		symConfig.fitnessObject = new ImageFitness();
 		// Initialise the fitness
 		symConfig.fitnessObject.initFitness();
@@ -84,31 +84,20 @@ public class Main {
 			pop.generateInitialPopulation();
 		}
 
-		try {
-			StringBuffer str1 = new StringBuffer();
+		/* Do 20 generations, returns true if solution is found */
 
-			/* Do 20 generations, returns true if solution is found */
-
-			if (pop.evolve(20)) {
-				System.out.println("Found solution");
-			} else {
-				System.out.println("Didn't find solution");
-			}
-			NodeFactory.report();
-			pop.getBest().print(str1);
-			System.out.println("Best program");
-			System.out.println("Fitness " + pop.getBest().getFitness());
-			System.out.println(str1);
-
-			// ((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).fitness.getResult(pop.getBest(),100);
-			 
-			((ImageFitness) (symConfig.fitnessObject)).getResult(pop.getBest(), 100, symConfig);
-			// cout <<"Results written" <<endl;
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println("Exiting");
-			System.exit(1);
+		if (pop.evolve(20)) {
+			System.out.println("Found solution");
+		} else {
+			System.out.println("Didn't find solution");
 		}
+		NodeFactory.report();
+		System.out.println("Best program");
+		System.out.println("Fitness " + pop.getBest().getFitness());
+		System.out.println(pop.getBest());
+
+		// ((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).fitness.getResult(pop.getBest(),100);
+		((ImageFitness) (symConfig.fitnessObject)).getResult(pop.getBest(), 100, symConfig);
 
 	}
 

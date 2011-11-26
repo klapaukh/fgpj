@@ -219,4 +219,10 @@ public abstract class Node {
 	 * @return the generated Node
 	 */
 	public abstract <T extends Node> T generate(GPConfig conf);
+	
+	public String toString(){
+		StringBuffer s = new StringBuffer();
+		this.print(s);
+		return s.toString();
+	}
 }

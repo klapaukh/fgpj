@@ -181,6 +181,8 @@ public class Population {
 		}
 		assignFitness(); // Evaluate the programs and assign their fitness values
 		sortPopulation();
+		config.fitnessObject.finish(); //Finshed with the fitness assessing now
+		
 		return false;
 	}
 

@@ -69,18 +69,6 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 		return fitness.solutionFound(pop);
 	}
 
-	public boolean isBetter(GeneticProgram gp1, GeneticProgram gp2) {
-		return fitness.isBetter(gp1, gp2);
-	}
-
-	public boolean isWorse(GeneticProgram gp1, GeneticProgram gp2) {
-		return fitness.isWorse(gp1, gp2);
-	}
-
-	public boolean isEqual(GeneticProgram gp1, GeneticProgram gp2) {
-		return fitness.isEqual(gp1, gp2);
-	}
-
 	public double best() {
 		return fitness.best();
 	}
@@ -158,5 +146,10 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 			this.max = mx;
 			this.pop = list;
 		}
+	}
+
+	@Override
+	public int compare(GeneticProgram p0, GeneticProgram p1) {
+		return fitness.compare(p0, p1);
 	}
 }

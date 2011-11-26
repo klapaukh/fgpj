@@ -8,11 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
-
-import sets.lines.ImageFitness;
 
 public class Population {
 
@@ -356,24 +353,14 @@ public class Population {
 	}
 
 	private void sortPopulation() {
-		Collections.sort(pop, new Comparator<GeneticProgram>() {
-			Fitness im = new ImageFitness(config);
-
-			public int compare(GeneticProgram o1, GeneticProgram o2) {
-				if (im.isEqual(o1, o2)) return 0;
-				if (im.isBetter(o1, o2)) return -2;
-				return 2;
-			}
-
-		});
+		Collections.sort(pop, config.fitnessObject);
 	}
 
 	public GeneticProgram getBest() {
 		int index = 0;
-		int i;
 
-		for (i = 0; i < numIndividuals; i++) {
-			if (config.fitnessObject.isBetter(pop.get(i), pop.get(index))) {
+		for (int i = 1; i < numIndividuals; i++) {
+			if (config.fitnessObject.compare(pop.get(i), pop.get(index)) > 1) {
 				index = i;
 			}
 		}
@@ -383,10 +370,9 @@ public class Population {
 
 	public GeneticProgram getWorst() {
 		int index = 0;
-		int i;
 
-		for (i = 0; i < numIndividuals; i++) {
-			if (config.fitnessObject.isWorse(pop.get(i), pop.get(index))) {
+		for (int i = 1; i < numIndividuals; i++) {
+			if (config.fitnessObject.compare(pop.get(i), pop.get(index))< 0) {
 				index = i;
 			}
 		}

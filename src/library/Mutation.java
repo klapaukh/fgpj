@@ -23,7 +23,7 @@ public class Mutation {
 		Function parent = (Function) (tmp.getParent());
 
 		// Generate a new tree to replace the old one
-		Node newTree = config.programGenerator.createGrowProgram(tmp.getDepth() - 1, config.maxDepth() ,
+		Node newTree = config.programGenerator.createGrowProgram(tmp.getDepth(), config.maxDepth() ,
 				tmp.getReturnType());
 
 		// If parent is not NULL then newTree is not at the root of

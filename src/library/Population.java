@@ -16,7 +16,7 @@ import sets.lines.ImageFitness;
 
 public class Population {
 
-	private List<GeneticProgram> pop; // The population, and array of pointers to programs
+	private List<GeneticProgram> pop; // The population
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 
 	// Number of evaluations carried out so far

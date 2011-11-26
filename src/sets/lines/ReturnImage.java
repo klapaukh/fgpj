@@ -17,21 +17,16 @@ public class ReturnImage extends ReturnData {
 	public final int ySize;
 
 	public ReturnImage(int width, int height, GPConfig config) {
+		super(TYPENUM);
 		xSize = (width);
 		ySize = (height);
-		initTypeNum();
 		// Allocate memory
 		im = new BufferedImage(xSize, ySize, BufferedImage.TYPE_INT_ARGB);
-	}
-
-	private void initTypeNum() {
-		setTypeNum(TYPENUM);
 	}
 
 	public Graphics getGraphics() {
 		return im.getGraphics();
 	}
-
 
 	public Color getData(int x, int y) {
 		return new Color(im.getRGB(x, y));

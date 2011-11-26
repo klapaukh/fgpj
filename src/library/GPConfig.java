@@ -5,9 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
-import sets.lines.Null;
-import sets.lines.ReturnImage;
-
 /**
  * The GPConfig class holds the current settings used by the GP algorithm. It has fields for all the operators, the
  * terminal and function sets, the program generator, the settings, and an algorithm to change itself as it goes along

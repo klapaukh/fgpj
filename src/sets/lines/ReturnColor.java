@@ -9,18 +9,14 @@ public class ReturnColor extends ReturnData {
 	public static final int TYPENUM = 3;
 
 	public ReturnColor() {
-		initTypeNum();
-	}
-
-	public void initTypeNum() {
-		setTypeNum(TYPENUM);
+		super(TYPENUM);
 	}
 
 	public void setColor(Color c) {
 		col = c;
 	}
-	
-	public Color getColor(){
+
+	public Color getColor() {
 		return col;
 	}
 

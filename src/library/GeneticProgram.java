@@ -179,7 +179,11 @@ public class GeneticProgram {
 	 */
 	public Node getRandomNode(int p, GPConfig config) {
 		int node = Math.abs(config.randomNumGenerator.nextInt() % size[p]);
-		return root[p].getNode(node);
+		Node n= root[p].getNode(node);
+		if(n == null){
+			System.out.println("LAME");
+		}
+		return n;
 	}
 
 	/**

@@ -173,7 +173,7 @@ public abstract class Function extends Node {
 		for( int i =0 ;i <args.length;i++){
 			pos = args[i].computePositions(pos);
 		}
-		return parent +1;
+		return pos;
 	}
 	
 	public Node getNode(int node){

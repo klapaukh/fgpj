@@ -1,55 +1,68 @@
 package library;
 
+/**
+ * This is the default Crossover operator. Extending this class and overloading its crossover method allows for users to
+ * define their own operator
+ * 
+ * @author Roma
+ * 
+ */
 public class Crossover {
-	public void crossover(GeneticProgram gp1, GeneticProgram gp2,
-			int numRetries, GPConfig config) {
-		// point1 and point2 are the points in the trees of gp1 and gp2
-		// where we will perform crossover
-		Node point1 = null, point2 = null;
 
-		// parent1 and parent2 are the parent nodes in the trees of point1
-		// and point2, they will be NULL if point1 or point2 are the root of
-		// the tree
-		Function parent1 = null, parent2 = null;
+	/**
+	 * Attempt to perform crossover on gp1 and gp2. The programs are modified in place, so copies should be used.
+	 * Attempt at crossover may fail. Crossover may happen between trees with different root numbers.
+	 * 
+	 * @param gp1
+	 *            Parent 1
+	 * @param gp2
+	 *            Parent 2
+	 * @param numRetries
+	 *            Number of tries to get successful crossover
+	 * @param config
+	 *            GPConfig to use
+	 * @return True if crossover was successful
+	 */
+	public boolean crossover(GeneticProgram gp1, GeneticProgram gp2, int numRetries, GPConfig config) {
+		Node point1 = null, point2 = null; // cross over points
 
-		boolean valid = false;
+		Function parent1 = null, parent2 = null; // parent of crossover point (null is root)
+
+		boolean valid = false; // have we got a valid crossover
 
 		int pos1 = -1, pos2 = -1;
 
 		int depth1, depth2;
 		int count = 0;
 
-		int par1 = (int) Math.abs(config.randomNumGenerator.nextLong() % config
-				.getNumRoots());
-		int par2 = (int) Math.abs(config.randomNumGenerator.nextLong() % config
-				.getNumRoots());
 		// The following loop will continually try to find two valid crossover
 		// points by selecting a node from each of the trees. It will try up
-		// to {numRetries} times before giving up which will leave the
+		// to numRetries times before giving up which will leave the
 		// trees unchanged.
+		int par1 = 0;
+		int par2 = 0;
 		while (!valid) {
-			count++;
+			if (count >= numRetries) return false;
+
 			point1 = point2 = null;
 
-			if (count >= numRetries)
-				return;
+			par1 = Math.abs(config.randomNumGenerator.nextInt() % config.getNumRoots());
+			par2 = Math.abs(config.randomNumGenerator.nextInt() % config.getNumRoots());
 
 			// Get a random point in the tree of gp1
-			point1 = gp1.getRandomNode(par1,config);
-
-			if (point1 == null) // Can't find valid node
-				continue;
-
+			point1 = gp1.getRandomNode(par1, config);
 			parent1 = (Function) point1.getParent();
 
 			// Get a random point in the tree which has the same return
 			// type as point1
-			point2 = gp2.getRandomNode(point1.getReturnType(), par2,config);
+			point2 = gp2.getRandomNode(point1.getReturnType(), par2, config);
 
 			// If there is no such node with the same return type then stop
 			// and try again.
-			if (point2 == null) // Can't find valid node
+			if (point2 == null) {
+				// Can't find valid node
 				continue;
+			}
 
 			parent2 = (Function) point2.getParent();
 
@@ -57,14 +70,14 @@ public class Crossover {
 			depth2 = point2.getDepth() - 1;
 
 			// Here we check that the crossover will produce trees which
-			// do not violate the maximum depth
-			if (((depth1 + point2.computeDepth(0)) <= config.maxDepth())
-					&& ((depth2 + point1.computeDepth(0)) <= config.maxDepth())) {
+			// do not violate the maximum and minimum depth
+			if ((depth1 + point2.computeDepth(0) <= config.maxDepth())
+					&& (depth2 + point1.computeDepth(0) <= config.maxDepth())
+					&& (depth2 + point1.computeDepth(0) >= config.minDepth())
+					&& (depth1 + point2.computeDepth(0) >= config.maxDepth())) {
 				valid = true;
-			} else {
-				gp1.computeSizeAndDepth();
-				gp2.computeSizeAndDepth();
 			}
+			count++;
 		}
 
 		// If we get to this point we have a valid pair of nodes to perform
@@ -74,8 +87,7 @@ public class Crossover {
 		// parent node.
 		if (parent1 != null) {
 			for (pos1 = 0; pos1 < parent1.getNumArgs(); pos1++) {
-				if (point1 == parent1.getArgN(pos1))
-					break;
+				if (point1 == parent1.getArgN(pos1)) break;
 			}
 		}
 
@@ -83,8 +95,7 @@ public class Crossover {
 		// parent node.
 		if (parent2 != null) {
 			for (pos2 = 0; pos2 < parent2.getNumArgs(); pos2++) {
-				if (point2 == parent2.getArgN(pos2))
-					break;
+				if (point2 == parent2.getArgN(pos2)) break;
 			}
 		}
 
@@ -124,5 +135,6 @@ public class Crossover {
 		// information
 		gp1.computeSizeAndDepth();
 		gp2.computeSizeAndDepth();
+		return true;
 	}
 }

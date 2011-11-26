@@ -340,7 +340,7 @@ public class Population {
 		int index = 0;
 
 		for (int i = 1; i < numIndividuals; i++) {
-			if (config.fitnessObject.compare(pop.get(i), pop.get(index)) > 1) {
+			if (config.fitnessObject.compare(pop.get(i), pop.get(index)) > 0) {
 				index = i;
 			}
 		}

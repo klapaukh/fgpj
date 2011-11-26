@@ -58,4 +58,11 @@ public abstract class Terminal extends Node {
 		}
 		return null;
 	}
+	
+	public Node getNode(int node, int type, Node best){
+		if(this.getReturnType() == type && ( best == null || this.getPosition() == node || Math.abs(best.getPosition() - node) > Math.abs(this.getPosition() - node))){
+			return this;
+		}
+		return best;
+	}
 }

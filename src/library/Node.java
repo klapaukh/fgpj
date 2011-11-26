@@ -241,6 +241,18 @@ public abstract class Node {
 	public abstract Node getNode(int i);
 
 	/**
+	 * Get the closest node to a specified position that has a specified type
+	 * @param i position to look at
+	 * @param type the type of the desired node
+	 * @return closest node to i that has type type
+	 */
+	public Node getNode(int i, int type){
+		return this.getNode(i,type,null);
+	}
+	
+	public abstract Node getNode(int i, int type, Node best);
+	
+	/**
 	 * work out the numbering of each node
 	 * @param parent the number of your parent
 	 * @return the number of your largest child

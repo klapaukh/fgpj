@@ -97,13 +97,13 @@ public abstract class Function extends Node {
 	}
 
 	public int computeSize() {
-		int size = 0;
+		int size = 1;
 
 		for (int i = 0; i < numArgs; i++) {
 			size += args[i].computeSize();
 		}
 
-		return size + 1;
+		return size;
 	}
 
 	public int computeDepth(int curDepth) {
@@ -187,5 +187,26 @@ public abstract class Function extends Node {
 			}
 		}
 		return null;
+	}
+	
+	public Node getNode(int node, int type, Node best){
+		//if you are it return yourself
+		if(this.getReturnType() == type && this.getPosition() == node){
+			return this;
+		}
+		//if you are the best so far, nominate yourself
+		if(this.getReturnType() == type && (best == null || Math.abs(best.getPosition() - node) > Math.abs(this.getPosition() - node))){
+			best = this;
+		}
+		//Check to make sure your children aren't it
+		for( int i =0 ;i <args.length;i++){
+			best  = args[i].getNode(node, type, best);
+			if(best.getPosition() == node || (i < args.length -1  && args[i+1].getPosition() > node && Math.abs(best.getPosition() - node) < Math.abs(args[i+1].getPosition() - node) )){
+				//can't get any better by searching
+				return best;
+			}
+		}
+		
+		return best;
 	}
 }

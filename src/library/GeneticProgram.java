@@ -1,7 +1,6 @@
 package library;
 
 import java.util.Scanner;
-import java.util.Vector;
 
 public class GeneticProgram {
 
@@ -81,9 +80,7 @@ public class GeneticProgram {
 	 */
 	public void setRoot(Node value, int place) {
 		root[place] = value;
-		if (root[place] != null) {
-			computeSizeAndDepth(place);
-		}
+		computeSizeAndDepth(place);
 	}
 
 	/**
@@ -165,29 +162,32 @@ public class GeneticProgram {
 	}
 
 	/**
-	 *  Gets a random node from the program tree
-	 * @param p which subtree to select from
-	 * @param config the config to use for random numbers
+	 * Gets a random node from the program tree
+	 * 
+	 * @param p
+	 *            which subtree to select from
+	 * @param config
+	 *            the config to use for random numbers
 	 * @return a random node in the subtree
 	 */
 	public Node getRandomNode(int p, GPConfig config) {
-		int node = config.randomNumGenerator.nextInt() % size[p];
+		int node = Math.abs(config.randomNumGenerator.nextInt() % size[p]);
 		return root[p].getNode(node);
 	}
 
-	// Get a random node from the program tree that returns typeNum
+	/**
+	 * Get a random node from the tree that has type typeNum
+	 * 
+	 * @param typeNum The return type of the node
+	 * @param p the subtree to select from
+	 * @param config the config to use
+	 * @return a random node from the tree p with type typeNum or null if there is none
+	 * 
+	 */
 	public Node getRandomNode(int typeNum, int p, GPConfig config) {
-		Vector<Node> nodeList = new Vector<Node>();
-		int index;
-		int place = p;
-		// int place = (int) (config.randomNumGenerator.randNum() % numParts);
-
-		root[place].addTreeToVector(nodeList, typeNum);
-
-		if (nodeList.size() != 0) {
-			index = (int) Math.abs(config.randomNumGenerator.nextLong() % nodeList.size());
-			return nodeList.get(index);
-		} else return null;
+		int node = Math.abs(config.randomNumGenerator.nextInt() % size[p]);
+		Node n = root[p].getNode(node, typeNum);
+		return n;
 	}
 
 	public void print(StringBuffer s) {

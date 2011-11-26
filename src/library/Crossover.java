@@ -68,17 +68,15 @@ public class Crossover {
 
 			parent2 = (Function) point2.getParent();
 
-			depth1 = parent1 == null? 0 : parent1.getDepth() ;
-			depth2 = parent2 == null? 0 : parent2.getDepth();
+			depth1 = parent1 == null ? 0 : parent1.getDepth();
+			depth2 = parent2 == null ? 0 : parent2.getDepth();
 
 			// Here we check that the crossover will produce trees which
 			// do not violate the maximum and minimum depth
-			int newDepth1 = depth1+point2.traceDepth(0);
-			int newDepth2 = depth2+point1.traceDepth(0);
-			if ((newDepth1 <= config.maxDepth())
-					&& (newDepth2 <= config.maxDepth())
-					&& (newDepth1 >= config.minDepth())
-					&& (newDepth2 >= config.maxDepth())) {
+			int newDepth1 = depth1 + point2.traceDepth(0);
+			int newDepth2 = depth2 + point1.traceDepth(0);
+			if ((newDepth1 <= config.maxDepth()) && (newDepth2 <= config.maxDepth())
+					&& (newDepth1 >= config.minDepth()) && (newDepth2 >= config.maxDepth())) {
 				valid = true;
 			}
 			count++;
@@ -127,14 +125,8 @@ public class Crossover {
 
 		// Force the updated programs to update their size and depth
 		// information
-		if(gp1.getDepth(0) > config.maxDepth() || gp2.getDepth(0) > config.maxDepth()){
-			System.out.println("BEFORE BADDD");
-		}
 		gp1.computeSizeAndDepth();
 		gp2.computeSizeAndDepth();
-		if(gp1.getDepth(0) > config.maxDepth() || gp2.getDepth(0) > config.maxDepth()){
-			System.out.println("BADDD");
-		}
 		return true;
 	}
 }

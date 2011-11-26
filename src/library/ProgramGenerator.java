@@ -44,7 +44,7 @@ public class ProgramGenerator {
 			}
 
 			for (int i = 0; i < config.getNumRoots(); i++) {
-				Node tmp = createGrowProgram(config.minDepth(), maxSize, pop.get(indiv).getReturnType(i), config);
+				Node tmp = createGrowProgram(1, maxSize, pop.get(indiv).getReturnType(i), config);
 				pop.get(indiv).setRoot(tmp, i);
 			}
 		}
@@ -55,7 +55,7 @@ public class ProgramGenerator {
 				maxSize++;
 			}
 			for (int i = 0; i < config.getNumRoots(); i++) {
-				Node tmp = createFullProgram(config.minDepth(), config.maxDepth(), pop.get(indiv).getReturnType(i),
+				Node tmp = createFullProgram(1, config.maxDepth(), pop.get(indiv).getReturnType(i),
 						config);
 				pop.get(indiv).setRoot(tmp, i);
 			}

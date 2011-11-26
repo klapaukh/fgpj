@@ -34,7 +34,7 @@ public abstract class Function extends Node {
 	 * Set the Nth argument
 	 */
 	public void setArgN(int N, Node n) {
-		if (N >= maxArgs || N < 0)
+		if (N >= numArgs || N < 0)
 			throw new IllegalArgumentException("Invalid argument number");
 
 		if (n == null)
@@ -52,7 +52,7 @@ public abstract class Function extends Node {
 	 * Get the Nth argument
 	 */
 	public Node getArgN(int N) {
-		if (N >= maxArgs || N < 0)
+		if (N >= numArgs || N < 0)
 			throw new IllegalArgumentException("Invalid argument number");
 
 		return args[N];
@@ -60,7 +60,7 @@ public abstract class Function extends Node {
 
 	/** Set the return type of the Nth argument */
 	public void setArgNReturnType(int N, int type) {
-		if (N >= maxArgs || N < 0)
+		if (N >= numArgs || N < 0)
 			throw new IllegalArgumentException(
 					"Function::setArgNReturnType, Invalid argument number");
 
@@ -73,7 +73,7 @@ public abstract class Function extends Node {
 
 	/** Get the return type of the Nth argument */
 	public int getArgNReturnType(int N) {
-		if (N >= maxArgs || N < 0)
+		if (N >= numArgs || N < 0)
 			throw new IllegalArgumentException(
 					"Function::getArgNReturnType, Invalid argument number");
 
@@ -87,7 +87,7 @@ public abstract class Function extends Node {
 	public int computeSize() {
 		int size = 0;
 
-		for (int i = 0; i < maxArgs; i++) {
+		for (int i = 0; i < numArgs; i++) {
 			size += args[i].computeSize();
 		}
 
@@ -104,7 +104,7 @@ public abstract class Function extends Node {
 		int retDepth = 0;
 		int maxDepth = 0;
 
-		for (int i = 0; i < maxArgs; i++) {
+		for (int i = 0; i < numArgs; i++) {
 			if ((retDepth = args[i].computeDepth(getDepth())) > maxDepth)
 				maxDepth = retDepth;
 		}
@@ -116,7 +116,7 @@ public abstract class Function extends Node {
 	public void addTreeToVector(Vector<Node> vec) {
 		vec.add(this);
 
-		for (int i = 0; i < maxArgs; i++) {
+		for (int i = 0; i < numArgs; i++) {
 			args[i].addTreeToVector(vec);
 		}
 	}
@@ -129,7 +129,7 @@ public abstract class Function extends Node {
 		if (getReturnType() == typeNum)
 			vec.add(this);
 
-		for (int i = 0; i < maxArgs; i++) {
+		for (int i = 0; i < numArgs; i++) {
 			args[i].addTreeToVector(vec, typeNum);
 		}
 	}
@@ -139,7 +139,7 @@ public abstract class Function extends Node {
 		s.append(" ( ");
 		s.append(getName());
 
-		for (int i = 0; i < maxArgs; i++) {
+		for (int i = 0; i < numArgs; i++) {
 			s.append(" ");
 			args[i].print(s);
 		}
@@ -148,14 +148,14 @@ public abstract class Function extends Node {
 	}
 
 	public void unhook(int i) {
-		if (i >= maxArgs || i < 0)
+		if (i >= numArgs || i < 0)
 			throw new IllegalArgumentException("Invalid argument number");
 
 		args[i] = null;
 	}
 
 	public void unhook(){
-		   for (int i =0; i< maxArgs;i++){
+		   for (int i =0; i< numArgs;i++){
 			   args[i] = null;
 		   }
 	}

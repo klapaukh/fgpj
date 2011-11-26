@@ -30,7 +30,7 @@ public class Line extends Function {
 		y2 = (int) Math.abs(conf.randomNumGenerator.nextLong() % ImageFitness.SIZE);
 
 		setArgNReturnType(0, ReturnColor.TYPENUM);
-		for (int i = 1; i < maxArgs; i++) {
+		for (int i = 1; i < numArgs; i++) {
 			setArgNReturnType(i, ReturnImage.TYPENUM);
 		}
 	}
@@ -45,17 +45,19 @@ public class Line extends Function {
 		y2 = (inity2);
 
 		setArgNReturnType(0, ReturnColor.TYPENUM);
-		for (int i = 1; i < maxArgs; i++) {
+		for (int i = 1; i < numArgs; i++) {
 			setArgNReturnType(i, ReturnImage.TYPENUM);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Line generate(GPConfig conf) {
 		return (Line) NodeFactory.newNode(getKind(), conf);
 		// return new Line(conf);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Line generate(String name, GPConfig conf) {
 
 		if (name.equals("")) {
@@ -86,7 +88,7 @@ public class Line extends Function {
 		g.setColor(c.getColor());
 		g.drawLine(x1, y1, x2, y2);
 
-		for (int j = 1; j < maxArgs; j++) {
+		for (int j = 1; j < numArgs; j++) {
 			getArgN(j).evaluate(out);
 		}
 	}
@@ -96,7 +98,7 @@ public class Line extends Function {
 		s.append(" ( ");
 		s.append(String.format("%sx%dx%dy%dy%d", getName(), x1, x2, y1, y2));
 
-		for (int i = 0; i < maxArgs; i++) {
+		for (int i = 0; i < numArgs; i++) {
 			s.append(" ");
 			getArgN(i).print(s);
 		}
@@ -112,17 +114,18 @@ public class Line extends Function {
 		return this;
 	}
 
-	public Function copy(GPConfig config) {
-		Function tmp = ((Line) NodeFactory.newNode(getKind(),config)).init(x1, x2, y1, y2);
+	public Line copy(GPConfig config) {
+		Line tmp = ((Line) NodeFactory.newNode(getKind(),config)).init(x1, x2, y1, y2);
 		// Function tmp = new Line(x1, x2, y1, y2,config);
 
-		for (int i = 0; i < getMaxArgs(); i++) {
+		for (int i = 0; i < getNumArgs(); i++) {
 			tmp.setArgN(i, getArgN(i).copy(config));
 		}
 
 		return tmp;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Line getNew(GPConfig config) {
 		return new Line(config);

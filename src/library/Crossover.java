@@ -73,7 +73,7 @@ public class Crossover {
 		// Here we find which child position point1 is in it's
 		// parent node.
 		if (parent1 != null) {
-			for (pos1 = 0; pos1 < parent1.getMaxArgs(); pos1++) {
+			for (pos1 = 0; pos1 < parent1.getNumArgs(); pos1++) {
 				if (point1 == parent1.getArgN(pos1))
 					break;
 			}
@@ -82,7 +82,7 @@ public class Crossover {
 		// Here we find which child position point2 is in it's
 		// parent node.
 		if (parent2 != null) {
-			for (pos2 = 0; pos2 < parent2.getMaxArgs(); pos2++) {
+			for (pos2 = 0; pos2 < parent2.getNumArgs(); pos2++) {
 				if (point2 == parent2.getArgN(pos2))
 					break;
 			}

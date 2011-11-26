@@ -26,7 +26,7 @@ public class Mutation {
 		if (parent != null)
 		{
 			int i;
-			for (i=0; i<parent.getMaxArgs(); i++)
+			for (i=0; i<parent.getNumArgs(); i++)
 			{
 				if (tmp == parent.getArgN(i))
 					break;

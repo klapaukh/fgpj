@@ -21,7 +21,7 @@ public class NodeFactory {
 		if (node instanceof Function) {
 			// need to maul it's children
 			Function f = (Function) node;
-			for (int i = 0; i < f.maxArgs; i++) {
+			for (int i = 0; i < f.numArgs; i++) {
 				delete(f.getArgN(i));
 			}
 			f.unhook();

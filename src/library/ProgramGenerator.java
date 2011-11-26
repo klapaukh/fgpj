@@ -106,10 +106,10 @@ public class ProgramGenerator {
 			return createGrowProgram(curDepth, maxDepth, expectedReturnType);
 		}
 
-		if (node.getMaxArgs() > 0) {
+		if (node.getNumArgs() > 0) {
 			Function func = (Function) (node);
 
-			for (int i = 0; i < func.getMaxArgs(); i++) {
+			for (int i = 0; i < func.getNumArgs(); i++) {
 				func.setArgN(i, createFullProgram(curDepth + 1, maxDepth, func.getArgNReturnType(i)));
 			}
 		}
@@ -131,10 +131,10 @@ public class ProgramGenerator {
 
 		if (node == null) throw new RuntimeException("getRandomNode returned NULL");
 
-		if (node.getMaxArgs() > 0) {
+		if (node.getNumArgs() > 0) {
 			Function func = (Function) (node);
 
-			for (i = 0; i < node.getMaxArgs(); i++) {
+			for (i = 0; i < node.getNumArgs(); i++) {
 				func.setArgN(i, createGrowProgram(curDepth + 1, maxDepth, func.getArgNReturnType(i)));
 			}
 		}
@@ -184,7 +184,7 @@ public class ProgramGenerator {
 				Function tmpFunc = (Function) config.funcSet.generate(i,config);
 				boolean valid = true;
 
-				for (int arg = 0; arg < tmpFunc.getMaxArgs(); arg++) {
+				for (int arg = 0; arg < tmpFunc.getNumArgs(); arg++) {
 					boolean found = false;
 					int argNReturnType = tmpFunc.getArgNReturnType(arg);
 
@@ -217,7 +217,7 @@ public class ProgramGenerator {
 				Function tmpFunc = (Function) config.funcSet.generate(i,config);
 				boolean valid = true;
 
-				for (int arg = 0; arg < tmpFunc.getMaxArgs(); arg++) {
+				for (int arg = 0; arg < tmpFunc.getNumArgs(); arg++) {
 					boolean found = false;
 					int argNReturnType = tmpFunc.getArgNReturnType(arg);
 

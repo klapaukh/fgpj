@@ -11,12 +11,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * This class controls the pool of programs. It also has the main evolve loop
+ * 
+ * @author Roma
+ * 
+ */
 public class Population {
 
 	private List<GeneticProgram> pop; // The population
 	private List<GeneticProgram> nextPop; // Space saver for next generation
 
-	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
+	private static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 
 	// Number of evaluations carried out so far
 	private long evaluations;
@@ -35,14 +41,15 @@ public class Population {
 	// What generation number are we currently processing.
 	private int generationNumber;
 
-
 	protected GPConfig config; // The configuration of this Population
 
 	/**
 	 * Create a new population
+	 * 
 	 * @param size
-	 * @param logFileName
+	 *            number of individual in
 	 * @param conf
+	 *            config used
 	 */
 	public Population(int size, GPConfig conf) {
 		bestFitness = (0.0);
@@ -60,18 +67,37 @@ public class Population {
 			pop.add(new GeneticProgram(config));
 		}
 
-
 	}
 
+	/**
+	 * Get the whole population
+	 * 
+	 * @return a clone of the underlying population list
+	 */
 	public List<GeneticProgram> getPopulation() {
-		return pop;
+		List<GeneticProgram> l = new ArrayList<GeneticProgram>(pop.size());
+		for (GeneticProgram p : pop) {
+			l.add(p.copy(config));
+		}
+		return l;
 	}
 
+	/**
+	 * Generate a random initial population using the ProgramGenerator specified in the config
+	 */
 	public void generateInitialPopulation() {
 		config.programGenerator.generateInitialPopulation(pop, returnType, config);
 
 	}
 
+	/**
+	 * Run the GP algorithm using the settings in the config for up to numGenerations generations. It will terminate
+	 * early if the fitness function says that an acceptable solution was found.
+	 * 
+	 * @param max
+	 *            numGenerations number of generations to run the algorithm for
+	 * @return if an acceptable solution was found
+	 */
 	public boolean evolve(int numGenerations) {
 		evaluations = 0;
 		for (int i = 0; i < numGenerations; i++) {
@@ -100,20 +126,19 @@ public class Population {
 		return false;
 	}
 
-	public void nextGeneration() {
+	/**
+	 * Generate the next generation from the current one, using the settings in config
+	 */
+	private void nextGeneration() {
 		int indiv1, indiv2;
-		int i;
 
 		// Write the pop to a file if it's time
 		if ((generationNumber % config.loggingFrequency()) == 0) writeToFile();
 
-		// copy some individuals (elitism)
-		for (i = 0; i < getNumForElitism(); i++) {
-			nextPop.add(pop.get(i).copy(config));
-		}
+		int numCrossover = (int) (pop.size() * config.crossoverRate());
+		int numMutation = (int) (pop.size() * config.mutationRate());
 
-		// crossover some individuals
-		for (i = 0; i < getNumForCrossover(); i += 2) {
+		for (int i = 0; i < numCrossover; i += 2) {
 			indiv1 = config.selectionOperator.select(pop, config);
 			indiv2 = config.selectionOperator.select(pop, config);
 			nextPop.add(pop.get(indiv1).copy(config));
@@ -123,18 +148,24 @@ public class Population {
 					config);
 		}
 
-		// mutate some individuals
-		for (i = 0; i < getNumForMutation(); i++) {
+		for (int i = 0; i < numMutation; i++) {
 			indiv1 = config.selectionOperator.select(pop, config);
 			nextPop.add(pop.get(indiv1).copy(config));
 			config.mutationOperator.mutate(nextPop.get(nextPop.size() - 1), config);
 		}
+
+		int i = pop.size() - 1;
+		while (nextPop.size() > pop.size()) {
+			nextPop.add(pop.get(i--).copy(config));
+		}
+
 		for (GeneticProgram m : pop) {
 			for (int j = 0; j < config.getNumRoots(); j++) {
 				m.deleteTree(j);
 			}
 		}
 
+		// Reuse the same lists
 		List<GeneticProgram> t = pop;
 		pop = nextPop;
 		nextPop = t;
@@ -143,19 +174,16 @@ public class Population {
 		generationNumber++;
 	}
 
-	/*******************************************************************************************************************
-	 * setNumIndiviuals currently resizes the population. If the new size is smaller it truncates the old population
-	 * (the last N programs are lost). If the new size is bigger then new population contains N copies of the last
-	 * program in the population.
+	/**
+	 * This resizes the population. Removal is from the from, weakest first. If Adding the last entry (best fitness) is
+	 * duplicated
 	 * 
-	 * If you want different behaviour, make a subclass of this class and overide this method.
-	 * 
-	 * N is the difference between old and new sizes.
-	 ******************************************************************************************************************/
-
+	 * @param num
+	 *            new size of population
+	 */
 	public void setNumIndividuals(int num) {
 		while (num > pop.size()) {
-			pop.add(pop.get(0).copy(config));
+			pop.add(pop.get(pop.size() - 1).copy(config));
 		}
 		while (pop.size() > num) {
 			GeneticProgram prog = pop.remove(0);
@@ -165,18 +193,39 @@ public class Population {
 		}
 	}
 
+	/**
+	 * The size of the population
+	 * 
+	 * @return size of population
+	 */
 	public int getNumIndividuals() {
 		return pop.size();
 	}
 
+	/**
+	 * Set the generation number. Not a good idea unless you have a good reason
+	 * 
+	 * @param num
+	 *            new generation number
+	 */
 	public void setGenerationNumber(int num) {
 		generationNumber = num;
 	}
 
+	/**
+	 * Get the current generation number
+	 * 
+	 * @return current generation number
+	 */
 	public int getGenerationNumber() {
 		return generationNumber;
 	}
 
+	/**
+	 * Set the return type for a particular subtree
+	 * @param root which subtree to set the return type of
+	 * @param type the return type
+	 */
 	public void setReturnType(int root, int type) {
 		returnType[root] = type;
 		for (int i = 0; i < pop.size(); i++) {
@@ -184,6 +233,10 @@ public class Population {
 		}
 	}
 
+	/**
+	 * Set all roots to this return type
+	 * @param type return type
+	 */
 	public void setReturnType(int type) {
 		for (int i = 0; i < config.getNumRoots(); i++) {
 			returnType[i] = type;
@@ -195,22 +248,20 @@ public class Population {
 		}
 	}
 
+	/**
+	 * Get the return type for the root
+	 * @param root root in question
+	 * @return return type
+	 */
 	public int getReturnType(int root) {
 		return returnType[root];
 	}
 
-	public int getNumForMutation() {
-		return (int) (pop.size() * config.mutationRate());
-	}
-
-	public int getNumForCrossover() {
-		return (int) (pop.size() * config.crossoverRate());
-	}
-
-	public int getNumForElitism() {
-		return (int) (pop.size() * config.elitismRate());
-	}
-
+	
+	/**
+	 * Get the program with the best fitness
+	 * @return Program with best fitness in population
+	 */
 	public GeneticProgram getBest() {
 		int index = 0;
 
@@ -223,6 +274,10 @@ public class Population {
 		return pop.get(index);
 	}
 
+	/**
+	 * Get program with worse fitness in population
+	 * @return program with worst fitness
+	 */
 	public GeneticProgram getWorst() {
 		int index = 0;
 
@@ -235,6 +290,9 @@ public class Population {
 		return pop.get(index);
 	}
 
+	/**
+	 * Computes statistics about the current population
+	 */
 	public void computeStatistics() {
 		double totalFitness = 0.0;
 		double totalDepth = 0.0;
@@ -257,6 +315,9 @@ public class Population {
 		avgSize = totalSize / (pop.size() * config.getNumRoots());
 	}
 
+	/**
+	 * Write the population to a file
+	 */
 	public void writeToFile() {
 		String filename = String.format("gen_%06d.gen", generationNumber);
 		PrintStream outputFile;
@@ -272,6 +333,10 @@ public class Population {
 
 	}
 
+	/**
+	 * Read the population from a file
+	 * @param filename file to read from
+	 */
 	public void readFromFile(String filename) {
 		try {
 			Scanner scan = new Scanner(new File(filename));
@@ -373,7 +438,7 @@ public class Population {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public String toString() {
 		StringBuffer s = new StringBuffer();
 
@@ -421,19 +486,26 @@ public class Population {
 		return s.toString();
 	}
 
+	/**
+	 * Write progress to log file if it is declared
+	 */
 	public void writeLog() {
 
 		config.log("*****************************************\n");
 		config.log("Generation " + generationNumber + "\n");
-		config.log("Time " + now()+ "\n");
-		config.log("BestFitness " + bestFitness+ "\n");
-		config.log("WorstFitness " + worstFitness+ "\n");
-		config.log("AverageFitness " + avgFitness+ "\n");
-		config.log("AverageDepth " + avgDepth+ "\n");
-		config.log("AverageSize " + avgSize+ "\n");
-		config.log("Evaluation " + evaluations+ "\n");
+		config.log("Time " + now() + "\n");
+		config.log("BestFitness " + bestFitness + "\n");
+		config.log("WorstFitness " + worstFitness + "\n");
+		config.log("AverageFitness " + avgFitness + "\n");
+		config.log("AverageDepth " + avgDepth + "\n");
+		config.log("AverageSize " + avgSize + "\n");
+		config.log("Evaluation " + evaluations + "\n");
 	}
 
+	/**
+	 * Formatted date string of time
+	 * @return Formatted current time string
+	 */
 	public String now() {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);

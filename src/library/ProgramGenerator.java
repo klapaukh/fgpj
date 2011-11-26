@@ -120,88 +120,83 @@ public class ProgramGenerator {
 	}
 
 	public Node createGrowProgram(int curDepth, int maxDepth, int expectedReturnType, GPConfig config) {
-		int i;
-		int depth;
-		Node node;
+		int depth = maxDepth - curDepth;
 
-		depth = maxDepth - curDepth;
-		if (depth < 0) {
-			depth = 0;
-		}
-
-		node = growTable[depth].generateRandomNode(expectedReturnType,config);
-
-		if (node == null) throw new RuntimeException("getRandomNode returned NULL");
+		Node node = growTable[depth].generateRandomNode(expectedReturnType,config);
 
 		if (node.getNumArgs() > 0) {
 			Function func = (Function) (node);
 
-			for (i = 0; i < node.getNumArgs(); i++) {
+			for (int i = 0; i < node.getNumArgs(); i++) {
 				func.setArgN(i, createGrowProgram(curDepth + 1, maxDepth, func.getArgNReturnType(i),config));
 			}
 		}
 		return node;
 	}
 
+	/**
+	 * Generate the tables used for making programs
+	 * 
+	 * @param config config to use
+	 */
 	@SuppressWarnings("unchecked")
-	void generateTables(GPConfig config) {
+	private void generateTables(GPConfig config) {
 
 		int numFunctions = config.funcSet.size();
 		int numTerminals = config.termSet.size();
-
-		int i;
 
 		int maxDepth = config.maxDepth();
 
 		growTable = (NodeVector<Node>[]) new NodeVector[maxDepth];
 		fullTable = (NodeVector<Node>[]) new NodeVector[maxDepth];
 
-		for (i = 0; i < maxDepth; i++) {
+		for (int i = 0; i < maxDepth; i++) {
 			growTable[i] = new NodeVector<Node>();
 			fullTable[i] = new NodeVector<Node>();
 		}
 
 
-		// Add in the terminals at the bottom of the tree
-		for (i = 0; i < numTerminals; i++) {
+		// Add in the terminals at the top of the matrix, this is the top of the tree
+		for (int i = 0; i < numTerminals; i++) {
 			Node n = config.termSet.generate(i,config);
 
 			growTable[0].add(n);
 			fullTable[0].add(n);
 		}
 
-		int curDepth = 0;
 
-		// grow table creation
-		for (curDepth = 1; curDepth < maxDepth; curDepth++) {
-			// Add the terminals
-			for (i = 0; i < numTerminals; i++) {
+		// grow table creation, by level
+		for (int curDepth = 1; curDepth < maxDepth; curDepth++) {
+			
+			// Add the terminals - they can be at any level
+			for (int i = 0; i < numTerminals; i++) {
 				Node n = config.termSet.generate(i,config);
-
 				growTable[curDepth].add(n);
 			}
 
 			// Add the functions
-			for (i = 0; i < numFunctions; i++) {
-				Function tmpFunc = (Function) config.funcSet.generate(i,config);
+			for (int i = 0; i < numFunctions; i++) {
+				//Try every function
+				Function tmpFunc = config.funcSet.generate(i,config);
 				boolean valid = true;
 
-				for (int arg = 0; arg < tmpFunc.getNumArgs(); arg++) {
+				//For each of its arguments
+				for (int arg = 0; valid && arg < tmpFunc.getNumArgs(); arg++) {
 					boolean found = false;
 					int argNReturnType = tmpFunc.getArgNReturnType(arg);
 
-					for (int tSize = 0; tSize < growTable[curDepth - 1].size(); tSize++) {
+					//Can you find something in the level below to attach it to
+					for (int tSize = 0; !found && tSize < growTable[curDepth - 1].size(); tSize++) {
 						Node tmpNode = growTable[curDepth - 1].generate(tSize,config);
-
+						
 						if (argNReturnType == tmpNode.getReturnType()) {
 							found = true;
-							break;
 						}
+						NodeFactory.delete(tmpNode);
 					}
 
 					if (!found) {
 						valid = false;
-						break;
 					}
 				}
 
@@ -213,23 +208,24 @@ public class ProgramGenerator {
 		}
 
 		// full table creation
-		for (curDepth = 1; curDepth < maxDepth; curDepth++) {
+		for (int curDepth = 1; curDepth < maxDepth; curDepth++) {
 			// Add the functions
-			for (i = 0; i < numFunctions; i++) {
-				Function tmpFunc = (Function) config.funcSet.generate(i,config);
+			for (int i = 0; i < numFunctions; i++) {
+				Function tmpFunc = config.funcSet.generate(i,config);
 				boolean valid = true;
 
-				for (int arg = 0; arg < tmpFunc.getNumArgs(); arg++) {
+				for (int arg = 0;valid &&  arg < tmpFunc.getNumArgs(); arg++) {
 					boolean found = false;
 					int argNReturnType = tmpFunc.getArgNReturnType(arg);
 
-					for (int tSize = 0; tSize < fullTable[curDepth - 1].size(); tSize++) {
+					for (int tSize = 0; !found && tSize < fullTable[curDepth - 1].size(); tSize++) {
 						Node tmpNode = fullTable[curDepth - 1].generate(tSize,config);
 
 						if (argNReturnType == tmpNode.getReturnType()) {
 							found = true;
 							break;
 						}
+						NodeFactory.delete(tmpNode);
 					}
 
 					if (!found) {

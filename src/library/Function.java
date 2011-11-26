@@ -106,6 +106,19 @@ public abstract class Function extends Node {
 		return size;
 	}
 
+	public int traceDepth(int curDepth) {
+		int retDepth = 0;
+		int maxDepth = 0;
+
+		for (int i = 0; i < numArgs; i++) {
+			retDepth = args[i].traceDepth(getDepth());
+			if (retDepth > maxDepth) {
+				maxDepth = retDepth;
+			}
+		}
+		return maxDepth + 1;
+	}
+	
 	public int computeDepth(int curDepth) {
 		setDepth(curDepth + 1);
 
@@ -113,7 +126,10 @@ public abstract class Function extends Node {
 		int maxDepth = 0;
 
 		for (int i = 0; i < numArgs; i++) {
-			if ((retDepth = args[i].computeDepth(getDepth())) > maxDepth) maxDepth = retDepth;
+			retDepth = args[i].computeDepth(getDepth());
+			if (retDepth > maxDepth) {
+				maxDepth = retDepth;
+			}
 		}
 
 		return maxDepth + 1;

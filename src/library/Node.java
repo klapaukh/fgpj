@@ -156,6 +156,14 @@ public abstract class Node {
 	public abstract int computeDepth(int curDepth);
 
 	/**
+	 * Compute the depth of the longest subtree, without modifying node state
+	 * 
+	 * @param curDepth
+	 *            depth at so far
+	 * @return depth of longest subtree
+	 */
+	public abstract int traceDepth(int curDepth);
+	/**
 	 * Add this node and all its children to the List (double dispatch trick)
 	 * 
 	 * @param list

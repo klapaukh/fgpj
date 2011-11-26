@@ -14,6 +14,8 @@ import java.util.Scanner;
 public class Population {
 
 	private List<GeneticProgram> pop; // The population
+	private List<GeneticProgram> nextPop;
+
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 
 	// Number of evaluations carried out so far
@@ -66,6 +68,7 @@ public class Population {
 		config = (conf);
 		int i;
 		pop = new ArrayList<GeneticProgram>(numIndividuals);
+		nextPop = new ArrayList<GeneticProgram>(numIndividuals);
 
 		for (i = 0; i < numIndividuals; i++) {
 			pop.add(new GeneticProgram(config));
@@ -95,7 +98,7 @@ public class Population {
 		int i;
 		fallPerGeneration = (int) ((initSize - size) / (numGenerationBeforeDecimation + 1));
 		pop = new ArrayList<GeneticProgram>(numIndividuals);
-
+		nextPop = new ArrayList<GeneticProgram>(numIndividuals);
 		for (i = 0; i < numIndividuals; i++) {
 			pop.add(new GeneticProgram(config));
 
@@ -190,7 +193,6 @@ public class Population {
 	public void nextGeneration() {
 		int indiv1, indiv2;
 		int i;
-		List<GeneticProgram> nextPop;
 
 		// Write the pop to a file if it's time
 		if ((generationNumber % loggingFrequency) == 0) writeToFile();
@@ -224,7 +226,11 @@ public class Population {
 				m.deleteTree(j);
 			}
 		}
+		
+		List<GeneticProgram> t = pop;
 		pop = nextPop;
+		nextPop = t;
+		nextPop.clear();
 
 		generationNumber++;
 	}

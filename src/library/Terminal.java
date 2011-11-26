@@ -24,7 +24,12 @@ public abstract class Terminal extends Node {
 	{
 	   return 1;
 	}
-
+	
+	public int traceDepth(int curDepth)
+	{
+	   return 1;
+	}
+	
 	public int computeDepth(int curDepth)
 	{
 	   setDepth(curDepth + 1);

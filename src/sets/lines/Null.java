@@ -15,7 +15,7 @@ public class Null extends Terminal {
 	public static final long serialVersionUID = 5747126155380314948L;
 
 	public Null(GPConfig conf) {
-		super(ReturnImage.TYPENUM, "null", conf);
+		super(ReturnImage.TYPENUM, "null");
 	}
 
 	public Terminal generate(GPConfig conf) {
@@ -36,7 +36,7 @@ public class Null extends Terminal {
 		s.append(getName());
 	}
 
-	public Node copy() {
+	public Node copy(GPConfig config) {
 		return NodeFactory.newNode(getKind(), config);
 		// return new Null(config);
 	}

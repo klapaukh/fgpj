@@ -86,8 +86,8 @@ public class GPConfig {
 		this.minDepth = minDepth;
 		this.maxDepth = maxDepth;
 		this.setRates(mutationRate, crossoverRate, elitismRate);
-		funcSet = new NodeVector<Function>(this);
-		termSet = new NodeVector<Terminal>(this);
+		funcSet = new NodeVector<Function>();
+		termSet = new NodeVector<Terminal>();
 
 		defaultInit();
 	}
@@ -226,8 +226,9 @@ public class GPConfig {
 	 * @param returnType The return type of this terminal
 	 * @param n an instance of the terminal
 	 */
-	public void addTerminal(int returnType, Terminal n){
-		this.termSet.addNodeToSet(returnType, n);
+	public void addTerminal(Terminal n){
+		NodeFactory.teach(n,this);
+		this.termSet.add(n);
 	}
 	
 	/**
@@ -235,7 +236,8 @@ public class GPConfig {
 	 * @param returnType the return type of this Function
 	 * @param n an instance of the function
 	 */
-	public void addFunction(int returnType, Function n){
-		this.funcSet.addNodeToSet(returnType, n);
+	public void addFunction(Function n){
+		NodeFactory.teach(n,this);
+		this.funcSet.add(n);
 	}
 }

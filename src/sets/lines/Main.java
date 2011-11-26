@@ -51,11 +51,11 @@ public class Main {
 		pop.setLogFrequency(100000);
 
 		// Add the terminals we need
-		symConfig.addTerminal(ReturnImage.TYPENUM, new Null(symConfig));
-		symConfig.addTerminal(ReturnColor.TYPENUM, new SetColor(symConfig));
+		symConfig.addTerminal(new Null(symConfig));
+		symConfig.addTerminal(new SetColor(symConfig));
 
 		// Add the functions we need
-		symConfig.addFunction(ReturnImage.TYPENUM, new Line(symConfig));
+		symConfig.addFunction(new Line(symConfig));
 		
 		// Set the fitness class to be used
 

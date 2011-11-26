@@ -15,16 +15,13 @@ public abstract class Node {
 
 	protected int maxArgs; // The maximum number of arguments this node can
 
-	// accept
 
-	protected GPConfig config; // Configuration object;
 
-	public Node(int type, int numArgs, String n, GPConfig conf) {
+	public Node(int type, int numArgs, String n) {
 		returnType = type;
 		parent = null;
 		name = n;
 		maxArgs = numArgs;
-		config = conf;
 	}
 
 	public Node(Node n) {
@@ -32,7 +29,6 @@ public abstract class Node {
 		parent = n.parent;
 		name = n.name;
 		maxArgs = n.maxArgs;
-		config = n.config;
 	}
 	public abstract Node getNew(GPConfig config);
 
@@ -84,7 +80,7 @@ public abstract class Node {
 
 	public abstract void print(StringBuffer s);
 
-	public abstract Node copy();
+	public abstract Node copy(GPConfig conf);
 	
 	/**
 	 * Sets the kind of a node (this is used only for memory management)

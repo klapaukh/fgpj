@@ -23,7 +23,7 @@ public class Line extends Function {
 
 	{
 
-		super(ReturnImage.TYPENUM, 4, "line", conf);
+		super(ReturnImage.TYPENUM, 4, "line");
 		x1 = (int) Math.abs((conf.randomNumGenerator.nextLong() % ImageFitness.SIZE));
 		x2 = (int) Math.abs(conf.randomNumGenerator.nextLong() % ImageFitness.SIZE);
 		y1 = (int) Math.abs(conf.randomNumGenerator.nextLong() % ImageFitness.SIZE);
@@ -38,7 +38,7 @@ public class Line extends Function {
 	public Line(int initx1, int initx2, int inity1, int inity2, GPConfig conf)
 
 	{
-		super(ReturnImage.TYPENUM, 4, "line", conf);
+		super(ReturnImage.TYPENUM, 4, "line");
 		x1 = (initx1);
 		x2 = (initx2);
 		y1 = (inity1);
@@ -112,12 +112,12 @@ public class Line extends Function {
 		return this;
 	}
 
-	public Function copy() {
-		Function tmp = ((Line) NodeFactory.newNode(getKind(), config)).init(x1, x2, y1, y2);
+	public Function copy(GPConfig config) {
+		Function tmp = ((Line) NodeFactory.newNode(getKind(),config)).init(x1, x2, y1, y2);
 		// Function tmp = new Line(x1, x2, y1, y2,config);
 
 		for (int i = 0; i < getMaxArgs(); i++) {
-			tmp.setArgN(i, getArgN(i).copy());
+			tmp.setArgN(i, getArgN(i).copy(config));
 		}
 
 		return tmp;

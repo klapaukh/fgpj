@@ -18,7 +18,7 @@ public class SetColor extends Terminal {
 	private Color col;
 
 	public SetColor(GPConfig conf) {
-		super(ReturnColor.TYPENUM, "setcolor", conf);
+		super(ReturnColor.TYPENUM, "setcolor");
 		if (conf == null) {
 			System.out.println("BOO");
 		}
@@ -29,7 +29,7 @@ public class SetColor extends Terminal {
 	}
 
 	public SetColor(Color c, GPConfig conf) {
-		super(ReturnColor.TYPENUM, "setcolor", conf);
+		super(ReturnColor.TYPENUM, "setcolor");
 		if (conf == null) {
 			System.out.println("BOO");
 		}
@@ -80,7 +80,7 @@ public class SetColor extends Terminal {
 		return this;
 	}
 
-	public Node copy() {
+	public Node copy(GPConfig config) {
 		return ((SetColor) NodeFactory.newNode(this.getKind(), config)).init(col);
 		// return new SetColor(col, config);
 	}

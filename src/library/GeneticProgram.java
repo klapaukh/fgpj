@@ -212,7 +212,7 @@ public class GeneticProgram {
 
 		for (int i = 0; i < numParts; i++) {
 			if (root[i] != null) {
-				rootTmp = root[i].copy();
+				rootTmp = root[i].copy(config);
 				tmp.setRoot(rootTmp, i);
 			} else {
 				System.err.println("**** Warning GeneticProgram::copy() ******");
@@ -249,7 +249,7 @@ public class GeneticProgram {
 	}
 
 	private Node[] buildTree(Scanner scan) {
-		Node[] tmpRoot = null;// new Node*[numParts];
+		Node[] tmpRoot = null;
 		Node arg = null;
 
 		String token = scan.next();
@@ -271,7 +271,7 @@ public class GeneticProgram {
 			} else if (token.equalsIgnoreCase("(")) // Start of function
 			{
 				token = scan.next();
-				tmpRoot[i] = config.funcSet.getNodeByName(token);
+				tmpRoot[i] = config.funcSet.generateNodeByName(token, config);
 				token = scan.next();
 				while (!token.equals(")")) {
 					arg = buildTreeNode(scan, token);
@@ -282,7 +282,7 @@ public class GeneticProgram {
 				token = scan.next();
 			} else // Must be terminal
 			{
-				tmpRoot[i] = config.termSet.getNodeByName(token);
+				tmpRoot[i] = config.termSet.generateNodeByName(token,config);
 				token = scan.next(); // read extra |
 			}
 		}
@@ -304,7 +304,7 @@ public class GeneticProgram {
 		} else if (token.equalsIgnoreCase("(")) // Start of function
 		{
 			token = scan.next();
-			tmpRoot = config.funcSet.getNodeByName(token);
+			tmpRoot = config.funcSet.generateNodeByName(token,config);
 			token = scan.next();
 			while (!token.equals(")")) {
 				arg = buildTreeNode(scan, token);
@@ -314,7 +314,7 @@ public class GeneticProgram {
 			}
 		} else // Must be terminal
 		{
-			tmpRoot = config.termSet.getNodeByName(token);
+			tmpRoot = config.termSet.generateNodeByName(token,config);
 		}
 
 		// If we get an error it will usually be because of a terminal

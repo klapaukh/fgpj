@@ -4,9 +4,9 @@ import java.util.Vector;
 
 public abstract class Terminal extends Node {
 
-	public Terminal(int type, String n, GPConfig conf) 
+	public Terminal(int type, String n) 
 	{
-		super(type, 0, n, conf);
+		super(type, 0, n);
 	}
 
 	public int computeSize()

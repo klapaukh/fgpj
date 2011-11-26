@@ -99,7 +99,7 @@ public class ProgramGenerator {
 			depth = 0;
 		}
 
-		node = fullTable[depth].getRandomTypedElement(expectedReturnType);
+		node = fullTable[depth].generateRandomNode(expectedReturnType,config);
 
 		if (node == null) {
 			System.err.println("Warning, unable to create Full program for this set of Functions and Terminals");
@@ -127,7 +127,7 @@ public class ProgramGenerator {
 			depth = 0;
 		}
 
-		node = growTable[depth].getRandomTypedElement(expectedReturnType);
+		node = growTable[depth].generateRandomNode(expectedReturnType,config);
 
 		if (node == null) throw new RuntimeException("getRandomNode returned NULL");
 
@@ -157,19 +157,15 @@ public class ProgramGenerator {
 		for (i = 0; i < maxDepth; i++) {
 			growTable[i] = new NodeVector<Node>();
 			fullTable[i] = new NodeVector<Node>();
-			growTable[i].setGPConfig(config);
-			fullTable[i].setGPConfig(config);
 		}
-		NodeVector<Node>.Element elem;
+
 
 		// Add in the terminals at the bottom of the tree
 		for (i = 0; i < numTerminals; i++) {
-			elem = growTable[0].new Element();
-			elem.returnType = config.termSet.getNodeReturnType(i);
-			elem.g = config.termSet.getGenFunction(i);
+			Node n = config.termSet.generate(i,config);
 
-			growTable[0].addElement(elem);
-			fullTable[0].addElement(elem);
+			growTable[0].add(n);
+			fullTable[0].add(n);
 		}
 
 		int curDepth = 0;
@@ -178,16 +174,14 @@ public class ProgramGenerator {
 		for (curDepth = 1; curDepth < maxDepth; curDepth++) {
 			// Add the terminals
 			for (i = 0; i < numTerminals; i++) {
-				elem = growTable[0].new Element();
-				elem.returnType = config.termSet.getNodeReturnType(i);
-				elem.g = config.termSet.getGenFunction(i);
+				Node n = config.termSet.generate(i,config);
 
-				growTable[curDepth].addElement(elem);
+				growTable[curDepth].add(n);
 			}
 
 			// Add the functions
 			for (i = 0; i < numFunctions; i++) {
-				Function tmpFunc = (Function) config.funcSet.getGenFunction(i).generate(config);
+				Function tmpFunc = (Function) config.funcSet.generate(i,config);
 				boolean valid = true;
 
 				for (int arg = 0; arg < tmpFunc.getMaxArgs(); arg++) {
@@ -195,7 +189,7 @@ public class ProgramGenerator {
 					int argNReturnType = tmpFunc.getArgNReturnType(arg);
 
 					for (int tSize = 0; tSize < growTable[curDepth - 1].size(); tSize++) {
-						Node tmpNode = growTable[curDepth - 1].getElement(tSize).g.generate(config);
+						Node tmpNode = growTable[curDepth - 1].generate(tSize,config);
 
 						if (argNReturnType == tmpNode.getReturnType()) {
 							found = true;
@@ -210,10 +204,8 @@ public class ProgramGenerator {
 				}
 
 				if (valid) {
-					elem = growTable[0].new Element();
-					elem.returnType = tmpFunc.getReturnType();
-					elem.g = config.funcSet.getGenFunction(i);
-					growTable[curDepth].addElement(elem);
+					Node n = config.funcSet.generate(i, config);
+					growTable[curDepth].add(n);
 				}
 			}
 		}
@@ -222,7 +214,7 @@ public class ProgramGenerator {
 		for (curDepth = 1; curDepth < maxDepth; curDepth++) {
 			// Add the functions
 			for (i = 0; i < numFunctions; i++) {
-				Function tmpFunc = (Function) config.funcSet.getGenFunction(i).generate(config);
+				Function tmpFunc = (Function) config.funcSet.generate(i,config);
 				boolean valid = true;
 
 				for (int arg = 0; arg < tmpFunc.getMaxArgs(); arg++) {
@@ -230,7 +222,7 @@ public class ProgramGenerator {
 					int argNReturnType = tmpFunc.getArgNReturnType(arg);
 
 					for (int tSize = 0; tSize < fullTable[curDepth - 1].size(); tSize++) {
-						Node tmpNode = fullTable[curDepth - 1].getElement(tSize).g.generate(config);
+						Node tmpNode = fullTable[curDepth - 1].generate(tSize,config);
 
 						if (argNReturnType == tmpNode.getReturnType()) {
 							found = true;
@@ -245,10 +237,8 @@ public class ProgramGenerator {
 				}
 
 				if (valid) {
-					elem = growTable[0].new Element();
-					elem.returnType = tmpFunc.getReturnType();
-					elem.g = config.funcSet.getGenFunction(i);
-					fullTable[curDepth].addElement(elem);
+					Node n = config.funcSet.generate(i,config);
+					fullTable[curDepth].add(n);
 				}
 			}
 		}

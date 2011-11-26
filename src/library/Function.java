@@ -12,8 +12,8 @@ public abstract class Function extends Node {
 	 * Constuctor
 	 * 
 	 */
-	public Function(int type, int numArgs, String n, GPConfig conf) {
-		super(type, numArgs, n, conf);
+	public Function(int type, int numArgs, String n) {
+		super(type, numArgs, n);
 		args = null;
 		argReturnTypes = null;
 		// If the number of arguments this function accepts is greater than zero

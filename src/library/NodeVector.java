@@ -3,142 +3,115 @@ package library;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a special List that allows for easy access to nodes by type, name, index and random value. It is aware of
+ * node identity so its generate methods return clones.
+ * 
+ * @author Roma
+ * 
+ * @param <T>
+ *            The type of Node that this NodeVector stores
+ */
 public class NodeVector<T extends Node> {
 
-	public class Element {
-		public int returnType;
+	private List<T> vec;
 
-		public T g;
-	}
-
-	private List<Element> vec;
-
-	protected GPConfig config;
-
+	/**
+	 * Create a new NodeVector
+	 */
 	public NodeVector() {
-		config = null;
-		vec = new ArrayList<Element>();
-	}
-	
-	public NodeVector(GPConfig conf) {
-		config = conf;
-		vec = new ArrayList<Element>();
+		vec = new ArrayList<T>();
 	}
 
-	public void setGPConfig(GPConfig conf) {
-		config = conf;
+	/**
+	 * Add to the list
+	 * 
+	 * @param g
+	 *            the node to add
+	 */
+	public void add(T g) {
+		vec.add(g);
 	}
-	
-	public void addNodeToSet(int returnType, T g) {
-		NodeFactory.teach(g);
-		Element elem = new Element();
-		elem.returnType = returnType;
-		elem.g = g;
 
-		addElement(elem);
-	}
-	
-	
-	public Node getNodeByName(String name) {
-		Node newNode;
-		int i;
-
-		for (i = 0; i < size(); i++) {
-			newNode = getElement(i).g.generate(name, config);
-
-			if (newNode != null) {
-				return newNode;
+	/**
+	 * Get a new instance of the type that the name is
+	 * 
+	 * @param name
+	 *            The name of the node
+	 * @param conf
+	 *            the GPConfig to generate the node with
+	 * @return the generated node
+	 */
+	public T generateNodeByName(String name, GPConfig conf) {
+		for (int i = 0; i < size(); i++) {
+			if (vec.get(i).getName().equals(name)) {
+				return vec.get(i).generate(name, conf);
 			}
 		}
 
-		throw new RuntimeException(
-				"Error could not build function for token "
-						+ name);
-	}
-	
-	public void addElement(Element elem) {
-		vec.add(elem);
+		throw new RuntimeException("Could not find node " + name);
 	}
 
-	public Element getElement(int pos) {
-		if ((pos >= 0) && (pos < vec.size()))
-			return vec.get(pos);
-		else
-			return null;
+	/**
+	 * Generate a clone of the node at the position
+	 * 
+	 * @param pos
+	 *            Index of node to generate
+	 * @param config
+	 *            the config to generate the node with
+	 * @return the generated node
+	 */
+	public T generate(int pos, GPConfig config) {
+		return vec.get(pos).generate(config);
 	}
 
-	public T getRandomElement() {
-		int pos = (int) Math.abs(config.randomNumGenerator.nextLong() % vec.size());
-
-		if ((pos >= 0) && (pos < vec.size()))
-			return vec.get(pos).g.generate(config);
-		else
-			return null;
-	}
-
-	public T getRandomTypedElement(int returnType) {
-		T ret = null;
-		int pos;
-		int i;
-
-		List<Element>tmpStore = new ArrayList<Element>(vec.size());
-
-		for (i = 0; i < vec.size(); i++) {
-			if (vec.get(i).returnType == returnType) {
-				tmpStore.add( vec.get(i));
-			}
-		}
-		if (tmpStore.size() != 0) {
-			pos = (int) Math.abs(config.randomNumGenerator.nextLong() % tmpStore.size());
-			ret = tmpStore.get(pos).g.generate(config);
-		}
-
-		return ret;
-	}
-
+	/**
+	 * 
+	 * Get the size of the list
+	 * @return the size of the list
+	 */
 	public int size() {
 		return vec.size();
 	}
-	
-	public Node getNodeByNumber(int position) {
-		Node newNode;
 
-		if (size() > position) {
-			newNode = getElement(position).g.generate(config);
-			if (newNode != null) {
-				return newNode;
+	/**
+	 * Generate a random node in the list
+	 * 
+	 * @param config the config to generate the node with
+	 * @return a new random node
+	 */
+	public T generateRandomNode(GPConfig config) {
+		int pos = (int) Math.abs(config.randomNumGenerator.nextLong() % vec.size());
+		return vec.get(pos).generate(config);
+	}
+
+	/**
+	 * Generate a new random node of a given type
+	 * @param returnType the return type that the new node must have 
+	 * @param config the config used to create the node
+	 * @return the new random node
+	 */
+	public T generateRandomNode(int returnType, GPConfig config) {
+		T ret = null;
+		int numNodes = 0;
+		for (int i = 0; i < vec.size(); i++) {
+			if (vec.get(i).getReturnType() == returnType) {
+				numNodes++;
+			}
+		}
+		if (numNodes != 0) {
+			int pos = Math.abs(config.randomNumGenerator.nextInt() % numNodes);
+			numNodes = 0;
+			for (int i = 0; i < vec.size(); i++) {
+				if (vec.get(i).getReturnType() == returnType) {
+					if(numNodes == pos){
+						return vec.get(i).generate(config);
+					}
+					numNodes++;
+				}
 			}
 		}
 
-		throw new RuntimeException(
-				"Error could not build function for the token");
-
-	}
-
-	public int getNodeReturnType(int position) {
-		Element elem = getElement(position);
-
-		if (elem != null)
-			return elem.returnType;
-		else
-			return -1;
-	}
-	
-	public T getGenFunction(int position) {
-		Element elem = getElement(position);
-
-		if (elem != null)
-			return elem.g;
-		else
-			return null;
-	}
-	
-	
-	public T getRandomNode() {
-		return getRandomElement();
-	}
-
-	public T getRandomNode(int returnType) {
-		return getRandomTypedElement(returnType);
+		return ret;
 	}
 }

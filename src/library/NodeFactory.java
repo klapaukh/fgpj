@@ -44,7 +44,7 @@ public class NodeFactory {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void teach(Node node) {
+	public static void teach(Node node, GPConfig config) {
 		node.setKind(n.kinds++);
 		Queue<Node>[] t = n.nodes;
 		n.nodes = new Queue[n.kinds];
@@ -53,7 +53,7 @@ public class NodeFactory {
 			n.nodes[i] = t[i];
 		}
 		n.nodes[i] = new LinkedList<Node>();
-		n.nodes[i].add(node.getNew(node.config));
+		n.nodes[i].add(node.getNew(config));
 	}
 
 	public static void report() {

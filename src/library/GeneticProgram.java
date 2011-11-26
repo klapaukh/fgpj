@@ -6,8 +6,6 @@ import java.util.Vector;
 public class GeneticProgram {
 	private GPConfig config; // Configuration object for this program
 
-	private int programID; // ID number of this program
-
 	private double fitness; // The fitness of this program
 
 	private double adjustFitness; // The adjusted fitness
@@ -16,47 +14,31 @@ public class GeneticProgram {
 
 	private int[] size; // Size of this program
 
-	private int returnType; // Return type of this program
-
-	private int numParts; // The number of programs this program contains
+	private int[] returnType; // Return type of this program
 
 	private Node[] root; // The root node of the program tree
 
 	public GeneticProgram(GPConfig conf) {
 		config = conf;
-		programID = 0;
 		fitness = 0.0;
-		returnType = -1;
-		numParts = conf.getNumParts();
-		root = new Node[numParts];
-		for (int i = 0; i < numParts; i++)
-			root[i] = null;
-		depth = new int[numParts];
-		size = new int[numParts];
+		returnType = new int[conf.getNumParts()];
+		root = new Node[conf.getNumParts()];
+		depth = new int[conf.getNumParts()];
+		size = new int[conf.getNumParts()];
+
 	}
 
-
-	public void setProgramID(int id) {
-		programID = id;
-	}
-
-	public int getProgramID() {
-		return programID;
-	}
 
 	// The evaluate method evaluates(executes) this program
 	public void evaluate(ReturnData out[]) {
-		for (int i = 0; i < numParts; i++) {
-			if (root[i] == null) throw new RuntimeException("Root node is NULL");
-		}
-		for (int i = 0; i < numParts; i++) {
+		for (int i = 0; i < config.getNumParts(); i++) {
 			if (out[i].getTypeNum() != root[i].getReturnType()) {
 				// int j = out[i].getTypeNum();
 				throw new RuntimeException("Return type of root node does not match return type of out");
 			}
 		}
 
-		for (int i = 0; i < numParts; i++) {
+		for (int i = 0; i < config.getNumParts(); i++) {
 			root[i].evaluate(out[i]);
 		}
 	}
@@ -65,7 +47,7 @@ public class GeneticProgram {
 	// If the old tree is no longer to be used it must be deleted
 	// explicitly by calling deleteTree() below.
 	public void setRoot(Node value, int place) {
-		if (place < 0 || place >= numParts) {
+		if (place < 0 || place >= config.getNumParts()) {
 			throw new IllegalArgumentException("Invalid place value");
 		}
 		root[place] = value;
@@ -74,13 +56,13 @@ public class GeneticProgram {
 	}
 
 	public Node getRoot(int place) {
-		if (place < 0 || place >= numParts) throw new IllegalArgumentException("Invalid place value");
+		if (place < 0 || place >= config.getNumParts()) throw new IllegalArgumentException("Invalid place value");
 		return root[place];
 	}
 
 	// Delete the current tree.
 	public void deleteTree(int place) {
-		if (place < 0 || place >= numParts) throw new IllegalArgumentException("Invalid place of value");
+		if (place < 0 || place >= config.getNumParts()) throw new IllegalArgumentException("Invalid place of value");
 		deleteTree(root[place]);
 		root[place] = null;
 	}
@@ -99,7 +81,7 @@ public class GeneticProgram {
 	}
 
 	public void computeSizeAndDepth() {
-		for (int i = 0; i < numParts; i++) {
+		for (int i = 0; i < config.getNumParts(); i++) {
 			if (root[i] == null) {
 				throw new RuntimeException("Root " + i + " is null");
 			}
@@ -109,7 +91,7 @@ public class GeneticProgram {
 	}
 
 	public void computeSizeAndDepth(int place) {
-		if (place < 0 || place >= numParts) {
+		if (place < 0 || place >= config.getNumParts()) {
 			throw new RuntimeException("Invalid place value: " + place);
 		}
 
@@ -121,7 +103,7 @@ public class GeneticProgram {
 
 	// Gets a random node from the program tree
 	public Node getRandomNode(int p) {
-		if (p < 0 || p >= numParts) {
+		if (p < 0 || p >= config.getNumParts()) {
 			throw new RuntimeException("Invalid p value: " + p);
 		}
 		Vector<Node> nodeList = new Vector<Node>();
@@ -139,7 +121,7 @@ public class GeneticProgram {
 
 	// Get a random node from the program tree that returns typeNum
 	public Node getRandomNode(int typeNum, int p) {
-		if (p < 0 || p >= numParts) {
+		if (p < 0 || p >= config.getNumParts()) {
 			throw new RuntimeException("Invalid p value: " + p);
 		}
 		Vector<Node> nodeList = new Vector<Node>();
@@ -158,9 +140,9 @@ public class GeneticProgram {
 	public void print(StringBuffer s) {
 		if (root == null) throw new RuntimeException("Root node is NULL");
 
-		s.append(numParts);
+		s.append(config.getNumParts());
 		s.append(" ");
-		for (int i = 0; i < numParts; i++) {
+		for (int i = 0; i < config.getNumParts(); i++) {
 			s.append("Program");
 			s.append(i);
 			s.append(" ");
@@ -170,12 +152,12 @@ public class GeneticProgram {
 
 	}
 
-	public void setReturnType(int type) {
-		returnType = type;
+	public void setReturnType(int root, int type) {
+		returnType[root] = type;
 	}
 
-	public int getReturnType() {
-		return returnType;
+	public int getReturnType(int root) {
+		return returnType[root];
 	}
 
 	public void setFitness(double f) {
@@ -208,9 +190,11 @@ public class GeneticProgram {
 
 		// tmp.setFitness(fitness);
 		// tmp.setAdjFitness(adjustFitness);
-		 tmp.setReturnType(returnType);
+		for(int i = 0 ;i<config.getNumParts();i++){
+		 tmp.setReturnType(i,returnType[i]);
+		}
 
-		for (int i = 0; i < numParts; i++) {
+		for (int i = 0; i < config.getNumParts(); i++) {
 			if (root[i] != null) {
 				rootTmp = root[i].copy(config);
 				tmp.setRoot(rootTmp, i);
@@ -242,7 +226,7 @@ public class GeneticProgram {
 			throw new RuntimeException("Parsing failed");
 		}
 
-		for (int i = 0; i < numParts; i++) {
+		for (int i = 0; i < config.getNumParts(); i++) {
 			deleteTree(i);
 			setRoot(tmpRoot[i], i);
 		}
@@ -255,7 +239,7 @@ public class GeneticProgram {
 		String token = scan.next();
 
 		// token should be a number
-		numParts = Integer.parseInt(token);
+		int numParts = Integer.parseInt(token);
 		tmpRoot = new Node[numParts];
 
 		token = scan.next();

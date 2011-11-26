@@ -13,7 +13,7 @@ public class ProgramGenerator {
 		config = conf;
 	}
 
-	public void generateInitialPopulation(List<GeneticProgram> pop, int numIndividuals, int expectedReturnType) {
+	public void generateInitialPopulation(List<GeneticProgram> pop, int numIndividuals, int expectedReturnType[]) {
 		generateTables();
 		Node tmp;
 		int indivPerSize = 0;
@@ -51,7 +51,7 @@ public class ProgramGenerator {
 			try {
 				// TODO dodgy
 				for (int i = 0; i < config.getNumParts(); i++) {
-					tmp = createGrowProgram(0, tmpSize, pop.get(indiv).getReturnType());
+					tmp = createGrowProgram(0, tmpSize, pop.get(indiv).getReturnType(i));
 					pop.get(indiv).setRoot(tmp, i);
 				}
 			} catch (Exception error) {
@@ -73,7 +73,7 @@ public class ProgramGenerator {
 
 			try {
 				for (int i = 0; i < config.getNumParts(); i++) {
-					tmp = createFullProgram(0, tmpSize, pop.get(indiv).getReturnType());
+					tmp = createFullProgram(0, tmpSize, pop.get(indiv).getReturnType(i));
 					pop.get(indiv).setRoot(tmp, i);
 				}
 			} catch (Exception error) {

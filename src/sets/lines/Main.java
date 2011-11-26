@@ -45,6 +45,7 @@ public class Main {
 		Population pop = new Population(100, 100, "run-log.txt", symConfig);
 
 		// Set the return type for our programs
+//		pop.setReturnType(0,ReturnImage.TYPENUM);
 		pop.setReturnType(ReturnImage.TYPENUM);
 
 		// Write out the population every N generations

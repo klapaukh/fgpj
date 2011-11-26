@@ -39,7 +39,7 @@ public class Population {
 	private double avgSize;
 
 	// The return type for all the programs in this population
-	private int returnType;
+	private int returnType[];
 
 	// What generation number are we currently processing.
 	private int generationNumber;
@@ -60,7 +60,7 @@ public class Population {
 		avgFitness = (0.0);
 		avgDepth = (0.0);
 		avgSize = (0.0);
-		returnType = (-1);
+		returnType = new int[conf.getNumParts()];
 		generationNumber = (0);
 		loggingFrequency = (1);
 		config = (conf);
@@ -88,7 +88,7 @@ public class Population {
 		avgFitness = (0.0);
 		avgDepth = (0.0);
 		avgSize = (0.0);
-		returnType = (-1);
+		returnType = new int[conf.getNumParts()];
 		generationNumber = (0);
 		loggingFrequency = (1);
 		config = (conf);
@@ -176,14 +176,14 @@ public class Population {
 				return true;
 			}
 
-			config.configModifier.ModifyConfig(config,this);
+			config.configModifier.ModifyConfig(config, this);
 
 			nextGeneration();
 		}
 		assignFitness(); // Evaluate the programs and assign their fitness values
 		sortPopulation();
-		config.fitnessObject.finish(); //Finshed with the fitness assessing now
-		
+		config.fitnessObject.finish(); // Finshed with the fitness assessing now
+
 		return false;
 	}
 
@@ -313,25 +313,31 @@ public class Population {
 		return generationNumber;
 	}
 
-	public void setReturnType(int type) {
-		int i;
-
-		returnType = type;
-
-		for (i = 0; i < numIndividuals; i++) {
-			pop.get(i).setReturnType(type);
+	public void setReturnType(int root, int type) {
+		returnType[root] = type;
+		for (int i = 0; i < numIndividuals; i++) {
+			pop.get(i).setReturnType(root, type);
 		}
 	}
 
-	public int getReturnType() {
-		return returnType;
+	public void setReturnType(int type) {
+		for (int i = 0; i < config.getNumParts(); i++) {
+			returnType[i] = type;
+		}
+		for (int i = 0; i < numIndividuals; i++) {
+			for (int j = 0; j < config.getNumParts(); j++) {
+				pop.get(i).setReturnType(j, type);
+			}
+		}
 	}
 
+	public int getReturnType(int root) {
+		return returnType[root];
+	}
 
 	public int getNumForMutation() {
 		return (int) (numIndividuals * config.mutationRate());
 	}
-
 
 	public int getNumForCrossover() {
 		return (int) (numIndividuals * config.crossoverRate());
@@ -342,7 +348,7 @@ public class Population {
 	}
 
 	public void assignFitness() {
-		config.fitnessObject.assignFitness(pop,config);
+		config.fitnessObject.assignFitness(pop, config);
 	}
 
 	private void sortPopulation() {
@@ -365,7 +371,7 @@ public class Population {
 		int index = 0;
 
 		for (int i = 1; i < numIndividuals; i++) {
-			if (config.fitnessObject.compare(pop.get(i), pop.get(index))< 0) {
+			if (config.fitnessObject.compare(pop.get(i), pop.get(index)) < 0) {
 				index = i;
 			}
 		}

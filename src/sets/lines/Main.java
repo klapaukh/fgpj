@@ -27,8 +27,8 @@ public class Main {
 			throw new RuntimeException("File cannot be found to enlarge");
 		}
 		String line;
-		scan.nextLine();// getline(image, line);
-		scan.nextLine();// ()getline(image,line);
+		scan.nextLine();
+		scan.nextLine();
 		line = scan.nextLine().substring(1);
 		GeneticProgram p = new GeneticProgram(c);
 		p.parseProgram(line);
@@ -47,16 +47,15 @@ public class Main {
 		// Set the return type for our programs
 		pop.setReturnType(ReturnImage.TYPENUM);
 
-
 		// Write out the population every N generations
 		pop.setLogFrequency(100000);
 
 		// Add the terminals we need
-		symConfig.termSet.addNodeToSet(ReturnImage.TYPENUM, new Null(symConfig));
-		symConfig.termSet.addNodeToSet(ReturnColor.TYPENUM, new SetColor(symConfig));
+		symConfig.addTerminal(ReturnImage.TYPENUM, new Null(symConfig));
+		symConfig.addTerminal(ReturnColor.TYPENUM, new SetColor(symConfig));
 
 		// Add the functions we need
-		symConfig.funcSet.addNodeToSet(ReturnImage.TYPENUM, new Line(symConfig));
+		symConfig.addFunction(ReturnImage.TYPENUM, new Line(symConfig));
 		
 		// Set the fitness class to be used
 
@@ -64,8 +63,6 @@ public class Main {
 		 symConfig.fitnessObject = new ImageFitness(symConfig);
 		// Initialise the fitness
 		symConfig.fitnessObject.initFitness();
-
-		// symConfig.selectionOperator = new TournamentSelection(5);
 
 		if (args.length == 2) {
 			symConfig.fitnessObject = new ImageFitness(symConfig);
@@ -103,8 +100,6 @@ public class Main {
 			System.out.println("Fitness " + pop.getBest().getFitness());
 			System.out.println(str1);
 
-			// cout << "Writing results to out.txt..." << endl;
-
 //			((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).fitness.getResult(pop.getBest(),100);
 //			((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).finish();
 			((ImageFitness)(symConfig.fitnessObject)).getResult(pop.getBest(),100);
@@ -115,10 +110,6 @@ public class Main {
 			System.exit(1);
 		}
 
-		// The following code executes the best program on the training data
-		// and outputs the results of the execution to the file results.txt
-
-		System.out.println("Finished");
 	}
 
 }

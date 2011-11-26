@@ -7,9 +7,7 @@ import java.util.Scanner;
 import library.GPConfig;
 import library.GeneticProgram;
 import library.NodeFactory;
-import library.ParallelFitness;
 import library.Population;
-import library.ProgramGenerator;
 
 public class Main {
 

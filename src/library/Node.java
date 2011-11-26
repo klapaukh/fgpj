@@ -142,7 +142,7 @@ public abstract class Node {
 	public abstract int computeSize();
 
 	/**
-	 * Compute the depth of the longest subtree
+	 * Compute the depth of the longest subtree, and set the value for depth of current node
 	 * 
 	 * @param curDepth
 	 *            depth at so far

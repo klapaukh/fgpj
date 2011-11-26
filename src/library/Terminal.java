@@ -1,12 +1,23 @@
 package library;
 
-import java.util.Vector;
+import java.util.List;
 
+/**
+ * The Terminal class represents a terminal is a GP program tree
+ * 
+ * @author Roma
+ *
+ */
 public abstract class Terminal extends Node {
 
-	public Terminal(int type, String n) 
+	/**
+	 * Make a new terminal. It has a return type and a name
+	 * @param type The return type
+	 * @param name name of the terminal
+	 */
+	public Terminal(int type, String name) 
 	{
-		super(type, 0, n);
+		super(type, 0, name);
 	}
 
 	public int computeSize()
@@ -20,15 +31,15 @@ public abstract class Terminal extends Node {
 	   return 1;
 	}
 
-	public void addTreeToVector(Vector<Node> vec)
+	public void addTreeToVector(List<Node> list)
 	{
-	   vec.add(this);
+	   list.add(this);
 	}
 
-	public void addTreeToVector(Vector<Node> vec, int typeNum)
+	public void addTreeToVector(List<Node> list, int typeNum)
 	{
 	   if (getReturnType() == typeNum)
-	      vec.add(this);
+	      list.add(this);
 	}
 
 	public void print(StringBuffer s)

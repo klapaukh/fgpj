@@ -136,7 +136,7 @@ public class Population {
 	}
 
 	public void generateInitialPopulation() {
-		config.programGenerator.generateInitialPopulation(pop, numIndividuals, returnType);
+		config.programGenerator.generateInitialPopulation(pop, numIndividuals, returnType, config);
 
 	}
 

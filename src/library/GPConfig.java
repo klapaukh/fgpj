@@ -213,7 +213,7 @@ public class GPConfig {
 		crossoverOperator = new Crossover();
 		mutationOperator = new Mutation();
 		selectionOperator = new Selection();
-		programGenerator = new ProgramGenerator(this);
+		programGenerator = new ProgramGenerator();
 		configModifier = new ConfigModifier() {
 			@Override
 			public void ModifyConfig(GPConfig g, Population pop) {

@@ -2,19 +2,21 @@ package library;
 
 import java.util.List;
 
+/**
+ * Generates programs. Can generate both grow and full programs. Default behaviour is generate 50-50 but can be changed
+ * @author Roma
+ *
+ */
 public class ProgramGenerator {
-	private GPConfig config;
-
 	private NodeVector<Node> growTable[];
 
 	private NodeVector<Node> fullTable[];
 
-	public ProgramGenerator(GPConfig conf) {
-		config = conf;
+	public ProgramGenerator() {
 	}
 
-	public void generateInitialPopulation(List<GeneticProgram> pop, int numIndividuals, int expectedReturnType[]) {
-		generateTables();
+	public void generateInitialPopulation(List<GeneticProgram> pop, int numIndividuals, int expectedReturnType[], GPConfig config) {
+		generateTables(config);
 		Node tmp;
 		int indivPerSize = 0;
 		int tmpSize = config.minDepth() - 1;
@@ -51,7 +53,7 @@ public class ProgramGenerator {
 			try {
 				// TODO dodgy
 				for (int i = 0; i < config.getNumRoots(); i++) {
-					tmp = createGrowProgram(0, tmpSize, pop.get(indiv).getReturnType(i));
+					tmp = createGrowProgram(0, tmpSize, pop.get(indiv).getReturnType(i),config);
 					pop.get(indiv).setRoot(tmp, i);
 				}
 			} catch (Exception error) {
@@ -73,7 +75,7 @@ public class ProgramGenerator {
 
 			try {
 				for (int i = 0; i < config.getNumRoots(); i++) {
-					tmp = createFullProgram(0, tmpSize, pop.get(indiv).getReturnType(i));
+					tmp = createFullProgram(0, tmpSize, pop.get(indiv).getReturnType(i),config);
 					pop.get(indiv).setRoot(tmp, i);
 				}
 			} catch (Exception error) {
@@ -90,7 +92,7 @@ public class ProgramGenerator {
 		}
 	}
 
-	public Node createFullProgram(int curDepth, int maxDepth, int expectedReturnType) {
+	public Node createFullProgram(int curDepth, int maxDepth, int expectedReturnType, GPConfig config) {
 		int depth;
 		Node node = null;
 
@@ -103,21 +105,21 @@ public class ProgramGenerator {
 
 		if (node == null) {
 			System.err.println("Warning, unable to create Full program for this set of Functions and Terminals");
-			return createGrowProgram(curDepth, maxDepth, expectedReturnType);
+			return createGrowProgram(curDepth, maxDepth, expectedReturnType,config);
 		}
 
 		if (node.getNumArgs() > 0) {
 			Function func = (Function) (node);
 
 			for (int i = 0; i < func.getNumArgs(); i++) {
-				func.setArgN(i, createFullProgram(curDepth + 1, maxDepth, func.getArgNReturnType(i)));
+				func.setArgN(i, createFullProgram(curDepth + 1, maxDepth, func.getArgNReturnType(i),config));
 			}
 		}
 
 		return node;
 	}
 
-	public Node createGrowProgram(int curDepth, int maxDepth, int expectedReturnType) {
+	public Node createGrowProgram(int curDepth, int maxDepth, int expectedReturnType, GPConfig config) {
 		int i;
 		int depth;
 		Node node;
@@ -135,14 +137,14 @@ public class ProgramGenerator {
 			Function func = (Function) (node);
 
 			for (i = 0; i < node.getNumArgs(); i++) {
-				func.setArgN(i, createGrowProgram(curDepth + 1, maxDepth, func.getArgNReturnType(i)));
+				func.setArgN(i, createGrowProgram(curDepth + 1, maxDepth, func.getArgNReturnType(i),config));
 			}
 		}
 		return node;
 	}
 
 	@SuppressWarnings("unchecked")
-	void generateTables() {
+	void generateTables(GPConfig config) {
 
 		int numFunctions = config.funcSet.size();
 		int numTerminals = config.termSet.size();

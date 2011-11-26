@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class Population {
 
 	private List<GeneticProgram> pop; // The population
-	private List<GeneticProgram> nextPop;
+	private List<GeneticProgram> nextPop; //Space saver for next generation
 
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 
@@ -24,13 +24,6 @@ public class Population {
 	// Number of individuals in this population
 	private int numIndividuals;
 
-	// Used for Decimation
-	private int initNumIndividuals;
-	private int numGenerationBeforeDecimation;
-	private int fallPerGeneration;
-
-	// Should Decimation be performed?
-	private boolean performDecimation;
 
 	// The best, worst, and average fitness
 	private double bestFitness;
@@ -56,7 +49,6 @@ public class Population {
 
 	public Population(int size, String logFileName, GPConfig conf) {
 		numIndividuals = (size);
-		performDecimation = (false);
 		bestFitness = (0.0);
 		worstFitness = (0.0);
 		avgFitness = (0.0);
@@ -81,35 +73,7 @@ public class Population {
 		}
 	}
 
-	public Population(int size, int initSize, String logFileName, GPConfig conf) {
-		numIndividuals = (initSize);
-		initNumIndividuals = (size);
-		numGenerationBeforeDecimation = (0);
-		performDecimation = (true);
-		bestFitness = (0.0);
-		worstFitness = (0.0);
-		avgFitness = (0.0);
-		avgDepth = (0.0);
-		avgSize = (0.0);
-		returnType = new int[conf.getNumRoots()];
-		generationNumber = (0);
-		loggingFrequency = (1);
-		config = (conf);
-		int i;
-		fallPerGeneration = (int) ((initSize - size) / (numGenerationBeforeDecimation + 1));
-		pop = new ArrayList<GeneticProgram>(numIndividuals);
-		nextPop = new ArrayList<GeneticProgram>(numIndividuals);
-		for (i = 0; i < numIndividuals; i++) {
-			pop.add(new GeneticProgram(config));
 
-		}
-
-		try {
-			logFile = new PrintStream(new File(logFileName));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
 
 	public List<GeneticProgram> getPopulation() {
 		return pop;
@@ -144,32 +108,15 @@ public class Population {
 	}
 
 	public boolean evolve(int numGenerations) {
-		int i = 0;
 		evaluations = 0;
-		for (; i < numGenerations; i++) {
-			assignFitness(); // Evaluate the programs and assign their fitness values
+		for (int i = 0 ; i < numGenerations; i++) {
+			config.fitnessObject.assignFitness(pop, config); // Evaluate the programs and assign their fitness values
 			evaluations += numIndividuals; // Update the number of evaluations performed
 			sortPopulation(); // Sort the population based on fitness
 			computeStatistics(); // Calculate some statistics for the population
 			writeLog(); // Write some information to the log file
 
-			/*
-			 * Decimation The actual removal of individuals from the bottom of the population and the freeing of the
-			 * memory is carried out in the numGenerationBeforeDecimation method.
-			 */
-			if (performDecimation) {
-				/*
-				 * If the numGenerationBeforeDecimation set to a value greater than 0 progressive decimation is
-				 * performed
-				 */
-				if (i < numGenerationBeforeDecimation)
-					setNumIndividuals(numIndividuals - fallPerGeneration);
-				else if (i == numGenerationBeforeDecimation) {
-					// Decimation is completed in this step.
-					setNumIndividuals(initNumIndividuals);
-					performDecimation = false;
-				}
-			}
+
 
 			// If the solution has been found quit and return true to
 			// indicate success
@@ -183,7 +130,7 @@ public class Population {
 
 			nextGeneration();
 		}
-		assignFitness(); // Evaluate the programs and assign their fitness values
+		config.fitnessObject.assignFitness(pop, config);
 		sortPopulation();
 		config.fitnessObject.finish(); // Finshed with the fitness assessing now
 
@@ -233,29 +180,6 @@ public class Population {
 		nextPop.clear();
 
 		generationNumber++;
-	}
-
-	/*******************************************************************************************************************
-	 * setInitNumIndividuals makes sure that the initial population size is greater than the actual size of the
-	 * population, for performing Decimation.
-	 ******************************************************************************************************************/
-
-	public void setNumGenerationBeforeDecimation(int num) {
-		if (performDecimation) {
-			// Negative values are not allowed for numGenerationBeforeDecimation
-			if (num < 0) {
-				num = 0;
-			}
-
-			numGenerationBeforeDecimation = num;
-			fallPerGeneration = (numIndividuals - initNumIndividuals) / (numGenerationBeforeDecimation + 1);
-		}
-	}
-
-	public int getNumGenerationBeforeDecimation() {
-		if (performDecimation)
-			return numGenerationBeforeDecimation;
-		else return -1;
 	}
 
 	/*******************************************************************************************************************
@@ -330,10 +254,6 @@ public class Population {
 
 	public int getNumForElitism() {
 		return (int) (numIndividuals * config.elitismRate());
-	}
-
-	public void assignFitness() {
-		config.fitnessObject.assignFitness(pop, config);
 	}
 
 	private void sortPopulation() {
@@ -535,7 +455,6 @@ public class Population {
 			s.append("Fitness ");
 			s.append(pop.get(i).getFitness());
 			s.append('\n');
-			// TODO I changed this
 			for (int j = 0; j < config.getNumRoots(); j++) {
 				s.append("Depth ");
 				s.append(pop.get(i).getDepth(j));

@@ -42,7 +42,7 @@ public class Main {
 		GPConfig symConfig = new GPConfig(1, 1, 8, 0.7, 0.28, 0.02);
 
 		// Declare a population, giving the size and a log file name
-		Population pop = new Population(100, 100, "run-log.txt", symConfig);
+		Population pop = new Population(100, "run-log.txt", symConfig);
 
 		// Set the return type for our programs
 //		pop.setReturnType(0,ReturnImage.TYPENUM);

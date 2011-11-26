@@ -68,6 +68,7 @@ public class NodeVector<T extends Node> {
 	/**
 	 * 
 	 * Get the size of the list
+	 * 
 	 * @return the size of the list
 	 */
 	public int size() {
@@ -77,7 +78,8 @@ public class NodeVector<T extends Node> {
 	/**
 	 * Generate a random node in the list
 	 * 
-	 * @param config the config to generate the node with
+	 * @param config
+	 *            the config to generate the node with
 	 * @return a new random node
 	 */
 	public T generateRandomNode(GPConfig config) {
@@ -87,8 +89,11 @@ public class NodeVector<T extends Node> {
 
 	/**
 	 * Generate a new random node of a given type
-	 * @param returnType the return type that the new node must have 
-	 * @param config the config used to create the node
+	 * 
+	 * @param returnType
+	 *            the return type that the new node must have
+	 * @param config
+	 *            the config used to create the node
 	 * @return the new random node
 	 */
 	public T generateRandomNode(int returnType, GPConfig config) {
@@ -104,7 +109,7 @@ public class NodeVector<T extends Node> {
 			numNodes = 0;
 			for (int i = 0; i < vec.size(); i++) {
 				if (vec.get(i).getReturnType() == returnType) {
-					if(numNodes == pos){
+					if (numNodes == pos) {
 						return vec.get(i).generate(config);
 					}
 					numNodes++;

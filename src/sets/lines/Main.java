@@ -31,7 +31,7 @@ public class Main {
 		scan.nextLine();
 		line = scan.nextLine().substring(1);
 		GeneticProgram p = new GeneticProgram(c);
-		p.parseProgram(line);
+		p.parseProgram(line, c);
 		((ImageFitness) (c.fitnessObject)).getResult(p, size, c);
 	}
 

@@ -35,7 +35,7 @@ public class Crossover {
 				return;
 
 			// Get a random point in the tree of gp1
-			point1 = gp1.getRandomNode(par1);
+			point1 = gp1.getRandomNode(par1,config);
 
 			if (point1 == null) // Can't find valid node
 				continue;
@@ -44,7 +44,7 @@ public class Crossover {
 
 			// Get a random point in the tree which has the same return
 			// type as point1
-			point2 = gp2.getRandomNode(point1.getReturnType(), par2);
+			point2 = gp2.getRandomNode(point1.getReturnType(), par2,config);
 
 			// If there is no such node with the same return type then stop
 			// and try again.

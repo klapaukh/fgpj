@@ -10,7 +10,7 @@ public class Mutation {
 		//need to get parent index here as well
 		int p = (int) Math.abs(config.randomNumGenerator.nextLong() % config
 				.getNumParts());
-		tmp = gp.getRandomNode(p);
+		tmp = gp.getRandomNode(p,config);
 		if(tmp == null)
 			return;
 

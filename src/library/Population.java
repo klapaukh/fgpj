@@ -197,19 +197,17 @@ public class Population {
 
 		nextPop = new ArrayList<GeneticProgram>(numIndividuals);
 
-		adjustFitness();
-
 		// copy some individuals (elitism)
 		for (i = 0; i < getNumForElitism(); i++) {
-			nextPop.add(pop.get(i).copy());
+			nextPop.add(pop.get(i).copy(config));
 		}
 
 		// crossover some individuals
 		for (i = 0; i < getNumForCrossover(); i += 2) {
 			indiv1 = config.selectionOperator.select(pop, numIndividuals, config);
 			indiv2 = config.selectionOperator.select(pop, numIndividuals, config);
-			nextPop.add(pop.get(indiv1).copy());
-			nextPop.add(pop.get(indiv2).copy());
+			nextPop.add(pop.get(indiv1).copy(config));
+			nextPop.add(pop.get(indiv2).copy(config));
 
 			config.crossoverOperator.crossover(nextPop.get(nextPop.size() - 2), (nextPop.get(nextPop.size() - 1)), 100,
 					config);
@@ -218,7 +216,7 @@ public class Population {
 		// mutate some individuals
 		for (i = 0; i < getNumForMutation(); i++) {
 			indiv1 = config.selectionOperator.select(pop, numIndividuals, config);
-			nextPop.add(pop.get(indiv1).copy());
+			nextPop.add(pop.get(indiv1).copy(config));
 			config.mutationOperator.mutate(nextPop.get(nextPop.size() - 1), config);
 		}
 		for (GeneticProgram m : pop) {
@@ -231,24 +229,7 @@ public class Population {
 		generationNumber++;
 	}
 
-	/*******************************************************************************************************************
-	 * adjustFitness() Adjusts the raw fitness values for use with the roullette wheel selection operator. Gives
-	 * programs with low (better) raw fitnesses higher adjusted fitnesses.
-	 ******************************************************************************************************************/
 
-	public void adjustFitness() {
-		int i;
-		double totalFitness = 0.0;
-
-		for (i = 0; i < numIndividuals; i++) {
-			pop.get(i).setAdjFitness(1.0 / (1.0 + pop.get(i).getFitness()));
-			totalFitness += pop.get(i).getAdjFitness();
-		}
-
-		for (i = 0; i < numIndividuals; i++) {
-			pop.get(i).setAdjFitness(pop.get(i).getAdjFitness() / totalFitness);
-		}
-	}
 
 	/*******************************************************************************************************************
 	 * setInitNumIndividuals makes sure that the initial population size is greater than the actual size of the
@@ -292,7 +273,7 @@ public class Population {
 
 		if (num > numIndividuals) {
 			for (; i < num; i++) {
-				tmp.add(tmp.get(numIndividuals - 1).copy());
+				tmp.add(tmp.get(numIndividuals - 1).copy(config));
 			}
 		}
 
@@ -501,7 +482,7 @@ public class Population {
 				} else if (line.startsWith("Program")) {
 					programString = line.substring("Program".length() + 1);
 
-					pop.get(individual).parseProgram(programString);
+					pop.get(individual).parseProgram(programString,config);
 				} else {
 					System.err.println("Ignoring line " + line);
 				}

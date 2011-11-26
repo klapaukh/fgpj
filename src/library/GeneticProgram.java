@@ -4,41 +4,60 @@ import java.util.Scanner;
 import java.util.Vector;
 
 public class GeneticProgram {
-	private GPConfig config; // Configuration object for this program
+	
+	/**
+	 * The fitness of this program
+	 */
+	private double fitness;
 
-	private double fitness; // The fitness of this program
+	/**
+	 * Depth of this program
+	 */
+	private final int[] depth;
 
-	private double adjustFitness; // The adjusted fitness
+	/**
+	 * Size of this program
+	 */
+	private final int[] size;
 
-	private int[] depth; // Depth of this program
+	/**
+	 * Return type of this program
+	 */
+	private final int[] returnType;
 
-	private int[] size; // Size of this program
-
-	private int[] returnType; // Return type of this program
-
-	private Node[] root; // The root node of the program tree
+	/**
+	 * The root node of the program tree
+	 */
+	private final Node[] root;
+	
+	/**Number of parts**/
+	private final int numRoots;
 
 	public GeneticProgram(GPConfig conf) {
-		config = conf;
+		this(conf.getNumParts());
+	}
+	
+	
+	public GeneticProgram(int numParts) {
+		this.numRoots = numParts;
 		fitness = 0.0;
-		returnType = new int[conf.getNumParts()];
-		root = new Node[conf.getNumParts()];
-		depth = new int[conf.getNumParts()];
-		size = new int[conf.getNumParts()];
+		returnType = new int[numParts];
+		root = new Node[numParts];
+		depth = new int[numParts];
+		size = new int[numParts];
 
 	}
 
-
 	// The evaluate method evaluates(executes) this program
 	public void evaluate(ReturnData out[]) {
-		for (int i = 0; i < config.getNumParts(); i++) {
+		for (int i = 0; i < numRoots; i++) {
 			if (out[i].getTypeNum() != root[i].getReturnType()) {
 				// int j = out[i].getTypeNum();
 				throw new RuntimeException("Return type of root node does not match return type of out");
 			}
 		}
 
-		for (int i = 0; i < config.getNumParts(); i++) {
+		for (int i = 0; i < numRoots; i++) {
 			root[i].evaluate(out[i]);
 		}
 	}
@@ -47,7 +66,7 @@ public class GeneticProgram {
 	// If the old tree is no longer to be used it must be deleted
 	// explicitly by calling deleteTree() below.
 	public void setRoot(Node value, int place) {
-		if (place < 0 || place >= config.getNumParts()) {
+		if (place < 0 || place >= numRoots) {
 			throw new IllegalArgumentException("Invalid place value");
 		}
 		root[place] = value;
@@ -56,13 +75,13 @@ public class GeneticProgram {
 	}
 
 	public Node getRoot(int place) {
-		if (place < 0 || place >= config.getNumParts()) throw new IllegalArgumentException("Invalid place value");
+		if (place < 0 || place >= numRoots) throw new IllegalArgumentException("Invalid place value");
 		return root[place];
 	}
 
 	// Delete the current tree.
 	public void deleteTree(int place) {
-		if (place < 0 || place >= config.getNumParts()) throw new IllegalArgumentException("Invalid place of value");
+		if (place < 0 || place >= numRoots) throw new IllegalArgumentException("Invalid place of value");
 		deleteTree(root[place]);
 		root[place] = null;
 	}
@@ -81,7 +100,7 @@ public class GeneticProgram {
 	}
 
 	public void computeSizeAndDepth() {
-		for (int i = 0; i < config.getNumParts(); i++) {
+		for (int i = 0; i < numRoots; i++) {
 			if (root[i] == null) {
 				throw new RuntimeException("Root " + i + " is null");
 			}
@@ -91,7 +110,7 @@ public class GeneticProgram {
 	}
 
 	public void computeSizeAndDepth(int place) {
-		if (place < 0 || place >= config.getNumParts()) {
+		if (place < 0 || place >= numRoots) {
 			throw new RuntimeException("Invalid place value: " + place);
 		}
 
@@ -102,8 +121,8 @@ public class GeneticProgram {
 	}
 
 	// Gets a random node from the program tree
-	public Node getRandomNode(int p) {
-		if (p < 0 || p >= config.getNumParts()) {
+	public Node getRandomNode(int p, GPConfig config) {
+		if (p < 0 || p >= numRoots) {
 			throw new RuntimeException("Invalid p value: " + p);
 		}
 		Vector<Node> nodeList = new Vector<Node>();
@@ -120,8 +139,8 @@ public class GeneticProgram {
 	}
 
 	// Get a random node from the program tree that returns typeNum
-	public Node getRandomNode(int typeNum, int p) {
-		if (p < 0 || p >= config.getNumParts()) {
+	public Node getRandomNode(int typeNum, int p, GPConfig config) {
+		if (p < 0 || p >= numRoots) {
 			throw new RuntimeException("Invalid p value: " + p);
 		}
 		Vector<Node> nodeList = new Vector<Node>();
@@ -140,9 +159,9 @@ public class GeneticProgram {
 	public void print(StringBuffer s) {
 		if (root == null) throw new RuntimeException("Root node is NULL");
 
-		s.append(config.getNumParts());
+		s.append(numRoots);
 		s.append(" ");
-		for (int i = 0; i < config.getNumParts(); i++) {
+		for (int i = 0; i < numRoots; i++) {
 			s.append("Program");
 			s.append(i);
 			s.append(" ");
@@ -173,28 +192,20 @@ public class GeneticProgram {
 		return fitness;
 	}
 
-	public void setAdjFitness(double f) {
-		adjustFitness = f;
-	}
-
-	public double getAdjFitness() {
-		return adjustFitness;
-	}
-
 	// The copy method will create a new genetic
 	// program which is a copy of the current program
-	public GeneticProgram copy() {
-		GeneticProgram tmp = new GeneticProgram(config);
+	public GeneticProgram copy(GPConfig config) {
+		GeneticProgram tmp = new GeneticProgram(numRoots);
 
 		Node rootTmp;
 
 		// tmp.setFitness(fitness);
 		// tmp.setAdjFitness(adjustFitness);
-		for(int i = 0 ;i<config.getNumParts();i++){
-		 tmp.setReturnType(i,returnType[i]);
+		for (int i = 0; i < numRoots; i++) {
+			tmp.setReturnType(i, returnType[i]);
 		}
 
-		for (int i = 0; i < config.getNumParts(); i++) {
+		for (int i = 0; i < numRoots; i++) {
 			if (root[i] != null) {
 				rootTmp = root[i].copy(config);
 				tmp.setRoot(rootTmp, i);
@@ -213,12 +224,12 @@ public class GeneticProgram {
 	/***************************************************************************
 	 * parseProgram based on function parseTree originally written by Peter Wilson
 	 **************************************************************************/
-	public void parseProgram(String programString) {
+	public void parseProgram(String programString, GPConfig config) {
 		Node[] tmpRoot = null;
 		Scanner scan = new Scanner(programString);
 
 		try {
-			tmpRoot = buildTree(scan);
+			tmpRoot = buildTree(scan, config);
 		} catch (Exception e) {
 			System.err.println("GeneticProgram::parseProgram\nError program: ");
 			System.err.println(programString);
@@ -226,13 +237,13 @@ public class GeneticProgram {
 			throw new RuntimeException("Parsing failed");
 		}
 
-		for (int i = 0; i < config.getNumParts(); i++) {
+		for (int i = 0; i < numRoots; i++) {
 			deleteTree(i);
 			setRoot(tmpRoot[i], i);
 		}
 	}
 
-	private Node[] buildTree(Scanner scan) {
+	private Node[] buildTree(Scanner scan, GPConfig config) {
 		Node[] tmpRoot = null;
 		Node arg = null;
 
@@ -258,7 +269,7 @@ public class GeneticProgram {
 				tmpRoot[i] = config.funcSet.generateNodeByName(token, config);
 				token = scan.next();
 				while (!token.equals(")")) {
-					arg = buildTreeNode(scan, token);
+					arg = buildTreeNode(scan, token,config);
 					((Function) (tmpRoot[i])).setArgN(count, arg);
 					count++;
 					token = scan.next();
@@ -266,7 +277,7 @@ public class GeneticProgram {
 				token = scan.next();
 			} else // Must be terminal
 			{
-				tmpRoot[i] = config.termSet.generateNodeByName(token,config);
+				tmpRoot[i] = config.termSet.generateNodeByName(token, config);
 				token = scan.next(); // read extra |
 			}
 		}
@@ -277,7 +288,7 @@ public class GeneticProgram {
 		return tmpRoot;
 	}
 
-	private Node buildTreeNode(Scanner scan, String token) {
+	private Node buildTreeNode(Scanner scan, String token, GPConfig config) {
 		Node tmpRoot = null;
 		Node arg = null;
 
@@ -288,17 +299,17 @@ public class GeneticProgram {
 		} else if (token.equalsIgnoreCase("(")) // Start of function
 		{
 			token = scan.next();
-			tmpRoot = config.funcSet.generateNodeByName(token,config);
+			tmpRoot = config.funcSet.generateNodeByName(token, config);
 			token = scan.next();
 			while (!token.equals(")")) {
-				arg = buildTreeNode(scan, token);
+				arg = buildTreeNode(scan, token, config);
 				((Function) (tmpRoot)).setArgN(count, arg);
 				count++;
 				token = scan.next();
 			}
 		} else // Must be terminal
 		{
-			tmpRoot = config.termSet.generateNodeByName(token,config);
+			tmpRoot = config.termSet.generateNodeByName(token, config);
 		}
 
 		// If we get an error it will usually be because of a terminal
@@ -306,8 +317,8 @@ public class GeneticProgram {
 
 		return tmpRoot;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		StringBuffer s = new StringBuffer();
 		this.print(s);
 		return s.toString();

@@ -3,6 +3,13 @@ package library;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * NodeFactory recycles nodes. This is an attempt to try to reduce the amount of memory thrashing that goes on with
+ * constant allocation of new nodes for the GP trees.
+ * 
+ * @author Roma
+ * 
+ */
 public class NodeFactory {
 
 	private Queue<Node>[] nodes;
@@ -14,6 +21,12 @@ public class NodeFactory {
 		hit = miss = 0;
 	}
 
+	/**
+	 * Returns a node to the factory. There must be no external aliases of this Node.
+	 * 
+	 * @param node
+	 *            The node to return to the factory
+	 */
 	public static void delete(Node node) {
 		if (node == null) return;
 		node.setParent(null);
@@ -27,12 +40,15 @@ public class NodeFactory {
 			f.unhook();
 		}
 		n.nodes[node.getKind()].offer(node);
-
-		// all done
 	}
 
+	/**
+	 * Get a new node of the specified kind
+	 * @param kind The kind of node to get
+	 * @param conf The config to create the node with
+	 * @return A new node
+	 */
 	public static Node newNode(int kind, GPConfig conf) {
-
 		Queue<Node> l = n.nodes[kind];
 		if (l.size() == 1) {
 			n.miss++;
@@ -43,6 +59,12 @@ public class NodeFactory {
 		}
 	}
 
+	/**
+	 * Add a new kind of node to the Factory, so that it can be generated.
+	 * 
+	 * @param node New kind of node to add
+	 * @param config the config to create new nodes with
+	 */
 	@SuppressWarnings("unchecked")
 	public static void teach(Node node, GPConfig config) {
 		node.setKind(n.kinds++);
@@ -56,6 +78,9 @@ public class NodeFactory {
 		n.nodes[i].add(node.getNew(config));
 	}
 
+	/**
+	 * Print a performance report for the cache
+	 */
 	public static void report() {
 		System.out.printf("%s cache hits: %.2f\n", "%", (double) (100.0 * n.hit / (double) (n.hit + n.miss)));
 		System.out.println(n.kinds + " different kinds");

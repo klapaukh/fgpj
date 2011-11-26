@@ -171,11 +171,12 @@ public class Population {
 			// If the solution has been found quit and return true to
 			// indicate success
 			if (config.fitnessObject.solutionFound(pop)) {
+				config.fitnessObject.finish();
 				logFile.println("Solution found!");
 				return true;
 			}
 
-			config.configModifier.ModifyConfig();
+			config.configModifier.ModifyConfig(config,this);
 
 			nextGeneration();
 		}
@@ -326,24 +327,14 @@ public class Population {
 		return returnType;
 	}
 
-	public double getMutationRate() {
-		return config.mutationRate();
-	}
 
 	public int getNumForMutation() {
 		return (int) (numIndividuals * config.mutationRate());
 	}
 
-	public double getCrossoverRate() {
-		return config.crossoverRate();
-	}
 
 	public int getNumForCrossover() {
 		return (int) (numIndividuals * config.crossoverRate());
-	}
-
-	public double getElitismRate() {
-		return config.elitismRate();
 	}
 
 	public int getNumForElitism() {

@@ -214,9 +214,9 @@ public class GPConfig {
 		mutationOperator = new Mutation();
 		selectionOperator = new Selection();
 		programGenerator = new ProgramGenerator(this);
-		configModifier = new ConfigModifier(this) {
+		configModifier = new ConfigModifier() {
 			@Override
-			public void ModifyConfig() {
+			public void ModifyConfig(GPConfig g, Population pop) {
 			}
 		};
 	}

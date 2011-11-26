@@ -42,7 +42,9 @@ public class Crossover {
 		int par1 = 0;
 		int par2 = 0;
 		while (!valid) {
-			if (count >= numRetries) return false;
+			if (count >= numRetries) {
+				return false;
+			}
 
 			point1 = point2 = null;
 

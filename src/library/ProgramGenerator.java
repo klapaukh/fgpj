@@ -33,7 +33,7 @@ public class ProgramGenerator {
 		int numIndividualsForRamping = pop.size() / 2;
 		int numSizes = config.maxDepth() - config.minDepth() + 1;
 		int sizeInc = numIndividualsForRamping < numSizes ? numSizes / numIndividualsForRamping : 1;
-		int minSize = numIndividualsForRamping < numSizes ? config.minDepth() : config.maxDepth()
+		int minSize = numIndividualsForRamping > numSizes ? config.minDepth() : config.maxDepth()
 				- (numIndividualsForRamping - 1);
 
 		int indiv;
@@ -109,7 +109,8 @@ public class ProgramGenerator {
 	 * @return Node that fits the requested description
 	 */
 	public Node createGrowProgram(int curDepth, int maxDepth, int expectedReturnType, GPConfig config) {
-		Node node = growTable[curDepth - 1].generateRandomNode(expectedReturnType, config);
+		int depth = maxDepth - curDepth;
+		Node node = growTable[depth].generateRandomNode(expectedReturnType, config);
 
 		if (node.getNumArgs() > 0) {
 			Function func = (Function) (node);
@@ -147,12 +148,12 @@ public class ProgramGenerator {
 		for (int i = 0; i < numTerminals; i++) {
 			Node n = config.termSet.generate(i, config);
 
-			growTable[maxDepth - 1].add(n);
-			fullTable[maxDepth - 1].add(n);
+			growTable[0].add(n);
+			fullTable[0].add(n);
 		}
 
 		// grow table creation, by level
-		for (int curDepth = maxDepth - 2; curDepth >= 0; curDepth--) {
+		for (int curDepth = 1; curDepth < maxDepth; curDepth++) {
 
 			// Add the terminals - they can be at any level but not below minDepth
 			if (curDepth >= config.minDepth()) {
@@ -174,8 +175,8 @@ public class ProgramGenerator {
 					int argNReturnType = tmpFunc.getArgNReturnType(arg);
 
 					// Can you find something in the level below to attach it to
-					for (int tSize = 0; !found && tSize < growTable[curDepth + 1].size(); tSize++) {
-						Node tmpNode = growTable[curDepth + 1].generate(tSize, config);
+					for (int tSize = 0; !found && tSize < growTable[curDepth - 1].size(); tSize++) {
+						Node tmpNode = growTable[curDepth - 1].generate(tSize, config);
 
 						if (argNReturnType == tmpNode.getReturnType()) {
 							found = true;
@@ -196,7 +197,7 @@ public class ProgramGenerator {
 		}
 
 		// full table creation
-		for (int curDepth = maxDepth - 2; curDepth >= 0; curDepth--) {
+		for (int curDepth = 1; curDepth <maxDepth; curDepth++) {
 			// Add the functions
 			for (int i = 0; i < numFunctions; i++) {
 				Function tmpFunc = config.funcSet.generate(i, config);
@@ -206,8 +207,8 @@ public class ProgramGenerator {
 					boolean found = false;
 					int argNReturnType = tmpFunc.getArgNReturnType(arg);
 
-					for (int tSize = 0; !found && tSize < fullTable[curDepth + 1].size(); tSize++) {
-						Node tmpNode = fullTable[curDepth + 1].generate(tSize, config);
+					for (int tSize = 0; !found && tSize < fullTable[curDepth - 1].size(); tSize++) {
+						Node tmpNode = fullTable[curDepth - 1].generate(tSize, config);
 
 						if (argNReturnType == tmpNode.getReturnType()) {
 							found = true;

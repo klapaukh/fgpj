@@ -63,7 +63,7 @@ public class Main {
 		// symConfig.fitnessObject = new ParallelFitness<ImageFitness>(new ImageFitness());
 		symConfig.fitnessObject = new ImageFitness();
 		// Initialise the fitness
-		symConfig.fitnessObject.initFitness();
+		
 
 		if (args.length == 2) {
 			symConfig.fitnessObject = new ImageFitness();

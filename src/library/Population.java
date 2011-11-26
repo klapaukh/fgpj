@@ -100,6 +100,7 @@ public class Population {
 	 */
 	public boolean evolve(int numGenerations) {
 		evaluations = 0;
+		config.fitnessObject.initFitness();
 		for (int i = 0; i < numGenerations; i++) {
 			config.fitnessObject.assignFitness(pop, config); // Evaluate the programs and assign their fitness values
 			evaluations += pop.size(); // Update the number of evaluations performed
@@ -155,7 +156,7 @@ public class Population {
 		}
 
 		int i = pop.size() - 1;
-		while (nextPop.size() > pop.size()) {
+		while (nextPop.size() < pop.size()) {
 			nextPop.add(pop.get(i--).copy(config));
 		}
 

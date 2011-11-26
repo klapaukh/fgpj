@@ -140,16 +140,8 @@ public class ImageFitness extends Fitness {
 		return false;
 	}
 
-	public boolean isBetter(GeneticProgram gp1, GeneticProgram gp2) {
-		return (gp1.getFitness() > gp2.getFitness());
-	}
-
-	public boolean isWorse(GeneticProgram gp1, GeneticProgram gp2) {
-		return (gp1.getFitness() < gp2.getFitness());
-	}
-
-	public boolean isEqual(GeneticProgram gp1, GeneticProgram gp2) {
-		return (gp1.getFitness() == gp2.getFitness());
+	public int compare(GeneticProgram gp1, GeneticProgram gp2) {
+		return Double.compare(gp1.getFitness() , gp2.getFitness());
 	}
 
 	public double best() {

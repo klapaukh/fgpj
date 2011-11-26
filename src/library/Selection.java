@@ -2,37 +2,45 @@ package library;
 
 import java.util.List;
 
+/**
+ * This is the selection Operator. This is an implementation of roulette wheel. It can be exteded to be replaced
+ * 
+ * @author Roma
+ * 
+ */
 public class Selection {
-	public int select(List<GeneticProgram> pop, int popSize, GPConfig config)
-	{
-	   int i;
-	   double totalFitness=0;
-	   double randValue;
-	   double cumulFitness;
 
-	   for(i=0; i<popSize; i++)
-	   {
-	      totalFitness += pop.get(i).getFitness();
-	   } 
+	/**
+	 * Select an index from the population based on Roulette wheel. Bigger fitness means greater chance of selection.
+	 * 
+	 * @param pop the population of programs
+	 * @param config the config
+	 * @return the index of the selected program
+	 */
+	public int select(List<GeneticProgram> pop, GPConfig config) {
+		double totalFitness = 0;
 
-	   double tmpRand = config.randomNumGenerator.nextDouble();
-	   randValue = totalFitness * tmpRand; 
+		for (int i = 0; i < pop.size(); i++) {
+			totalFitness += pop.get(i).getFitness();
+		}
 
-	   cumulFitness = totalFitness;
-	   for(i=0; i<popSize; i++)
-	   {
-	      cumulFitness -= pop.get(i).getFitness();
+		double tmpRand = config.randomNumGenerator.nextDouble();
+		double randValue = totalFitness * tmpRand;
 
-	      if(cumulFitness <= randValue) 
-	         break;   
-	   }
+		double cumulFitness = totalFitness;
+		
+		int i ;
+		for (i = 0; i < pop.size(); i++) {
+			cumulFitness -= pop.get(i).getFitness();
 
-	   if (i >= popSize)
-	   {
-	      i = popSize-1;
-	   }
+			if (cumulFitness <= randValue) break;
+		}
 
-	   return i;
+		if (i >= pop.size()) {
+			i = pop.size() - 1;
+		}
+
+		return i;
 	}
 
 }

@@ -206,8 +206,8 @@ public class Population {
 
 		// crossover some individuals
 		for (i = 0; i < getNumForCrossover(); i += 2) {
-			indiv1 = config.selectionOperator.select(pop, numIndividuals, config);
-			indiv2 = config.selectionOperator.select(pop, numIndividuals, config);
+			indiv1 = config.selectionOperator.select(pop, config);
+			indiv2 = config.selectionOperator.select(pop, config);
 			nextPop.add(pop.get(indiv1).copy(config));
 			nextPop.add(pop.get(indiv2).copy(config));
 
@@ -217,7 +217,7 @@ public class Population {
 
 		// mutate some individuals
 		for (i = 0; i < getNumForMutation(); i++) {
-			indiv1 = config.selectionOperator.select(pop, numIndividuals, config);
+			indiv1 = config.selectionOperator.select(pop, config);
 			nextPop.add(pop.get(indiv1).copy(config));
 			config.mutationOperator.mutate(nextPop.get(nextPop.size() - 1), config);
 		}
@@ -226,7 +226,7 @@ public class Population {
 				m.deleteTree(j);
 			}
 		}
-		
+
 		List<GeneticProgram> t = pop;
 		pop = nextPop;
 		nextPop = t;
@@ -234,8 +234,6 @@ public class Population {
 
 		generationNumber++;
 	}
-
-
 
 	/*******************************************************************************************************************
 	 * setInitNumIndividuals makes sure that the initial population size is greater than the actual size of the
@@ -488,7 +486,7 @@ public class Population {
 				} else if (line.startsWith("Program")) {
 					programString = line.substring("Program".length() + 1);
 
-					pop.get(individual).parseProgram(programString,config);
+					pop.get(individual).parseProgram(programString, config);
 				} else {
 					System.err.println("Ignoring line " + line);
 				}

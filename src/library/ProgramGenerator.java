@@ -122,7 +122,7 @@ public class ProgramGenerator {
 		int depth;
 		Node node;
 
-		depth = maxDepth - curDepth;
+		depth = maxDepth -1 - curDepth;
 		if (depth < 0) {
 			depth = 0;
 		}

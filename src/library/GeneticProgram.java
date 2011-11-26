@@ -87,6 +87,7 @@ public class GeneticProgram {
 	 */
 	public void setRoot(Node value, int place) {
 		root[place] = value;
+		value.setParent(null);
 		computeSizeAndDepth(place);
 	}
 

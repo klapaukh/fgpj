@@ -104,15 +104,10 @@ public class Crossover {
 			// replace point1 with point2
 			// update point2s parent node
 			parent1.setArgN(pos1, point2);
-			point2.setParent(parent1);
 		} else {
 			// If point1 was at the root then make point2
 			// the new root of gp1
-			// TODO fix
-			// int place =
-			// config->randomNumGenerator->randNum()%config->numParts;
 			gp1.setRoot(point2, par1);
-			point2.setParent(null);
 		}
 
 		if (pos2 >= 0) {
@@ -120,15 +115,10 @@ public class Crossover {
 			// replace point1 with point2
 			// update point2s parent node
 			parent2.setArgN(pos2, point1);
-			point1.setParent(parent2);
 		} else {
 			// If point1 was at the root then make point2
 			// the new root of gp1
-			// TODO fix
-			// int place =
-			// config->randomNumGenerator->randNum()%config->numParts;
 			gp2.setRoot(point1, par2);
-			point1.setParent(null);
 		}
 
 		// Force the updated programs to update their size and depth

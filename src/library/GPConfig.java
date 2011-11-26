@@ -1,5 +1,8 @@
 package library;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -46,10 +49,14 @@ public class GPConfig {
 	public ProgramGenerator programGenerator;
 
 	public ConfigModifier configModifier;
+	
+	private int loggingFrequency;
+	
+	private PrintStream logFile;
 
 	/**
 	 * Initialise a GPConfig with 1 root, mindepth of 1 and maxdepth of 10. The rates must add to 1. Intialises the
-	 * config with all the default operators.
+	 * config with all the default operators. And a logging frequency of 1000 generations
 	 * 
 	 * @param mutationRate
 	 *            The mutation rate
@@ -64,7 +71,7 @@ public class GPConfig {
 
 	/**
 	 * Make a new GPConfig with the specified settings. The rates must add to 1. Intialises the config with all the
-	 * default operators.
+	 * default operators. Logging frequency of 1000 generations
 	 * 
 	 * @param numParts
 	 *            The number of root nodes each GP program has
@@ -88,7 +95,7 @@ public class GPConfig {
 		this.setRates(mutationRate, crossoverRate, elitismRate);
 		funcSet = new NodeVector<Function>();
 		termSet = new NodeVector<Terminal>();
-
+		this.loggingFrequency = 1000;
 		defaultInit();
 	}
 
@@ -197,6 +204,44 @@ public class GPConfig {
 		this.elitismRate = elitismRate;
 	}
 
+	/**
+	 * Get the logging fequency
+	 * @return logging frequency
+	 */
+	public int loggingFrequency(){
+		return this.loggingFrequency;
+	}
+	
+	/**
+	 * Set the logging frequency. Everything will be written to a file every that many generations
+	 * @param freq number of generations
+	 */
+	public void loggingFrequency(int freq){
+		this.loggingFrequency = freq;
+	}
+	
+	/**
+	 * Set the log file
+	 * @param filename filename for logfile
+	 */
+	public void setLogFile(String filename){
+		try {
+			logFile = new PrintStream(new File(filename));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Append string to logfile if set
+	 * @param s string to append to log file
+	 */
+	public void log(String s){
+		if(logFile != null){
+			logFile.print(s);
+		}
+	}
+	
 	/**
 	 * Initialises the random number generator, program generator (ramped half-half), the crossover operator, the
 	 * mutation operator, the selection operator (roulette wheel), and the config modifier to the standard base objects.

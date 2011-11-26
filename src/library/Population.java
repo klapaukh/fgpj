@@ -35,11 +35,6 @@ public class Population {
 	// What generation number are we currently processing.
 	private int generationNumber;
 
-	// The loggingFrequency stores how often to write out
-	// generation files.
-	private int loggingFrequency;
-
-	private PrintStream logFile;
 
 	protected GPConfig config; // The configuration of this Population
 
@@ -49,7 +44,7 @@ public class Population {
 	 * @param logFileName
 	 * @param conf
 	 */
-	public Population(int size, String logFileName, GPConfig conf) {
+	public Population(int size, GPConfig conf) {
 		bestFitness = (0.0);
 		worstFitness = (0.0);
 		avgFitness = (0.0);
@@ -57,7 +52,6 @@ public class Population {
 		avgSize = (0.0);
 		returnType = new int[conf.getNumRoots()];
 		generationNumber = (0);
-		loggingFrequency = (1);
 		config = (conf);
 		pop = new ArrayList<GeneticProgram>(size);
 		nextPop = new ArrayList<GeneticProgram>(size);
@@ -66,11 +60,7 @@ public class Population {
 			pop.add(new GeneticProgram(config));
 		}
 
-		try {
-			logFile = new PrintStream(new File(logFileName));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+
 	}
 
 	public List<GeneticProgram> getPopulation() {
@@ -95,7 +85,7 @@ public class Population {
 			// indicate success
 			if (config.fitnessObject.solutionFound(pop)) {
 				config.fitnessObject.finish();
-				logFile.println("Solution found!");
+				config.log("Solution found!\n");
 				return true;
 			}
 
@@ -115,7 +105,7 @@ public class Population {
 		int i;
 
 		// Write the pop to a file if it's time
-		if ((generationNumber % loggingFrequency) == 0) writeToFile();
+		if ((generationNumber % config.loggingFrequency()) == 0) writeToFile();
 
 		// copy some individuals (elitism)
 		for (i = 0; i < getNumForElitism(); i++) {
@@ -431,25 +421,17 @@ public class Population {
 		return s.toString();
 	}
 
-	public void setLogFrequency(int freq) {
-		loggingFrequency = freq;
-	}
-
-	public int getLogFrequency() {
-		return loggingFrequency;
-	}
-
 	public void writeLog() {
 
-		logFile.println("*****************************************");
-		logFile.println("Generation " + generationNumber);
-		logFile.println("Time " + now());
-		logFile.println("BestFitness " + bestFitness);
-		logFile.println("WorstFitness " + worstFitness);
-		logFile.println("AverageFitness " + avgFitness);
-		logFile.println("AverageDepth " + avgDepth);
-		logFile.println("AverageSize " + avgSize);
-		logFile.println("Evaluation " + evaluations);
+		config.log("*****************************************\n");
+		config.log("Generation " + generationNumber + "\n");
+		config.log("Time " + now()+ "\n");
+		config.log("BestFitness " + bestFitness+ "\n");
+		config.log("WorstFitness " + worstFitness+ "\n");
+		config.log("AverageFitness " + avgFitness+ "\n");
+		config.log("AverageDepth " + avgDepth+ "\n");
+		config.log("AverageSize " + avgSize+ "\n");
+		config.log("Evaluation " + evaluations+ "\n");
 	}
 
 	public String now() {

@@ -78,9 +78,9 @@ public abstract class Node {
 
 	public abstract int computeDepth(int curDepth);
 
-	public abstract void addToVector(Vector<Node> vec);
+	public abstract void addTreeToVector(Vector<Node> vec);
 
-	public abstract void addToVector(Vector<Node> vec, int typeNum);
+	public abstract void addTreeToVector(Vector<Node> vec, int typeNum);
 
 	public abstract void print(StringBuffer s);
 

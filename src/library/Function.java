@@ -113,11 +113,11 @@ public abstract class Function extends Node {
 	}
 
 	/** Adds the current node to the vector */
-	public void addToVector(Vector<Node> vec) {
+	public void addTreeToVector(Vector<Node> vec) {
 		vec.add(this);
 
 		for (int i = 0; i < maxArgs; i++) {
-			args[i].addToVector(vec);
+			args[i].addTreeToVector(vec);
 		}
 	}
 
@@ -125,12 +125,12 @@ public abstract class Function extends Node {
 	 * Adds the current node to the vector iff this function returns the type
 	 * typeNum
 	 */
-	public void addToVector(Vector<Node> vec, int typeNum) {
+	public void addTreeToVector(Vector<Node> vec, int typeNum) {
 		if (getReturnType() == typeNum)
 			vec.add(this);
 
 		for (int i = 0; i < maxArgs; i++) {
-			args[i].addToVector(vec, typeNum);
+			args[i].addTreeToVector(vec, typeNum);
 		}
 	}
 

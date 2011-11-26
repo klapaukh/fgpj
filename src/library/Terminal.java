@@ -20,12 +20,12 @@ public abstract class Terminal extends Node {
 	   return 1;
 	}
 
-	public void addToVector(Vector<Node> vec)
+	public void addTreeToVector(Vector<Node> vec)
 	{
 	   vec.add(this);
 	}
 
-	public void addToVector(Vector<Node> vec, int typeNum)
+	public void addTreeToVector(Vector<Node> vec, int typeNum)
 	{
 	   if (getReturnType() == typeNum)
 	      vec.add(this);

@@ -35,24 +35,6 @@ public class GeneticProgram {
 		size = new int[numParts];
 	}
 
-	public GeneticProgram(GeneticProgram g) {
-
-		config = g.config;
-		programID = g.programID;
-		fitness = g.fitness;
-		adjustFitness = g.adjustFitness;
-		returnType = g.returnType;
-		numParts = g.numParts;
-		root = new Node[numParts];
-		depth = new int[numParts];
-		size = new int[numParts];
-		for (int i = 0; i < numParts; i++) {
-			root[i] = g.root[i].copy();
-			depth[i] = g.depth[i];
-			size[i] = g.size[i];
-		}
-
-	}
 
 	public void setProgramID(int id) {
 		programID = id;
@@ -147,7 +129,7 @@ public class GeneticProgram {
 		// int place = (int) (config.randomNumGenerator.randNum() % numParts);
 		// p = place;
 
-		root[place].addToVector(nodeList);
+		root[place].addTreeToVector(nodeList);
 
 		if (nodeList.size() != 0) {
 			int index = (int) Math.abs(config.randomNumGenerator.nextLong() % nodeList.size());
@@ -165,7 +147,7 @@ public class GeneticProgram {
 		int place = p;
 		// int place = (int) (config.randomNumGenerator.randNum() % numParts);
 
-		root[place].addToVector(nodeList, typeNum);
+		root[place].addTreeToVector(nodeList, typeNum);
 
 		if (nodeList.size() != 0) {
 			index = (int) Math.abs(config.randomNumGenerator.nextLong() % nodeList.size());
@@ -226,7 +208,7 @@ public class GeneticProgram {
 
 		// tmp.setFitness(fitness);
 		// tmp.setAdjFitness(adjustFitness);
-		// tmp.setReturnType(returnType);
+		 tmp.setReturnType(returnType);
 
 		for (int i = 0; i < numParts; i++) {
 			if (root[i] != null) {
@@ -234,7 +216,7 @@ public class GeneticProgram {
 				tmp.setRoot(rootTmp, i);
 			} else {
 				System.err.println("**** Warning GeneticProgram::copy() ******");
-				System.err.println("Copying program will NULL root");
+				System.err.println("Copying program with NULL root");
 
 				tmp.setRoot(null, i);
 			}

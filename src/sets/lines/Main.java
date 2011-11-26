@@ -101,7 +101,7 @@ public class Main {
 			System.out.println(str1);
 
 			// ((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).fitness.getResult(pop.getBest(),100);
-			// ((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).finish();
+			 symConfig.fitnessObject.finish();
 			((ImageFitness) (symConfig.fitnessObject)).getResult(pop.getBest(), 100, symConfig);
 			// cout <<"Results written" <<endl;
 		} catch (Exception e) {

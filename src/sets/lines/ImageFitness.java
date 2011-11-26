@@ -195,4 +195,7 @@ public class ImageFitness implements Fitness {
 		file.close();
 
 	}
+	
+	
+	public void finish(){}
 }

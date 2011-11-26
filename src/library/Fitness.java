@@ -37,5 +37,11 @@ public interface Fitness extends Comparator<GeneticProgram> {
 	 * @return true is a good enough solution is in the list
 	 */
 	public abstract boolean solutionFound(List<GeneticProgram> pop);
+	
+	
+	/**
+	 * GP has now finished, any resources can be freed
+	 */
+	public abstract void finish();
 
 }

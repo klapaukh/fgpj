@@ -6,7 +6,15 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CyclicBarrier;
 
-public class ParallelFitness<T extends Fitness> extends Fitness {
+/**
+ * This parallelises Fitness computations on the CPU using multiple threads. It generic, so can use any Fitness function
+ * that is defined by a user. The fitness object must allow for multiple calls to assign fitness at the same time
+ * 
+ * @author Roma
+ * 
+ * @param <T>
+ */
+public class ParallelFitness<T extends Fitness> implements Fitness {
 	public final T fitness;
 	private int gen;
 	private final int numThreads;
@@ -15,13 +23,29 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 	private CyclicBarrier end, start;
 	private int stepSize;
 
-	public ParallelFitness(GPConfig conf, T fitness) {
-		this(conf, fitness, 4, 10);
+	/**
+	 * Create a new Parallel fitness using the specified fitness function. It will use 4 threads, and group the jobs up
+	 * into blocks of size 10
+	 * 
+	 * @param fitness
+	 *            the fitness function to use
+	 */
+	public ParallelFitness(T fitness) {
+		this(fitness, 4, 10);
 	}
 
+	/**
+	 * Create a new parallel fitness
+	 * 
+	 * @param fitness
+	 *            The fitness function to use
+	 * @param numThreads
+	 *            The number of CPU threads to use
+	 * @param stepSize
+	 *            Block size of jobs handed to each thread
+	 */
 	@SuppressWarnings("unchecked")
-	public ParallelFitness(GPConfig conf, T fitness, int numThreads, int stepSize) {
-		super(conf);
+	public ParallelFitness(T fitness, int numThreads, int stepSize) {
 		this.stepSize = 10;
 		this.jobs = new ConcurrentLinkedQueue<Job>();
 		this.numThreads = numThreads;
@@ -32,6 +56,9 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 		workers = new Worker[numThreads];
 	}
 
+	/**
+	 * Initialises the underlying fitness function and starts up all the workers
+	 */
 	public void initFitness() {
 		fitness.initFitness();
 
@@ -42,10 +69,10 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 		}
 	}
 
-	public void assignFitness(List<GeneticProgram> pop) {
+	public void assignFitness(List<GeneticProgram> pop, GPConfig conf) {
 		int min = 0, max = stepSize;
 		while (max < pop.size()) {
-			jobs.offer(new Job(min, max, pop));
+			jobs.offer(new Job(min, max, pop, conf));
 			max = Math.min(max + stepSize, pop.size());
 			min += stepSize;
 		}
@@ -61,10 +88,6 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 		gen++;
 	}
 
-	// This has been fixed
-	// There is no possible solution worthy of an early end point.
-	// May need to be reinabled, but in principle, this is human guided not controlled
-	// So it probably shouldn't terminate eary
 	public boolean solutionFound(List<GeneticProgram> pop) {
 		return fitness.solutionFound(pop);
 	}
@@ -77,9 +100,15 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 		return fitness.worst();
 	}
 
+	@Override
+	public int compare(GeneticProgram p0, GeneticProgram p1) {
+		return fitness.compare(p0, p1);
+	}
+
 	public void finish() {
+		fitness.finish();
 		for (int i = 0; i < workers.length; i++) {
-			jobs.offer(new Job(-1, -1, null));
+			jobs.offer(new Job(-1, -1, null, null));
 		}
 		try {
 			start.await();
@@ -90,6 +119,14 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 		}
 	}
 
+	/**
+	 * Worker class that does actual jobs.
+	 * A job with a start of -1 is considered a terminate job
+	 * 
+	 * @author Roma
+	 *
+	 * @param <F> The fitness function used for evaluation
+	 */
 	private static class Worker<F extends Fitness> extends Thread {
 
 		private Queue<Job> jobs;
@@ -123,7 +160,7 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 					if (j.min == -1) {
 						return;
 					}
-					fitness.assignFitness(j.pop.subList(j.min, j.max));
+					fitness.assignFitness(j.pop.subList(j.min, j.max), j.conf);
 				}
 				try {
 					end.await();
@@ -136,20 +173,24 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 		}
 	}
 
+	/**
+	 * Job class to designate how much work a thread is too do.
+	 * 
+	 * @author Roma
+	 *
+	 */
 	private static class Job {
 		public final int min;
 		public final int max;
 		public final List<GeneticProgram> pop;
+		public final GPConfig conf;
 
-		public Job(int mn, int mx, List<GeneticProgram> list) {
+		public Job(int mn, int mx, List<GeneticProgram> list, GPConfig conf) {
 			this.min = mn;
 			this.max = mx;
 			this.pop = list;
+			this.conf = conf;
 		}
 	}
 
-	@Override
-	public int compare(GeneticProgram p0, GeneticProgram p1) {
-		return fitness.compare(p0, p1);
-	}
 }

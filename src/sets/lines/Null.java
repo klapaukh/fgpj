@@ -24,7 +24,9 @@ public class Null extends Terminal {
 	}
 
 	public Terminal generate(String name, GPConfig conf) {
-		return generate(conf);
+		if(name.startsWith(getName()))
+			return generate(conf);
+		return null;
 	}
 
 	public void evaluate(ReturnData out) {

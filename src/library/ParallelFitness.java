@@ -92,14 +92,6 @@ public class ParallelFitness<T extends Fitness> implements Fitness {
 		return fitness.solutionFound(pop);
 	}
 
-	public double best() {
-		return fitness.best();
-	}
-
-	public double worst() {
-		return fitness.worst();
-	}
-
 	@Override
 	public int compare(GeneticProgram p0, GeneticProgram p1) {
 		return fitness.compare(p0, p1);

@@ -16,20 +16,6 @@ public interface Fitness extends Comparator<GeneticProgram> {
 	public abstract void assignFitness(List<GeneticProgram> pop, GPConfig config);
 
 	/**
-	 * The best possible fitness
-	 * 
-	 * @return best fitness possible
-	 */
-	public abstract double best();
-
-	/**
-	 * The worst possible fitness
-	 * 
-	 * @return worst possible fitness
-	 */
-	public abstract double worst();
-
-	/**
 	 * return if a good enough solution has been found in a set of programs that have had their fitness tested
 	 * 
 	 * @param pop

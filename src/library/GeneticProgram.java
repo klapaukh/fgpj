@@ -2,6 +2,13 @@ package library;
 
 import java.util.Scanner;
 
+/**
+ * This is a GeneticProgram. It is a forest, where the number of trees is set in the GPConfig.
+ * 
+ * @author Roma
+ * 
+ */
+
 public class GeneticProgram {
 
 	/**
@@ -178,9 +185,12 @@ public class GeneticProgram {
 	/**
 	 * Get a random node from the tree that has type typeNum
 	 * 
-	 * @param typeNum The return type of the node
-	 * @param p the subtree to select from
-	 * @param config the config to use
+	 * @param typeNum
+	 *            The return type of the node
+	 * @param p
+	 *            the subtree to select from
+	 * @param config
+	 *            the config to use
 	 * @return a random node from the tree p with type typeNum or null if there is none
 	 * 
 	 */
@@ -190,9 +200,13 @@ public class GeneticProgram {
 		return n;
 	}
 
+	/**
+	 * Prints the program to a string buffer. The program can be reconstructed from this string
+	 * 
+	 * @param s
+	 *            the StringBuffer to print to
+	 */
 	public void print(StringBuffer s) {
-		if (root == null) throw new RuntimeException("Root node is NULL");
-
 		s.append(numRoots);
 		s.append(" ");
 		for (int i = 0; i < numRoots; i++) {
@@ -205,65 +219,90 @@ public class GeneticProgram {
 
 	}
 
+	/**
+	 * Set the return type for a particular root node
+	 * 
+	 * @param root
+	 *            the root whose return type will be se
+	 * @param type
+	 *            the return type of the root
+	 */
 	public void setReturnType(int root, int type) {
 		returnType[root] = type;
 	}
 
+	/**
+	 * Get the return type of a given root
+	 * 
+	 * @param root
+	 *            which root to get the return type for
+	 * @return the return type of the root
+	 */
 	public int getReturnType(int root) {
 		return returnType[root];
 	}
 
+	/**
+	 * Set the fitness. Assumes the fitness should be positive
+	 * 
+	 * @param f
+	 *            the fitness of the node
+	 */
 	public void setFitness(double f) {
-		// If we get a fitness < 0 then there is a problem
-		// this is usually caused by a double overflowing and
-		// wrapping to a negative value
-		if (f < 0.0) {
-			System.err.println("GeneticProgram::setFitness : Warning: Fitness overflow " + f);
-		} else fitness = f;
+		fitness = f;
 	}
 
+	/**
+	 * Get the fitness of this program
+	 * 
+	 * @return this program's fitness
+	 */
 	public double getFitness() {
 		return fitness;
 	}
 
-	// The copy method will create a new genetic
-	// program which is a copy of the current program
+	/**
+	 * The copy method will create a new genetic program which is a copy of the current program
+	 * 
+	 * @param config
+	 *            the config to create with
+	 * @return a clone of the current GeneticProgram
+	 */
 	public GeneticProgram copy(GPConfig config) {
 		GeneticProgram tmp = new GeneticProgram(numRoots);
+		tmp.setFitness(fitness);
 
-		Node rootTmp;
-
-		// tmp.setFitness(fitness);
-		// tmp.setAdjFitness(adjustFitness);
 		for (int i = 0; i < numRoots; i++) {
 			tmp.setReturnType(i, returnType[i]);
 		}
 
 		for (int i = 0; i < numRoots; i++) {
-			if (root[i] != null) {
-				rootTmp = root[i].copy(config);
-				tmp.setRoot(rootTmp, i);
-			} else {
-				System.err.println("**** Warning GeneticProgram::copy() ******");
-				System.err.println("Copying program with NULL root");
-
-				tmp.setRoot(null, i);
-			}
+			Node rootTmp = root[i].copy(config);
+			tmp.setRoot(rootTmp, i);
 		}
+
 		tmp.computeSizeAndDepth();
 
 		return tmp;
 	}
 
-	/***************************************************************************
-	 * parseProgram based on function parseTree originally written by Peter Wilson
-	 **************************************************************************/
+	/**
+	 * Read in a program from a string and make this that program
+	 * 
+	 * @param programString
+	 *            The string specifying the program
+	 * @param config
+	 *            the config used to build the program
+	 */
 	public void parseProgram(String programString, GPConfig config) {
-		Node[] tmpRoot = null;
-		Scanner scan = new Scanner(programString);
 
 		try {
-			tmpRoot = buildTree(scan, config);
+			Scanner scan = new Scanner(programString);
+			Node[] tmpRoot = buildTree(scan, config);
+			for (int i = 0; i < numRoots; i++) {
+				deleteTree(i);
+				setRoot(tmpRoot[i], i);
+			}
 		} catch (Exception e) {
 			System.err.println("GeneticProgram::parseProgram\nError program: ");
 			System.err.println(programString);
@@ -271,10 +310,6 @@ public class GeneticProgram {
 			throw new RuntimeException("Parsing failed");
 		}
 
-		for (int i = 0; i < numRoots; i++) {
-			deleteTree(i);
-			setRoot(tmpRoot[i], i);
-		}
 	}
 
 	private Node[] buildTree(Scanner scan, GPConfig config) {

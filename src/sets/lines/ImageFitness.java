@@ -11,19 +11,16 @@ import library.Fitness;
 import library.GPConfig;
 import library.GeneticProgram;
 
-public class ImageFitness extends Fitness {
+public class ImageFitness implements Fitness {
 	public static final int SIZE = 100;
 	public static final int XSIZE = 100;
 	public static final int YSIZE = 100;
 
 	private int[][][] pixels = new int[XSIZE][YSIZE][3];
-	//private double power;
+	// private double power;
 	private static final double MAX_BADNESS = 7650000;
 
-	public ImageFitness(GPConfig conf) {
-		super(conf);
-		// Read in data;
-		//power = 1;
+	public ImageFitness() {
 	}
 
 	public void initFitness() {
@@ -52,7 +49,7 @@ public class ImageFitness extends Fitness {
 		scan.close();
 	}
 
-	public void assignFitness(List<GeneticProgram> pop) {
+	public void assignFitness(List<GeneticProgram> pop, GPConfig config) {
 		int i;
 
 		double totalFitness;
@@ -61,7 +58,7 @@ public class ImageFitness extends Fitness {
 		for (i = 0; i < pop.size(); i++) {
 			// initialise fitness to zero
 			totalFitness = 0;
-			
+
 			ReturnImage im[] = new ReturnImage[] { new ReturnImage(SIZE, SIZE, config) };
 
 			pop.get(i).evaluate(im);
@@ -83,13 +80,13 @@ public class ImageFitness extends Fitness {
 			// totalFitness = pow(totalFitness,power);
 			// power += 0.000075;
 			pop.get(i).setFitness(totalFitness);
-//			System.out.println("Evaluated Program as " + totalFitness);
+			// System.out.println("Evaluated Program as " + totalFitness);
 		}
 		// power += 0.000075;
 	}
 
 	// Needs to be fixed
-	public void outputResults(GeneticProgram program, String filename) {
+	public void outputResults(GeneticProgram program, String filename, GPConfig config) {
 		PrintStream file;
 		try {
 			file = new PrintStream(new File(filename));
@@ -141,7 +138,7 @@ public class ImageFitness extends Fitness {
 	}
 
 	public int compare(GeneticProgram gp1, GeneticProgram gp2) {
-		return Double.compare(gp1.getFitness() , gp2.getFitness());
+		return Double.compare(gp1.getFitness(), gp2.getFitness());
 	}
 
 	public double best() {
@@ -153,7 +150,7 @@ public class ImageFitness extends Fitness {
 	}
 
 	// I realise, I am intentionally making square images.
-	public void getResult(GeneticProgram gp, int size) {
+	public void getResult(GeneticProgram gp, int size, GPConfig config) {
 
 		PrintStream file;
 		try {

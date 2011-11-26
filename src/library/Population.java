@@ -349,7 +349,7 @@ public class Population {
 	}
 
 	public void assignFitness() {
-		config.fitnessObject.assignFitness(pop);
+		config.fitnessObject.assignFitness(pop,config);
 	}
 
 	private void sortPopulation() {

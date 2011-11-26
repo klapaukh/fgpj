@@ -32,15 +32,15 @@ public class Main {
 		line = scan.nextLine().substring(1);
 		GeneticProgram p = new GeneticProgram(c);
 		p.parseProgram(line);
-		((ImageFitness) (c.fitnessObject)).getResult(p, size);
+		((ImageFitness) (c.fitnessObject)).getResult(p, size, c);
 	}
 
 	public static void main(String[] args) {
 
-		//Create the setting for a new GP run
-		//1 root node, min program depth 1, and max depth 8
-		GPConfig symConfig = new GPConfig(1,1,8,0.7,0.28,0.02);
-	
+		// Create the setting for a new GP run
+		// 1 root node, min program depth 1, and max depth 8
+		GPConfig symConfig = new GPConfig(1, 1, 8, 0.7, 0.28, 0.02);
+
 		// Declare a population, giving the size and a log file name
 		Population pop = new Population(100, 100, "run-log.txt", symConfig);
 
@@ -56,16 +56,16 @@ public class Main {
 
 		// Add the functions we need
 		symConfig.addFunction(new Line(symConfig));
-		
+
 		// Set the fitness class to be used
 
-//		symConfig.fitnessObject = new ParallelFitness<ImageFitness>(symConfig,new ImageFitness(symConfig));
-		 symConfig.fitnessObject = new ImageFitness(symConfig);
+		// symConfig.fitnessObject = new ParallelFitness<ImageFitness>(symConfig,new ImageFitness(symConfig));
+		symConfig.fitnessObject = new ImageFitness();
 		// Initialise the fitness
 		symConfig.fitnessObject.initFitness();
 
 		if (args.length == 2) {
-			symConfig.fitnessObject = new ImageFitness(symConfig);
+			symConfig.fitnessObject = new ImageFitness();
 			enlarge(args, symConfig);
 			System.exit(0);
 		}
@@ -100,9 +100,9 @@ public class Main {
 			System.out.println("Fitness " + pop.getBest().getFitness());
 			System.out.println(str1);
 
-//			((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).fitness.getResult(pop.getBest(),100);
-//			((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).finish();
-			((ImageFitness)(symConfig.fitnessObject)).getResult(pop.getBest(),100);
+			// ((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).fitness.getResult(pop.getBest(),100);
+			// ((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).finish();
+			((ImageFitness) (symConfig.fitnessObject)).getResult(pop.getBest(), 100, symConfig);
 			// cout <<"Results written" <<endl;
 		} catch (Exception e) {
 			e.printStackTrace();

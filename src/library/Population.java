@@ -14,16 +14,12 @@ import java.util.Scanner;
 public class Population {
 
 	private List<GeneticProgram> pop; // The population
-	private List<GeneticProgram> nextPop; //Space saver for next generation
+	private List<GeneticProgram> nextPop; // Space saver for next generation
 
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 
 	// Number of evaluations carried out so far
 	private long evaluations;
-
-	// Number of individuals in this population
-	private int numIndividuals;
-
 
 	// The best, worst, and average fitness
 	private double bestFitness;
@@ -47,8 +43,13 @@ public class Population {
 
 	protected GPConfig config; // The configuration of this Population
 
+	/**
+	 * Create a new population
+	 * @param size
+	 * @param logFileName
+	 * @param conf
+	 */
 	public Population(int size, String logFileName, GPConfig conf) {
-		numIndividuals = (size);
 		bestFitness = (0.0);
 		worstFitness = (0.0);
 		avgFitness = (0.0);
@@ -58,11 +59,10 @@ public class Population {
 		generationNumber = (0);
 		loggingFrequency = (1);
 		config = (conf);
-		int i;
-		pop = new ArrayList<GeneticProgram>(numIndividuals);
-		nextPop = new ArrayList<GeneticProgram>(numIndividuals);
+		pop = new ArrayList<GeneticProgram>(size);
+		nextPop = new ArrayList<GeneticProgram>(size);
 
-		for (i = 0; i < numIndividuals; i++) {
+		for (int i = 0; i < size; i++) {
 			pop.add(new GeneticProgram(config));
 		}
 
@@ -73,33 +73,8 @@ public class Population {
 		}
 	}
 
-
-
 	public List<GeneticProgram> getPopulation() {
 		return pop;
-	}
-
-	public void setPopulation(List<GeneticProgram> newPop, int size) {
-		int i;
-
-		if (size != numIndividuals) throw new RuntimeException("Population::setPopulation error incorrect size");
-
-		// copy new generation over old generation
-		for (i = 0; i < numIndividuals; i++) {
-			pop.set(i, newPop.get(i));
-		}
-	}
-
-	public GeneticProgram getIndividual(int individual) {
-		GeneticProgram tmp;
-
-		if (individual < numIndividuals)
-			tmp = pop.get(individual);
-		else throw new RuntimeException("Population::getIndividual Error invalid individual");
-
-		if (tmp == null) throw new RuntimeException("Population::getIndividual Error individual is NULL");
-
-		return tmp;
 	}
 
 	public void generateInitialPopulation() {
@@ -109,14 +84,12 @@ public class Population {
 
 	public boolean evolve(int numGenerations) {
 		evaluations = 0;
-		for (int i = 0 ; i < numGenerations; i++) {
+		for (int i = 0; i < numGenerations; i++) {
 			config.fitnessObject.assignFitness(pop, config); // Evaluate the programs and assign their fitness values
-			evaluations += numIndividuals; // Update the number of evaluations performed
-			sortPopulation(); // Sort the population based on fitness
+			evaluations += pop.size(); // Update the number of evaluations performed
+			Collections.sort(pop, config.fitnessObject); // Sort the population based on fitness
 			computeStatistics(); // Calculate some statistics for the population
 			writeLog(); // Write some information to the log file
-
-
 
 			// If the solution has been found quit and return true to
 			// indicate success
@@ -131,7 +104,7 @@ public class Population {
 			nextGeneration();
 		}
 		config.fitnessObject.assignFitness(pop, config);
-		sortPopulation();
+		Collections.sort(pop, config.fitnessObject);
 		config.fitnessObject.finish(); // Finshed with the fitness assessing now
 
 		return false;
@@ -143,8 +116,6 @@ public class Population {
 
 		// Write the pop to a file if it's time
 		if ((generationNumber % loggingFrequency) == 0) writeToFile();
-
-		nextPop = new ArrayList<GeneticProgram>(numIndividuals);
 
 		// copy some individuals (elitism)
 		for (i = 0; i < getNumForElitism(); i++) {
@@ -193,25 +164,19 @@ public class Population {
 	 ******************************************************************************************************************/
 
 	public void setNumIndividuals(int num) {
-		int i;
-		List<GeneticProgram> tmp = new ArrayList<GeneticProgram>(num);
-
-		for (i = 0; i < num && i < numIndividuals; i++)
-			tmp.add(pop.get(i));
-
-		if (num > numIndividuals) {
-			for (; i < num; i++) {
-				tmp.add(tmp.get(numIndividuals - 1).copy(config));
+		while (num > pop.size()) {
+			pop.add(pop.get(0).copy(config));
+		}
+		while (pop.size() > num) {
+			GeneticProgram prog = pop.remove(0);
+			for (int i = 0; i < config.getNumRoots(); i++) {
+				prog.deleteTree(i);
 			}
 		}
-
-		numIndividuals = num;
-
-		pop = tmp;
 	}
 
 	public int getNumIndividuals() {
-		return numIndividuals;
+		return pop.size();
 	}
 
 	public void setGenerationNumber(int num) {
@@ -224,7 +189,7 @@ public class Population {
 
 	public void setReturnType(int root, int type) {
 		returnType[root] = type;
-		for (int i = 0; i < numIndividuals; i++) {
+		for (int i = 0; i < pop.size(); i++) {
 			pop.get(i).setReturnType(root, type);
 		}
 	}
@@ -233,7 +198,7 @@ public class Population {
 		for (int i = 0; i < config.getNumRoots(); i++) {
 			returnType[i] = type;
 		}
-		for (int i = 0; i < numIndividuals; i++) {
+		for (int i = 0; i < pop.size(); i++) {
 			for (int j = 0; j < config.getNumRoots(); j++) {
 				pop.get(i).setReturnType(j, type);
 			}
@@ -245,25 +210,21 @@ public class Population {
 	}
 
 	public int getNumForMutation() {
-		return (int) (numIndividuals * config.mutationRate());
+		return (int) (pop.size() * config.mutationRate());
 	}
 
 	public int getNumForCrossover() {
-		return (int) (numIndividuals * config.crossoverRate());
+		return (int) (pop.size() * config.crossoverRate());
 	}
 
 	public int getNumForElitism() {
-		return (int) (numIndividuals * config.elitismRate());
-	}
-
-	private void sortPopulation() {
-		Collections.sort(pop, config.fitnessObject);
+		return (int) (pop.size() * config.elitismRate());
 	}
 
 	public GeneticProgram getBest() {
 		int index = 0;
 
-		for (int i = 1; i < numIndividuals; i++) {
+		for (int i = 1; i < pop.size(); i++) {
 			if (config.fitnessObject.compare(pop.get(i), pop.get(index)) > 0) {
 				index = i;
 			}
@@ -275,7 +236,7 @@ public class Population {
 	public GeneticProgram getWorst() {
 		int index = 0;
 
-		for (int i = 1; i < numIndividuals; i++) {
+		for (int i = 1; i < pop.size(); i++) {
 			if (config.fitnessObject.compare(pop.get(i), pop.get(index)) < 0) {
 				index = i;
 			}
@@ -292,7 +253,7 @@ public class Population {
 		bestFitness = getBest().getFitness();
 		worstFitness = getWorst().getFitness();
 
-		for (int i = 0; i < numIndividuals; i++) {
+		for (int i = 0; i < pop.size(); i++) {
 			totalFitness += pop.get(i).getFitness();
 			// find the average depth and size of the program
 			for (int j = 0; j < config.getNumRoots(); j++) {
@@ -301,9 +262,9 @@ public class Population {
 			}
 		}
 
-		avgFitness = totalFitness / numIndividuals;
-		avgDepth = totalDepth / (numIndividuals * config.getNumRoots());
-		avgSize = totalSize / (numIndividuals * config.getNumRoots());
+		avgFitness = totalFitness / pop.size();
+		avgDepth = totalDepth / (pop.size() * config.getNumRoots());
+		avgSize = totalSize / (pop.size() * config.getNumRoots());
 	}
 
 	public void writeToFile() {
@@ -384,7 +345,7 @@ public class Population {
 			config.setRates(mutationRate, crossoverRate, elitismRate);
 
 			while (true) {
-				if (individual > this.numIndividuals) break;
+				if (individual > this.pop.size()) break;
 
 				if (!scan.hasNext()) {
 					break;
@@ -428,7 +389,7 @@ public class Population {
 
 		s.append("File created at " + now());
 		s.append('\n');
-		s.append("numIndividuals " + numIndividuals);
+		s.append("numIndividuals " + pop.size());
 		s.append('\n');
 		s.append("depthLimit " + config.maxDepth());
 		s.append('\n');
@@ -445,7 +406,7 @@ public class Population {
 		s.append("Population at generation " + generationNumber);
 		s.append('\n');
 
-		for (int i = 0; i < numIndividuals; i++) {
+		for (int i = 0; i < pop.size(); i++) {
 			StringBuffer s1 = new StringBuffer();
 			pop.get(i).print(s1);
 			s.append("###################################\n");

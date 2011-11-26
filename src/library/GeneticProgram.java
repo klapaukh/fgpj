@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.util.Vector;
 
 public class GeneticProgram {
-	
+
 	/**
 	 * The fitness of this program
 	 */
@@ -29,120 +29,154 @@ public class GeneticProgram {
 	 * The root node of the program tree
 	 */
 	private final Node[] root;
-	
-	/**Number of parts**/
+
+	/** Number of parts **/
 	private final int numRoots;
 
+	/**
+	 * Create a new genetic program based on conf
+	 * 
+	 * @param conf
+	 *            the config to use
+	 */
 	public GeneticProgram(GPConfig conf) {
-		this(conf.getNumParts());
+		this(conf.getNumRoots());
 	}
-	
-	
-	public GeneticProgram(int numParts) {
-		this.numRoots = numParts;
+
+	/**
+	 * Create a new genetic program with numParts roots
+	 * 
+	 * @param numRoots
+	 *            number of root nodes
+	 */
+	public GeneticProgram(int numRoots) {
+		this.numRoots = numRoots;
 		fitness = 0.0;
-		returnType = new int[numParts];
-		root = new Node[numParts];
-		depth = new int[numParts];
-		size = new int[numParts];
+		returnType = new int[numRoots];
+		root = new Node[numRoots];
+		depth = new int[numRoots];
+		size = new int[numRoots];
 
 	}
 
-	// The evaluate method evaluates(executes) this program
+	/**
+	 * The evaluate method evaluates (executes) this program
+	 * 
+	 * @param out
+	 *            a pointer to the return value
+	 */
 	public void evaluate(ReturnData out[]) {
-		for (int i = 0; i < numRoots; i++) {
-			if (out[i].getTypeNum() != root[i].getReturnType()) {
-				// int j = out[i].getTypeNum();
-				throw new RuntimeException("Return type of root node does not match return type of out");
-			}
-		}
-
 		for (int i = 0; i < numRoots; i++) {
 			root[i].evaluate(out[i]);
 		}
 	}
 
-	// Sets the root of the tree to point to the new tree value.
-	// If the old tree is no longer to be used it must be deleted
-	// explicitly by calling deleteTree() below.
+	/**
+	 * Sets the root of the tree to point to the new tree value. This does not delete the nodes
+	 * 
+	 * @param value
+	 *            the new root node
+	 * @param place
+	 *            the number root it is
+	 */
 	public void setRoot(Node value, int place) {
-		if (place < 0 || place >= numRoots) {
-			throw new IllegalArgumentException("Invalid place value");
-		}
 		root[place] = value;
-
-		if (root[place] != null) computeSizeAndDepth(place);
+		if (root[place] != null) {
+			computeSizeAndDepth(place);
+		}
 	}
 
+	/**
+	 * Get the place root node
+	 * 
+	 * @param place
+	 *            index of root to get
+	 * @return the root at place
+	 */
 	public Node getRoot(int place) {
-		if (place < 0 || place >= numRoots) throw new IllegalArgumentException("Invalid place value");
 		return root[place];
 	}
 
-	// Delete the current tree.
+	/**
+	 * Delete the current tree. Returns it to the node factory and sets the root to null
+	 * 
+	 * @param place
+	 *            which root to delete
+	 */
 	public void deleteTree(int place) {
-		if (place < 0 || place >= numRoots) throw new IllegalArgumentException("Invalid place of value");
 		deleteTree(root[place]);
 		root[place] = null;
 	}
 
-	// Recursively deletes the tree whose root is pointed to by theRoot.
+	/**
+	 * Recursively deletes the tree whose root is pointed to by theRoot. This returns all nodes in the subtree to the
+	 * NodeFactory
+	 * 
+	 * @param theRoot
+	 *            root node to delete from
+	 */
 	public void deleteTree(Node theRoot) {
 		NodeFactory.delete(theRoot);
 	}
 
+	/**
+	 * Get the depth of a tree
+	 * 
+	 * @param place
+	 *            which tree to get the depth of
+	 * @return the depth of the place tree
+	 */
 	public int getDepth(int place) {
 		return depth[place];
 	}
 
+	/**
+	 * Gets the size of the place tree
+	 * 
+	 * @param place
+	 *            which tree to get the size of
+	 * @return the size of the tree
+	 */
 	public int getSize(int place) {
 		return size[place];
 	}
 
+	/**
+	 * Computes the size and depth of each of the trees
+	 */
 	public void computeSizeAndDepth() {
 		for (int i = 0; i < numRoots; i++) {
-			if (root[i] == null) {
-				throw new RuntimeException("Root " + i + " is null");
-			}
 			size[i] = root[i].computeSize();
 			depth[i] = root[i].computeDepth(0);
+			root[i].computePositions(-1);
 		}
 	}
 
+	/**
+	 * Computes the size and depth of a given tree
+	 * 
+	 * @param place
+	 *            which tree to compute
+	 */
 	public void computeSizeAndDepth(int place) {
-		if (place < 0 || place >= numRoots) {
-			throw new RuntimeException("Invalid place value: " + place);
-		}
-
-		if (root[place] == null) throw new RuntimeException("Root " + place + " is null");
-
 		size[place] = root[place].computeSize();
 		depth[place] = root[place].computeDepth(0);
+		root[place].computePositions(-1);
 	}
 
-	// Gets a random node from the program tree
+	/**
+	 *  Gets a random node from the program tree
+	 * @param p which subtree to select from
+	 * @param config the config to use for random numbers
+	 * @return a random node in the subtree
+	 */
 	public Node getRandomNode(int p, GPConfig config) {
-		if (p < 0 || p >= numRoots) {
-			throw new RuntimeException("Invalid p value: " + p);
-		}
-		Vector<Node> nodeList = new Vector<Node>();
-		int place = p;
-		// int place = (int) (config.randomNumGenerator.randNum() % numParts);
-		// p = place;
-
-		root[place].addTreeToVector(nodeList);
-
-		if (nodeList.size() != 0) {
-			int index = (int) Math.abs(config.randomNumGenerator.nextLong() % nodeList.size());
-			return nodeList.get(index);
-		} else return null;
+		int node = config.randomNumGenerator.nextInt() % size[p];
+		return root[p].getNode(node);
 	}
 
 	// Get a random node from the program tree that returns typeNum
 	public Node getRandomNode(int typeNum, int p, GPConfig config) {
-		if (p < 0 || p >= numRoots) {
-			throw new RuntimeException("Invalid p value: " + p);
-		}
 		Vector<Node> nodeList = new Vector<Node>();
 		int index;
 		int place = p;
@@ -269,7 +303,7 @@ public class GeneticProgram {
 				tmpRoot[i] = config.funcSet.generateNodeByName(token, config);
 				token = scan.next();
 				while (!token.equals(")")) {
-					arg = buildTreeNode(scan, token,config);
+					arg = buildTreeNode(scan, token, config);
 					((Function) (tmpRoot[i])).setArgN(count, arg);
 					count++;
 					token = scan.next();

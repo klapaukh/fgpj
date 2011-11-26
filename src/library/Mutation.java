@@ -9,7 +9,7 @@ public class Mutation {
 		//Get a random node and the parent of that node
 		//need to get parent index here as well
 		int p = (int) Math.abs(config.randomNumGenerator.nextLong() % config
-				.getNumParts());
+				.getNumRoots());
 		tmp = gp.getRandomNode(p,config);
 		if(tmp == null)
 			return;

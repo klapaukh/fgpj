@@ -47,4 +47,15 @@ public abstract class Terminal extends Node {
 	   s.append(getName());  
 	}
 
+	public int computePositions(int parent){
+		this.setPosition(parent +1);
+		return parent + 1;
+	}
+	
+	public Node getNode(int node){
+		if(this.getPosition() == node){
+			return this;
+		}
+		return null;
+	}
 }

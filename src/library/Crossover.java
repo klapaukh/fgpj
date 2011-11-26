@@ -20,9 +20,9 @@ public class Crossover {
 		int count = 0;
 
 		int par1 = (int) Math.abs(config.randomNumGenerator.nextLong() % config
-				.getNumParts());
+				.getNumRoots());
 		int par2 = (int) Math.abs(config.randomNumGenerator.nextLong() % config
-				.getNumParts());
+				.getNumRoots());
 		// The following loop will continually try to find two valid crossover
 		// points by selecting a node from each of the trees. It will try up
 		// to {numRetries} times before giving up which will leave the

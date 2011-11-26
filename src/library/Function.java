@@ -166,4 +166,26 @@ public abstract class Function extends Node {
 			args[i] = null;
 		}
 	}
+	
+	public int computePositions(int parent){
+		int pos = parent+1;
+		this.setPosition(pos);
+		for( int i =0 ;i <args.length;i++){
+			pos = args[i].computePositions(pos);
+		}
+		return parent +1;
+	}
+	
+	public Node getNode(int node){
+		if(this.getPosition() == node){
+			return this;
+		}
+		for( int i =0 ;i <args.length;i++){
+			Node n  = args[i].getNode(node);
+			if(n != null){
+				return n;
+			}
+		}
+		return null;
+	}
 }

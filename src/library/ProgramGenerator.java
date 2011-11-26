@@ -50,7 +50,7 @@ public class ProgramGenerator {
 
 			try {
 				// TODO dodgy
-				for (int i = 0; i < config.getNumParts(); i++) {
+				for (int i = 0; i < config.getNumRoots(); i++) {
 					tmp = createGrowProgram(0, tmpSize, pop.get(indiv).getReturnType(i));
 					pop.get(indiv).setRoot(tmp, i);
 				}
@@ -72,7 +72,7 @@ public class ProgramGenerator {
 			}
 
 			try {
-				for (int i = 0; i < config.getNumParts(); i++) {
+				for (int i = 0; i < config.getNumRoots(); i++) {
 					tmp = createFullProgram(0, tmpSize, pop.get(indiv).getReturnType(i));
 					pop.get(indiv).setRoot(tmp, i);
 				}

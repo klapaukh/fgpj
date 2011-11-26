@@ -97,7 +97,7 @@ public class GPConfig {
 	 * 
 	 * @return the number of root nodes
 	 */
-	public int getNumParts() {
+	public int getNumRoots() {
 		return numParts;
 	}
 

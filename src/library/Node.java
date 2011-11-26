@@ -35,6 +35,11 @@ public abstract class Node {
 	protected int numArgs;
 
 	/**
+	 * position of this node in the tree
+	 */
+	private int position;
+
+	/**
 	 * Make a new node with the specified number of arguments, return type and name
 	 * 
 	 * @param retType
@@ -219,10 +224,42 @@ public abstract class Node {
 	 * @return the generated Node
 	 */
 	public abstract <T extends Node> T generate(GPConfig conf);
-	
-	public String toString(){
+
+	public String toString() {
 		StringBuffer s = new StringBuffer();
 		this.print(s);
 		return s.toString();
+	}
+
+	/**
+	 * Gets a node at a specified position
+	 * 
+	 * @param i
+	 *            position to get node at
+	 * @return the node at this position
+	 */
+	public abstract Node getNode(int i);
+
+	/**
+	 * work out the numbering of each node
+	 * @param parent the number of your parent
+	 * @return the number of your largest child
+	 */
+	public abstract int computePositions(int parent);
+	
+	/** 
+	 * Set the position of this node
+	 * @param pos position of this node
+	 */
+	protected void setPosition(int pos){
+		this.position = pos;
+	}
+	
+	/**
+	 * get the position of this node
+	 * @return position of this node
+	 */
+	protected int getPosition(){
+		return this.position;
 	}
 }

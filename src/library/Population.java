@@ -60,7 +60,7 @@ public class Population {
 		avgFitness = (0.0);
 		avgDepth = (0.0);
 		avgSize = (0.0);
-		returnType = new int[conf.getNumParts()];
+		returnType = new int[conf.getNumRoots()];
 		generationNumber = (0);
 		loggingFrequency = (1);
 		config = (conf);
@@ -88,7 +88,7 @@ public class Population {
 		avgFitness = (0.0);
 		avgDepth = (0.0);
 		avgSize = (0.0);
-		returnType = new int[conf.getNumParts()];
+		returnType = new int[conf.getNumRoots()];
 		generationNumber = (0);
 		loggingFrequency = (1);
 		config = (conf);
@@ -220,7 +220,7 @@ public class Population {
 			config.mutationOperator.mutate(nextPop.get(nextPop.size() - 1), config);
 		}
 		for (GeneticProgram m : pop) {
-			for (int j = 0; j < config.getNumParts(); j++) {
+			for (int j = 0; j < config.getNumRoots(); j++) {
 				m.deleteTree(j);
 			}
 		}
@@ -302,11 +302,11 @@ public class Population {
 	}
 
 	public void setReturnType(int type) {
-		for (int i = 0; i < config.getNumParts(); i++) {
+		for (int i = 0; i < config.getNumRoots(); i++) {
 			returnType[i] = type;
 		}
 		for (int i = 0; i < numIndividuals; i++) {
-			for (int j = 0; j < config.getNumParts(); j++) {
+			for (int j = 0; j < config.getNumRoots(); j++) {
 				pop.get(i).setReturnType(j, type);
 			}
 		}
@@ -371,15 +371,15 @@ public class Population {
 		for (int i = 0; i < numIndividuals; i++) {
 			totalFitness += pop.get(i).getFitness();
 			// find the average depth and size of the program
-			for (int j = 0; j < config.getNumParts(); j++) {
+			for (int j = 0; j < config.getNumRoots(); j++) {
 				totalDepth += pop.get(i).getDepth(j);
 				totalSize += pop.get(i).getSize(j);
 			}
 		}
 
 		avgFitness = totalFitness / numIndividuals;
-		avgDepth = totalDepth / (numIndividuals * config.getNumParts());
-		avgSize = totalSize / (numIndividuals * config.getNumParts());
+		avgDepth = totalDepth / (numIndividuals * config.getNumRoots());
+		avgSize = totalSize / (numIndividuals * config.getNumRoots());
 	}
 
 	public void writeToFile() {
@@ -532,7 +532,7 @@ public class Population {
 			s.append(pop.get(i).getFitness());
 			s.append('\n');
 			// TODO I changed this
-			for (int j = 0; j < config.getNumParts(); j++) {
+			for (int j = 0; j < config.getNumRoots(); j++) {
 				s.append("Depth ");
 				s.append(pop.get(i).getDepth(j));
 				s.append('\n');

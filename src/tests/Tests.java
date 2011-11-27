@@ -11,15 +11,21 @@ import library.GPConfig;
 import library.GeneticProgram;
 import library.Node;
 import library.Population;
+import library.TournamentSelection;
 
 import org.junit.Test;
 
+import sets.lines.ImageFitness;
+import sets.lines.Line;
+import sets.lines.Null;
+import sets.lines.ReturnColor;
+import sets.lines.ReturnImage;
+import sets.lines.SetColor;
 import sets.symbolicRegression.Add;
 import sets.symbolicRegression.RandomInt;
 import sets.symbolicRegression.ReturnDouble;
 import sets.symbolicRegression.SymbolicFitness;
 import sets.symbolicRegression.Times;
-import sets.symbolicRegression.TournamentSelection;
 import sets.symbolicRegression.X;
 
 public class Tests {
@@ -172,6 +178,30 @@ public class Tests {
 	}
 
 	@Test
+	public void TestRandom() {
+		GPConfig conf = new GPConfig(1, 3, 8, 0.50, 0.4, 0.1);
+		conf.addFunction(new Line(conf));
+		conf.addTerminal(new Null(conf));
+		conf.addTerminal(new SetColor(conf));
+
+		int size = 100;
+		
+		Population p = new Population(size, conf);
+		p.setReturnType(ReturnImage.TYPENUM);
+		p.generateInitialPopulation();
+		List<GeneticProgram> pop = p.getUnderlyingPopulation();
+		GeneticProgram pr = pop.get(0);
+		int [] hist = new int[pr.getSize(0)];
+		for(int i= 0 ; i< pr.getSize(0)*100;i++){
+			hist[pr.getRandomNode(ReturnColor.TYPENUM,0, conf).getPosition()] ++;
+		}
+		for(int i =0 ;i < hist.length;i++){
+			System.out.printf("%03d " , hist[i]);
+		}		
+		System.out.println();
+	}
+	
+	@Test
 	public void TestDepthMutation() {
 		GPConfig conf = new GPConfig(1, 2, 8, 0.50, 0.4, 0.1);
 		conf.addTerminal(new X());
@@ -213,10 +243,10 @@ public class Tests {
 			ss = new StringBuilder();
 			pr.print(ss);
 			String news = ss.toString();
-			if(orig.equals(news)){
-				System.out.println(news);
-				count ++;
-			}
+//			if(orig.equals(news)){
+//				System.out.println(news);
+//				count ++;
+//			}
 		}
 		assertTrue(""+count, count < .01 * size);
 	}

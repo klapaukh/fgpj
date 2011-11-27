@@ -26,16 +26,7 @@ public class Mutation {
 		Node newTree = config.programGenerator.createGrowProgram(tmp.getDepth(), config.maxDepth() ,
 				tmp.getReturnType(), config);
 
-		StringBuilder ss = new StringBuilder();
-		tmp.print(ss);
-		String old = ss.toString();
-		ss = new StringBuilder();
-		newTree.print(ss);
-		String news = ss.toString();
-		
-		if(old.equals(news)){
-			System.out.println("RAWR " + old +  " " +tmp.getDepth());
-		}
+
 		// If parent is not NULL then newTree is not at the root of
 		// the tree
 		if (parent != null) {

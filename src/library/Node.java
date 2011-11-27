@@ -271,7 +271,7 @@ public abstract class Node {
 	 * Set the position of this node
 	 * @param pos position of this node
 	 */
-	protected void setPosition(int pos){
+	public void setPosition(int pos){
 		this.position = pos;
 	}
 	
@@ -279,7 +279,7 @@ public abstract class Node {
 	 * get the position of this node
 	 * @return position of this node
 	 */
-	protected int getPosition(){
+	public int getPosition(){
 		return this.position;
 	}
 }

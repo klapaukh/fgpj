@@ -14,7 +14,7 @@ public class RandomInt extends Terminal{
 	
 	public RandomInt(GPConfig conf) {
 		super(ReturnDouble.TYPENUM, "Random");
-		value = (int) (conf.randomNumGenerator.nextDouble() * 6);
+		value = conf.randomNumGenerator.nextInt(6);
 	}
 
 	

@@ -1,12 +1,14 @@
-package sets.symbolicRegression;
+package library;
 
 import java.util.Arrays;
 import java.util.List;
 
-import library.GPConfig;
-import library.GeneticProgram;
-import library.Selection;
 
+/**
+ * Tournament Selection
+ * @author Roma
+ *
+ */
 public class TournamentSelection extends Selection {
 
 	private int[] tournament;

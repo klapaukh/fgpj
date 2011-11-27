@@ -82,6 +82,16 @@ public class Population {
 		return l;
 	}
 
+	
+	/**
+	 * Get the underlying population be Careful!
+	 * 
+	 * @return the underlying population list
+	 */
+	public List<GeneticProgram> getUnderlyingPopulation() {
+		return pop;
+	}
+
 	/**
 	 * Generate a random initial population using the ProgramGenerator specified in the config
 	 */
@@ -463,7 +473,7 @@ public class Population {
 		s.append('\n');
 
 		for (int i = 0; i < pop.size(); i++) {
-			StringBuffer s1 = new StringBuffer();
+			StringBuilder s1 = new StringBuilder();
 			pop.get(i).print(s1);
 			s.append("###################################\n");
 			s.append("Individual ");

@@ -75,8 +75,7 @@ public class Crossover {
 			// do not violate the maximum and minimum depth
 			int newDepth1 = depth1 + point2.traceDepth(0);
 			int newDepth2 = depth2 + point1.traceDepth(0);
-			if ((newDepth1 <= config.maxDepth()) && (newDepth2 <= config.maxDepth())
-					&& (newDepth1 >= config.minDepth()) && (newDepth2 >= config.maxDepth())) {
+			if ((newDepth1 <= config.maxDepth()) && (newDepth2 <= config.maxDepth())) {
 				valid = true;
 			}
 			count++;

@@ -7,12 +7,12 @@ import library.Population;
 public class SymbMain {
 
 	public static void main(String[] args){
-		GPConfig conf= new GPConfig(1,3,4,0.4, 0.4, 0.2);
+		GPConfig conf= new GPConfig(1,2,5,0.5, 0.48, 0.02);
 		conf.setLogFile("run-log.txt");
 		conf.loggingFrequency(1);
 		
 		conf.addTerminal(new X());
-		conf.addTerminal(new RandomDouble(conf));
+		conf.addTerminal(new RandomInt(conf));
 		conf.addFunction(new Add());
 		conf.addFunction(new Times());
 		

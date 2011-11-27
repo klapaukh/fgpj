@@ -62,6 +62,9 @@ public class GeneticProgram {
 		root = new Node[numRoots];
 		depth = new int[numRoots];
 		size = new int[numRoots];
+		for(int i=0;i<numRoots;i++){
+			returnType[i] = -1;
+		}
 
 	}
 
@@ -208,7 +211,7 @@ public class GeneticProgram {
 	 * @param s
 	 *            the StringBuffer to print to
 	 */
-	public void print(StringBuffer s) {
+	public void print(StringBuilder s) {
 		s.append(numRoots);
 		s.append(" ");
 		for (int i = 0; i < numRoots; i++) {
@@ -390,7 +393,7 @@ public class GeneticProgram {
 	}
 
 	public String toString() {
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		this.print(s);
 		return s.toString();
 	}

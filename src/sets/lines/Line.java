@@ -93,7 +93,7 @@ public class Line extends Function {
 		}
 	}
 
-	public void print(StringBuffer s) {
+	public void print(StringBuilder s) {
 
 		s.append(" ( ");
 		s.append(String.format("%sx%dx%dy%dy%d", getName(), x1, x2, y1, y2));

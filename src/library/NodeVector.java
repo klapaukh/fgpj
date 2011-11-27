@@ -44,7 +44,7 @@ public class NodeVector<T extends Node> {
 	 */
 	public T generateNodeByName(String name, GPConfig conf) {
 		for (int i = 0; i < size(); i++) {
-			if (vec.get(i).getName().equals(name)) {
+			if (name.startsWith(vec.get(i).getName())) {
 				return vec.get(i).generate(name, conf);
 			}
 		}

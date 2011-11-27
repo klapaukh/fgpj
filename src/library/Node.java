@@ -187,7 +187,7 @@ public abstract class Node {
 	 * @param s
 	 *            The StringBuffer to print to
 	 */
-	public abstract void print(StringBuffer s);
+	public abstract void print(StringBuilder s);
 
 	/**
 	 * Return a copy of this node
@@ -234,7 +234,7 @@ public abstract class Node {
 	public abstract <T extends Node> T generate(GPConfig conf);
 
 	public String toString() {
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		this.print(s);
 		return s.toString();
 	}

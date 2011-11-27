@@ -47,7 +47,7 @@ public abstract class Terminal extends Node {
 	      list.add(this);
 	}
 
-	public void print(StringBuffer s)
+	public void print(StringBuilder s)
 	{
 	   s.append(getName());  
 	}

@@ -14,7 +14,8 @@ import java.util.Random;
  * (which can just do nothing for standard GP).
  * 
  * The depth limit for the population is needed due to memory and time constraints. Trees can get very big, very
- * quickly. The mutation, crossover and elitism rates must sum to 1.
+ * quickly. The mutation, crossover and elitism rates must sum to 1. The mindepth constraint, however, only holds for
+ * the generation of the inital population
  * 
  * @author Roma
  * 
@@ -49,9 +50,9 @@ public class GPConfig {
 	public ProgramGenerator programGenerator;
 
 	public ConfigModifier configModifier;
-	
+
 	private int loggingFrequency;
-	
+
 	private PrintStream logFile;
 
 	/**
@@ -206,42 +207,49 @@ public class GPConfig {
 
 	/**
 	 * Get the logging fequency
+	 * 
 	 * @return logging frequency
 	 */
-	public int loggingFrequency(){
+	public int loggingFrequency() {
 		return this.loggingFrequency;
 	}
-	
+
 	/**
 	 * Set the logging frequency. Everything will be written to a file every that many generations
-	 * @param freq number of generations
+	 * 
+	 * @param freq
+	 *            number of generations
 	 */
-	public void loggingFrequency(int freq){
+	public void loggingFrequency(int freq) {
 		this.loggingFrequency = freq;
 	}
-	
+
 	/**
 	 * Set the log file
-	 * @param filename filename for logfile
+	 * 
+	 * @param filename
+	 *            filename for logfile
 	 */
-	public void setLogFile(String filename){
+	public void setLogFile(String filename) {
 		try {
 			logFile = new PrintStream(new File(filename));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Append string to logfile if set
-	 * @param s string to append to log file
+	 * 
+	 * @param s
+	 *            string to append to log file
 	 */
-	public void log(String s){
-		if(logFile != null){
+	public void log(String s) {
+		if (logFile != null) {
 			logFile.print(s);
 		}
 	}
-	
+
 	/**
 	 * Initialises the random number generator, program generator (ramped half-half), the crossover operator, the
 	 * mutation operator, the selection operator (roulette wheel), and the config modifier to the standard base objects.
@@ -268,21 +276,27 @@ public class GPConfig {
 
 	/**
 	 * Add a Terminal to the terminal set
-	 * @param returnType The return type of this terminal
-	 * @param n an instance of the terminal
+	 * 
+	 * @param returnType
+	 *            The return type of this terminal
+	 * @param n
+	 *            an instance of the terminal
 	 */
-	public void addTerminal(Terminal n){
-		NodeFactory.teach(n,this);
+	public void addTerminal(Terminal n) {
+		NodeFactory.teach(n, this);
 		this.termSet.add(n);
 	}
-	
+
 	/**
 	 * Add a Function to the function set
-	 * @param returnType the return type of this Function
-	 * @param n an instance of the function
+	 * 
+	 * @param returnType
+	 *            the return type of this Function
+	 * @param n
+	 *            an instance of the function
 	 */
-	public void addFunction(Function n){
-		NodeFactory.teach(n,this);
+	public void addFunction(Function n) {
+		NodeFactory.teach(n, this);
 		this.funcSet.add(n);
 	}
 }

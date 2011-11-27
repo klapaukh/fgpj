@@ -69,7 +69,7 @@ public class SetColor extends Terminal {
 		i.setColor(col);
 	}
 
-	public void print(StringBuffer s) {
+	public void print(StringBuilder s) {
 
 		s.append(String.format("%sred%dgreen%dblue%dalpha%d", getName(), col.getRed(), col.getGreen(), col.getBlue(),
 				col.getAlpha()));

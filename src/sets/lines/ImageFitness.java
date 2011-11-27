@@ -97,7 +97,7 @@ public class ImageFitness implements Fitness {
 		int size = SIZE;
 
 		file.print("P3\n# best.pnm\n");
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		program.print(s);
 		file.print("#");
 		file.println(s);
@@ -163,7 +163,7 @@ public class ImageFitness implements Fitness {
 		// Set up ppm header
 
 		file.print("P3\n# best.pnm\n");
-		StringBuffer s = new StringBuffer();
+		StringBuilder s = new StringBuilder();
 		gp.print(s);
 		file.print("#");
 		file.println(s);

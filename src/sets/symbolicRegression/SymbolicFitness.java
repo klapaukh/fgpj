@@ -20,14 +20,14 @@ public class SymbolicFitness implements Fitness {
 	@Override
 	public void initFitness() {
 		values = new HashMap<Double, Double>();
-		for (int i = 0; i < 100; i++) {
-			double x = Math.random() * 100;
+		for (double i = 0; i < 50; i += 0.5) {
+			double x = i;
 			values.put(x, f(x));
 		}
 	}
 
 	private double f(double x) {
-		return 5 * x + 3 * x * x;
+		return 5*x+3*x*x;
 	}
 
 	@Override
@@ -40,21 +40,20 @@ public class SymbolicFitness implements Fitness {
 				p.evaluate(d);
 				error += Math.abs(d[0].value() - e.getValue());
 			}
-			if (Double.compare(error, 0) == 0) {
-				p.setFitness(0);
-			} else {
-				p.setFitness(1000000 / error);
-			}
+			double fit = 100000L / error;
+			if(Double.isNaN(fit ) || Double.isInfinite(fit)){fit = Double.MAX_VALUE;}
+			p.setFitness(fit);
+
 		}
 	}
 
 	@Override
 	public boolean solutionFound(List<GeneticProgram> pop) {
-		for (GeneticProgram p : pop) {
-			if (Double.compare(p.getFitness(), 0) == 0) {
-				return true;
-			}
-		}
+//		for (GeneticProgram p : pop) {
+//			if (Double.compare(p.getFitness(), 0) == 0) {
+//				return true;
+//			}
+//		}
 		return false;
 	}
 

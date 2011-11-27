@@ -17,7 +17,7 @@ public class ProgramGenerator {
 	}
 
 	/**
-	 * Generate the initial population.
+	 * Generate the initial population. They have depth between mindepth and maxdepth
 	 * 
 	 * @param pop
 	 *            The list of programs to set trees for
@@ -29,6 +29,14 @@ public class ProgramGenerator {
 	public void generateInitialPopulation(List<GeneticProgram> pop, int expectedReturnType[], GPConfig config) {
 		generateTables(config);
 		if (config.minDepth() > config.maxDepth()) throw new RuntimeException("minDepth is greater than maxDepth");
+		if (pop.size() > 1) {
+			GeneticProgram prog = pop.get(0);
+			for (int i = 0; i < config.getNumRoots(); i++) {
+				if (prog.getReturnType(i) == -1) {
+					throw new IllegalStateException("Return types for population not set");
+				}
+			}
+		}
 
 		int numIndividualsForRamping = pop.size() / 2;
 		int numSizes = config.maxDepth() - config.minDepth() + 1;
@@ -37,6 +45,10 @@ public class ProgramGenerator {
 				- (numIndividualsForRamping - 1);
 
 		int indiv;
+		if (minSize < config.minDepth()) {
+			throw new RuntimeException("minSize < minDepth");
+		}
+
 		int maxSize = minSize;
 		for (indiv = 0; indiv < numIndividualsForRamping; indiv++) {
 			if (maxSize < config.maxDepth() && (indiv % sizeInc) == 0) {
@@ -46,6 +58,10 @@ public class ProgramGenerator {
 			for (int i = 0; i < config.getNumRoots(); i++) {
 				Node tmp = createGrowProgram(1, maxSize, pop.get(indiv).getReturnType(i), config);
 				pop.get(indiv).setRoot(tmp, i);
+				pop.get(indiv).computeSizeAndDepth(i);
+				if (pop.get(indiv).getDepth(i) < config.minDepth() || pop.get(indiv).getDepth(i) > config.maxDepth()) {
+					i--;
+				}
 			}
 		}
 
@@ -55,9 +71,12 @@ public class ProgramGenerator {
 				maxSize++;
 			}
 			for (int i = 0; i < config.getNumRoots(); i++) {
-				Node tmp = createFullProgram(1, config.maxDepth(), pop.get(indiv).getReturnType(i),
-						config);
+				Node tmp = createFullProgram(1, config.maxDepth(), pop.get(indiv).getReturnType(i), config);
 				pop.get(indiv).setRoot(tmp, i);
+				pop.get(indiv).computeSizeAndDepth(i);
+				if (pop.get(indiv).getDepth(i) < config.minDepth()|| pop.get(indiv).getDepth(i) > config.maxDepth()) {
+					i--;
+				}
 			}
 		}
 	}
@@ -155,12 +174,10 @@ public class ProgramGenerator {
 		// grow table creation, by level
 		for (int curDepth = 1; curDepth < maxDepth; curDepth++) {
 
-			// Add the terminals - they can be at any level but not below minDepth
-			if (curDepth >= config.minDepth()) {
-				for (int i = 0; i < numTerminals; i++) {
-					Node n = config.termSet.generate(i, config);
-					growTable[curDepth].add(n);
-				}
+			// Add the terminals - they can be at any level
+			for (int i = 0; i < numTerminals; i++) {
+				Node n = config.termSet.generate(i, config);
+				growTable[curDepth].add(n);
 			}
 
 			// Add the functions
@@ -197,7 +214,7 @@ public class ProgramGenerator {
 		}
 
 		// full table creation
-		for (int curDepth = 1; curDepth <maxDepth; curDepth++) {
+		for (int curDepth = 1; curDepth < maxDepth; curDepth++) {
 			// Add the functions
 			for (int i = 0; i < numFunctions; i++) {
 				Function tmpFunc = config.funcSet.generate(i, config);

@@ -151,7 +151,7 @@ public abstract class Function extends Node {
 		}
 	}
 
-	public void print(StringBuffer s) {
+	public void print(StringBuilder s) {
 		s.append(" ( ");
 		s.append(getName());
 

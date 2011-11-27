@@ -14,7 +14,7 @@ public class SymbolicFitness implements Fitness {
 
 	@Override
 	public int compare(GeneticProgram arg0, GeneticProgram arg1) {
-		return Double.compare(arg0.getFitness(), arg1.getFitness());
+		return -1 * Double.compare(arg0.getFitness(), arg1.getFitness());
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class SymbolicFitness implements Fitness {
 	}
 
 	private double f(double x) {
-		return 5*x+3*x*x;
+		return (5*x)+(3*x*x);
 	}
 
 	@Override
@@ -38,22 +38,21 @@ public class SymbolicFitness implements Fitness {
 			for (Map.Entry<Double, Double> e : values.entrySet()) {
 				X.setValue(e.getKey());
 				p.evaluate(d);
-				error += Math.abs(d[0].value() - e.getValue());
+				error += Math.pow(d[0].value() - e.getValue(),2);
 			}
-			double fit = 100000L / error;
-			if(Double.isNaN(fit ) || Double.isInfinite(fit)){fit = Double.MAX_VALUE;}
-			p.setFitness(fit);
+			error /= values.size();
+			p.setFitness(Math.sqrt(error));
 
 		}
 	}
 
 	@Override
 	public boolean solutionFound(List<GeneticProgram> pop) {
-//		for (GeneticProgram p : pop) {
-//			if (Double.compare(p.getFitness(), 0) == 0) {
-//				return true;
-//			}
-//		}
+		for (GeneticProgram p : pop) {
+			if (Double.compare(p.getFitness(), 0) == 0) {
+				return true;
+			}
+		}
 		return false;
 	}
 

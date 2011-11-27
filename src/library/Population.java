@@ -104,7 +104,7 @@ public class Population {
 	 * Run the GP algorithm using the settings in the config for up to numGenerations generations. It will terminate
 	 * early if the fitness function says that an acceptable solution was found.
 	 * 
-	 * @param max
+	 * @param numGenerations
 	 *            numGenerations number of generations to run the algorithm for
 	 * @return if an acceptable solution was found
 	 */
@@ -132,7 +132,7 @@ public class Population {
 		}
 		config.fitnessObject.assignFitness(pop, config);
 		Collections.sort(pop, config.fitnessObject);
-		config.fitnessObject.finish(); // Finshed with the fitness assessing now
+		config.fitnessObject.finish(); // Finished with the fitness assessing now
 
 		return false;
 	}
@@ -140,7 +140,7 @@ public class Population {
 	/**
 	 * Generate the next generation from the current one, using the settings in config
 	 */
-	private void nextGeneration() {
+	public void nextGeneration() {
 		int indiv1, indiv2;
 
 		// Write the pop to a file if it's time

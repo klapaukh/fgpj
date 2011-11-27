@@ -23,7 +23,7 @@ public class X extends Terminal{
 	@Override
 	public void evaluate(ReturnData out) {
 		ReturnDouble d = (ReturnDouble)out;
-		d.setValue(this.value);
+		d.setValue(X.value);
 	}
 
 	@Override

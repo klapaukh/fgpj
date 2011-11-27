@@ -40,7 +40,8 @@ public class ProgramGenerator {
 
 		int numIndividualsForRamping = pop.size() / 2;
 		int numSizes = config.maxDepth() - config.minDepth() + 1;
-		int sizeInc = numIndividualsForRamping < numSizes ? numSizes / numIndividualsForRamping : 1;
+		int sizeInc = numIndividualsForRamping < numSizes ? numSizes
+				/ (numIndividualsForRamping != 0 ? numIndividualsForRamping : 1) : 1;
 		int minSize = numIndividualsForRamping > numSizes ? config.minDepth() : config.maxDepth()
 				- (numIndividualsForRamping - 1);
 
@@ -74,7 +75,7 @@ public class ProgramGenerator {
 				Node tmp = createFullProgram(1, config.maxDepth(), pop.get(indiv).getReturnType(i), config);
 				pop.get(indiv).setRoot(tmp, i);
 				pop.get(indiv).computeSizeAndDepth(i);
-				if (pop.get(indiv).getDepth(i) < config.minDepth()|| pop.get(indiv).getDepth(i) > config.maxDepth()) {
+				if (pop.get(indiv).getDepth(i) < config.minDepth() || pop.get(indiv).getDepth(i) > config.maxDepth()) {
 					i--;
 				}
 			}
@@ -229,7 +230,6 @@ public class ProgramGenerator {
 
 						if (argNReturnType == tmpNode.getReturnType()) {
 							found = true;
-							break;
 						}
 						NodeFactory.delete(tmpNode);
 					}
@@ -243,6 +243,51 @@ public class ProgramGenerator {
 				if (valid) {
 					Node n = config.funcSet.generate(i, config);
 					fullTable[curDepth].add(n);
+				}
+			}
+			if (fullTable[curDepth].size() == 0) {
+				// add functions, but now allow for terminal to appear
+				for (int i = 0; i < numFunctions; i++) {
+					Function tmpFunc = config.funcSet.generate(i, config);
+					boolean valid = true;
+
+					for (int arg = 0; valid && arg < tmpFunc.getNumArgs(); arg++) {
+						boolean found = false;
+						int argNReturnType = tmpFunc.getArgNReturnType(arg);
+
+						for (int tSize = 0; !found && tSize < fullTable[curDepth - 1].size(); tSize++) {
+							Node tmpNode = fullTable[curDepth - 1].generate(tSize, config);
+
+							if (argNReturnType == tmpNode.getReturnType()) {
+								found = true;
+							}
+							NodeFactory.delete(tmpNode);
+						}
+
+						if (!found) {
+							// OK, we are desperate, give us a terminal
+							for (int tSize = 0; !found && tSize < fullTable[0].size(); tSize++) {
+								Node tmpNode = fullTable[0].generate(tSize, config);
+
+								if (argNReturnType == tmpNode.getReturnType()) {
+									found = true;
+									fullTable[curDepth - 1].add(tmpNode);
+								} else {
+									NodeFactory.delete(tmpNode);
+								}
+							}
+						}
+
+						if (!found) {
+							valid = false;
+							break;
+						}
+					}
+
+					if (valid) {
+						Node n = config.funcSet.generate(i, config);
+						fullTable[curDepth].add(n);
+					}
 				}
 			}
 		}

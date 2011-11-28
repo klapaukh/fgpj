@@ -70,7 +70,7 @@ public class ParallelFitness<T extends Fitness> implements Fitness {
 	}
 
 	public void assignFitness(List<GeneticProgram> pop, GPConfig conf) {
-		int min = 0, max = stepSize;
+		int min = 0, max = Math.min(stepSize,pop.size());
 		while (min < pop.size()) {
 			jobs.offer(new Job(min, max, pop, conf));
 			
@@ -85,19 +85,6 @@ public class ParallelFitness<T extends Fitness> implements Fitness {
 			e.printStackTrace();
 		} catch (BrokenBarrierException e) {
 			e.printStackTrace();
-		}
-		
-		double[] fit = new double[pop.size()];
-		for(int i =0 ;i < pop.size();i++)
-		{
-			fit[i] = pop.get(i).getFitness();
-		}
-		fitness.assignFitness(pop, conf);
-		for(int i =0 ;i < pop.size();i++)
-		{
-			if(fit[i] != pop.get(i).getFitness()){
-				System.out.println("BAD "+ i);;
-			}
 		}
 		
 		gen++;

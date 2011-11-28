@@ -8,8 +8,7 @@ import library.Fitness;
 import library.GPConfig;
 import library.GeneticProgram;
 
-public class SymbolicFitness implements Fitness {
-
+public class SafeSymbolicFitness implements Fitness {
 	Map<Double, Double> values;
 
 	@Override
@@ -36,7 +35,7 @@ public class SymbolicFitness implements Fitness {
 			ReturnDouble d[] = new ReturnDouble[] { new ReturnDouble() };
 			double error = 0;
 			for (Map.Entry<Double, Double> e : values.entrySet()) {
-				X.setValue(e.getKey());
+				SafeX.setValue(e.getKey(),p);
 				p.evaluate(d);
 				error += Math.pow(d[0].value() - e.getValue(),2);
 			}
@@ -60,5 +59,6 @@ public class SymbolicFitness implements Fitness {
 	public void finish() {
 
 	}
+
 
 }

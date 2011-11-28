@@ -106,6 +106,13 @@ public class GeneticProgram {
 	}
 
 	/**
+	 * Number of root nodes this program has
+	 * @return number of root nodes
+	 */
+	public int numRoots(){
+		return numRoots;
+	}
+	/**
 	 * Delete the current tree. Returns it to the node factory and sets the root to null
 	 * 
 	 * @param place

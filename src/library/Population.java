@@ -126,6 +126,12 @@ public class Population {
 				return true;
 			}
 
+			for(GeneticProgram p : pop)
+			{
+				if(Double.isNaN(p.getFitness())){
+					System.out.println("NaN");
+				}
+			}
 			config.configModifier.ModifyConfig(config, this);
 
 			nextGeneration();

@@ -26,14 +26,16 @@ public class Divide extends Function {
 	@Override
 	public void evaluate(ReturnData out) {
 		ReturnDouble d = (ReturnDouble) out;
-		ReturnDouble d1 = new ReturnDouble();
-		getArgN(0).evaluate(d1);
-		d.setValue(d1.value());
-		getArgN(1).evaluate(d1);
-		if(d1.value() == 0){
+		
+		getArgN(0).evaluate(d);
+		double d1 = d.value();
+		
+		getArgN(1).evaluate(d);
+		
+		if(d.value() == 0){
 			d.setValue(0);
 		}else{
-			d.setValue(d.value() / d1.value());
+			d.setValue(d1 / d.value());
 		}
 	}
 

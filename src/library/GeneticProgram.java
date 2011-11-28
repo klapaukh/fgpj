@@ -285,7 +285,6 @@ public class GeneticProgram {
 			Node rootTmp = root[i].copy(config);
 			tmp.setRoot(rootTmp, i);
 		}
-
 		tmp.computeSizeAndDepth();
 
 		return tmp;

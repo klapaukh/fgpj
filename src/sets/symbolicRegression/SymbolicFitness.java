@@ -20,7 +20,7 @@ public class SymbolicFitness implements Fitness {
 	@Override
 	public void initFitness() {
 		values = new HashMap<Double, Double>();
-		for (double i = 0; i < 10; i += 0.1) {
+		for (double i = 0.1; i < 10; i += 0.1) {
 			double x = i;
 			values.put(x, f(x));
 		}

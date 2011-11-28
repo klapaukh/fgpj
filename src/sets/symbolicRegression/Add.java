@@ -26,11 +26,10 @@ public class Add extends Function {
 	@Override
 	public void evaluate(ReturnData out) {
 		ReturnDouble d = (ReturnDouble) out;
-		ReturnDouble d1 = new ReturnDouble();
-		getArgN(0).evaluate(d1);
-		d.setValue(d1.value());
-		getArgN(1).evaluate(d1);
-		d.setValue(d.value() + d1.value());
+		getArgN(0).evaluate(d);
+		double d1 = d.value();
+		getArgN(1).evaluate(d);
+		d.setValue(d.value() + d1);
 	}
 
 	@Override

@@ -11,26 +11,33 @@ import java.util.List;
  */
 public class TournamentSelection extends Selection {
 
-	private int[] tournament;
+	private int tournamentSize;
 	
 	public TournamentSelection(int size) {
-		this.tournament = new int[size];
+		this.tournamentSize = size;
 	}
 
 	public int select(List<GeneticProgram> pop, GPConfig config) {
-		for(int i= 0 ; i < tournament.length;i++){
-			tournament[i] = config.randomNumGenerator.nextInt(pop.size());
+		int idx = config.randomNumGenerator.nextInt(pop.size());
+		GeneticProgram fitness = pop.get(idx);
+		for(int i= 1 ; i < tournamentSize;i++){
+			int newIdx = config.randomNumGenerator.nextInt(pop.size());
+			GeneticProgram newFitness = pop.get(newIdx);
+			if(config.fitnessObject.compare(fitness, newFitness)<0){
+				idx = newIdx;
+				fitness = newFitness;
+			}
+			
 		}
-		Arrays.sort(tournament);
-		return tournament[tournament.length-1];
+		return idx;
 	}
 
 	public int getSize() {
-		return tournament.length;
+		return tournamentSize;
 	}
 
 	public void setSize(int size) {
-		this.tournament = new int[size];
+		this.tournamentSize = size;
 	}
 
 }

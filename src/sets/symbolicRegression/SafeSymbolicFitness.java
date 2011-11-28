@@ -26,7 +26,8 @@ public class SafeSymbolicFitness implements Fitness {
 	}
 
 	private double f(double x) {
-		return x*Math.exp(x + 3);
+//		return x*Math.exp(x + 3);
+		return x*Math.sin(x + 3);
 	}
 
 	@Override

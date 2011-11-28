@@ -9,10 +9,10 @@ import library.TournamentSelection;
 public class SymbMain {
 
 	public static void main(String[] args){
-		
+		long start = System.currentTimeMillis();
 		boolean parallel = true;
 		
-		GPConfig conf= new GPConfig(1,3,4,0.6, 0.38, 0.02);
+		GPConfig conf= new GPConfig(1,1,8,0.6, 0.38, 0.02);
 		conf.setLogFile("run-log.txt");
 		conf.loggingFrequency(10000);
 		conf.selectionOperator = new TournamentSelection(5);
@@ -39,26 +39,16 @@ public class SymbMain {
 		p.setReturnType(ReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 
-		String ss;
-		if(parallel){
-			ss = "1 Program0  ( * SafeX ( e ( + SafeX Randomx3 ) ) )  |";
-		}else{
-			ss = "1 Program0  ( * X ( e ( + X Randomx3 ) ) )  |";
-		}
-		GeneticProgram pr = p.getUnderlyingPopulation().get(0);
-		pr.parseProgram(ss, conf);
 		
-		p.evolve(1000);
+		if(p.evolve(1000)){
+			System.out.println("Early");
+		}
 		
 		GeneticProgram s = p.getBest();
 		System.out.println(s.getFitness());
 		System.out.println(s);
-
 		
-//		List<GeneticProgram> pp = new ArrayList<GeneticProgram>();
-//		pp.add(pr);
-//		((ParallelFitness<SafeSymbolicFitness>)conf.fitnessObject).fitness.assignFitness(pp, conf);
-		
-//		System.out.println(pr.getFitness());
+		long end = System.currentTimeMillis();
+		System.out.println(end - start );
 	}
 }

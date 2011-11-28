@@ -12,4 +12,4 @@ run-log.txt
 .settings/
 .#*
 *.swo
-
+test.sh

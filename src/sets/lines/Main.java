@@ -39,7 +39,7 @@ public class Main {
 
 		// Create the setting for a new GP run
 		// 1 root node, min program depth 1, and max depth 8
-		GPConfig symConfig = new GPConfig(1, 1, 8, 0.7, 0.28, 0.02);
+		GPConfig symConfig = new GPConfig(1, 1, 5, 0.7, 0.28, 0.02);
 		symConfig.setLogFile("run-log.txt");
 		// Declare a population, giving the size and a log file name
 		Population pop = new Population(100,  symConfig);

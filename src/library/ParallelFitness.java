@@ -71,7 +71,7 @@ public class ParallelFitness<T extends Fitness> implements Fitness {
 
 	public void assignFitness(List<GeneticProgram> pop, GPConfig conf) {
 		int min = 0, max = stepSize;
-		while (max < pop.size()) {
+		while (min < pop.size()) {
 			jobs.offer(new Job(min, max, pop, conf));
 			max = Math.min(max + stepSize, pop.size());
 			min += stepSize;

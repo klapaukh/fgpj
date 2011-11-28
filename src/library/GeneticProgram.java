@@ -57,7 +57,7 @@ public class GeneticProgram {
 	 */
 	public GeneticProgram(int numRoots) {
 		this.numRoots = numRoots;
-		fitness = 0.0;
+		fitness = Double.NaN;
 		returnType = new int[numRoots];
 		root = new Node[numRoots];
 		depth = new int[numRoots];

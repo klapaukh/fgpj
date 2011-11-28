@@ -1,5 +1,6 @@
 package tests;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -10,12 +11,12 @@ import java.util.List;
 import library.GPConfig;
 import library.GeneticProgram;
 import library.Node;
+import library.ParallelFitness;
 import library.Population;
 import library.TournamentSelection;
 
 import org.junit.Test;
 
-import sets.lines.ImageFitness;
 import sets.lines.Line;
 import sets.lines.Null;
 import sets.lines.ReturnColor;
@@ -43,7 +44,7 @@ public class Tests {
 	public void TestString1() {
 		GPConfig conf = new GPConfig(1, 2, 8, 0.50, 0.4, 0.1);
 		conf.addTerminal(new X());
-		conf.addTerminal(new RandomInt(conf));
+		conf.addTerminal(new RandomInt(0,10,conf));
 		conf.addFunction(new Times());
 		conf.addFunction(new Add());
 		conf.fitnessObject = new SymbolicFitness();
@@ -69,7 +70,7 @@ public class Tests {
 	public void TestString2() {
 		GPConfig conf = new GPConfig(1, 2, 8, 0.50, 0.4, 0.1);
 		conf.addTerminal(new X());
-		conf.addTerminal(new RandomInt(conf));
+		conf.addTerminal(new RandomInt(0,10,conf));
 		conf.addFunction(new Times());
 		conf.addFunction(new Add());
 		conf.fitnessObject = new SymbolicFitness();
@@ -111,6 +112,28 @@ public class Tests {
 		assertTrue(pop.size() == size);
 	}
 
+	
+	@Test
+	public void TestParralelFitness() {
+		GPConfig conf = new GPConfig(1, 2, 8, 0.50, 0.4, 0.1);
+		conf.addTerminal(new X());
+		conf.addFunction(new Times());
+		conf.fitnessObject = new ParallelFitness<SymbolicFitness>(new SymbolicFitness(),4,7);
+		conf.selectionOperator = new TournamentSelection(5);
+
+		int size = 100;
+		Population p = new Population(size, conf);
+		p.setReturnType(ReturnDouble.TYPENUM);
+		p.generateInitialPopulation();
+
+		p.evolve(1);
+		List<GeneticProgram> pop = p.getUnderlyingPopulation();
+		
+		for(GeneticProgram pp: pop){
+			assertFalse("Fitness is not being assigned",Double.isNaN(pp.getFitness()));
+		}
+	}
+	
 	@Test
 	public void TestDepthGeneration() {
 		GPConfig conf = new GPConfig(1, 2, 8, 0.50, 0.4, 0.1);
@@ -195,10 +218,11 @@ public class Tests {
 		for(int i= 0 ; i< pr.getSize(0)*100;i++){
 			hist[pr.getRandomNode(ReturnColor.TYPENUM,0, conf).getPosition()] ++;
 		}
-		for(int i =0 ;i < hist.length;i++){
-			System.out.printf("%03d " , hist[i]);
-		}		
-		System.out.println();
+		//Can this be automated?
+//		for(int i =0 ;i < hist.length;i++){
+//			System.out.printf("%03d " , hist[i]);
+//		}		
+//		System.out.println();
 	}
 	
 	@Test

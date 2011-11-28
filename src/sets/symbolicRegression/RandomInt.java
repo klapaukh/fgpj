@@ -10,11 +10,16 @@ public class RandomInt extends Terminal{
 
 	
 	private int value;
+	private int min, max;
 	private static int KIND;
 	
-	public RandomInt(GPConfig conf) {
+	public RandomInt(int min, int max, GPConfig conf) {
 		super(ReturnDouble.TYPENUM, "Random");
-		value = conf.randomNumGenerator.nextInt(6);
+		this.min = min;
+		this.max = max;
+		
+		int range = max - min;
+		value = conf.randomNumGenerator.nextInt(range + 1) + min;
 	}
 
 	
@@ -25,7 +30,7 @@ public class RandomInt extends Terminal{
 
 	@Override
 	public RandomInt getNew(GPConfig config) {
-		return new RandomInt(config);
+		return new RandomInt(min,max,config);
 	}
 
 

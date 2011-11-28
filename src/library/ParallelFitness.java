@@ -46,7 +46,7 @@ public class ParallelFitness<T extends Fitness> implements Fitness {
 	 */
 	@SuppressWarnings("unchecked")
 	public ParallelFitness(T fitness, int numThreads, int stepSize) {
-		this.stepSize = 10;
+		this.stepSize = stepSize;
 		this.jobs = new ConcurrentLinkedQueue<Job>();
 		this.numThreads = numThreads;
 		this.fitness = fitness;
@@ -73,6 +73,7 @@ public class ParallelFitness<T extends Fitness> implements Fitness {
 		int min = 0, max = stepSize;
 		while (min < pop.size()) {
 			jobs.offer(new Job(min, max, pop, conf));
+			
 			max = Math.min(max + stepSize, pop.size());
 			min += stepSize;
 		}
@@ -85,6 +86,20 @@ public class ParallelFitness<T extends Fitness> implements Fitness {
 		} catch (BrokenBarrierException e) {
 			e.printStackTrace();
 		}
+		
+		double[] fit = new double[pop.size()];
+		for(int i =0 ;i < pop.size();i++)
+		{
+			fit[i] = pop.get(i).getFitness();
+		}
+		fitness.assignFitness(pop, conf);
+		for(int i =0 ;i < pop.size();i++)
+		{
+			if(fit[i] != pop.get(i).getFitness()){
+				System.out.println("BAD "+ i);;
+			}
+		}
+		
 		gen++;
 	}
 

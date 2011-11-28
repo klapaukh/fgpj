@@ -25,16 +25,16 @@ public class SymbMain {
 		conf.addFunction(new Divide());
 		conf.addFunction(new Exp());
 		
-		conf.fitnessObject = new ParallelFitness<SymbolicFitness>(new SymbolicFitness(),4,20);
-//		conf.fitnessObject = new SymbolicFitness();
+//		conf.fitnessObject = new ParallelFitness<SymbolicFitness>(new SymbolicFitness(),4,21);
+		conf.fitnessObject = new SymbolicFitness();
 		
 		Population p = new Population(500, conf);
 		p.setReturnType(ReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 		
-		String ss = "1 Program0  ( * X ( e ( + X Randomx3 ) ) )  |";
-		GeneticProgram pr = p.getUnderlyingPopulation().get(0);
-		pr.parseProgram(ss, conf);
+//		String ss = "1 Program0  ( * X ( e ( + X Randomx3 ) ) )  |";
+//		GeneticProgram pr = p.getUnderlyingPopulation().get(0);
+//		pr.parseProgram(ss, conf);
 		
 		p.evolve(1000);
 		

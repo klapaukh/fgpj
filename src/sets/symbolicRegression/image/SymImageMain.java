@@ -2,24 +2,28 @@ package sets.symbolicRegression.image;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
-
-import sets.symbolicRegression.Add;
-import sets.symbolicRegression.Divide;
-import sets.symbolicRegression.Exp;
-import sets.symbolicRegression.Minus;
-import sets.symbolicRegression.RandomDouble;
-import sets.symbolicRegression.ReturnDouble;
-import sets.symbolicRegression.Sin;
-import sets.symbolicRegression.Times;
-import sets.symbolicRegression.X;
-import sets.symbolicRegression.Y;
 
 import library.GPConfig;
 import library.GeneticProgram;
 import library.ParallelFitness;
 import library.Population;
 import library.TournamentSelection;
+import sets.symbolicRegression.Add;
+import sets.symbolicRegression.Divide;
+import sets.symbolicRegression.Exp;
+import sets.symbolicRegression.Max;
+import sets.symbolicRegression.Min;
+import sets.symbolicRegression.Minus;
+import sets.symbolicRegression.RandomDouble;
+import sets.symbolicRegression.ReturnDouble;
+import sets.symbolicRegression.Sin;
+import sets.symbolicRegression.Tan;
+import sets.symbolicRegression.Times;
+import sets.symbolicRegression.X;
+import sets.symbolicRegression.Y;
 
 public class SymImageMain {
 	
@@ -45,7 +49,14 @@ public class SymImageMain {
 		line = scan.nextLine().substring(1);
 		GeneticProgram p = new GeneticProgram(c);
 		p.parseProgram(line, c);
+		
+		List<GeneticProgram> ll = new ArrayList<GeneticProgram>();
+		ll.add(p);
+		((ParallelFitness<MathImageFitness>) (c.fitnessObject)).fitness.initFitness();
+		((ParallelFitness<MathImageFitness>) (c.fitnessObject)).fitness.assignFitness(ll, c);
 		((ParallelFitness<MathImageFitness>) (c.fitnessObject)).fitness.getResult(p, size,size, c);
+		
+		System.out.println(p.getFitness());
 	}
 	
 	public static void main(String[] args) {
@@ -55,19 +66,23 @@ public class SymImageMain {
 
 		GPConfig conf = new GPConfig(3, 1, 8, 0.7, 0.28, 0.02);
 		conf.setLogFile("run-log.txt");
-		conf.loggingFrequency(10000);
+		conf.loggingFrequency(100000);
 		conf.selectionOperator = new TournamentSelection(5);
+		conf.configModifier = new ImageLoggerModifier(100);
 
 		conf.addTerminal(new X());
 		conf.addTerminal(new Y());
-		conf.addTerminal(new RandomDouble(1, 5, conf));
+		conf.addTerminal(new RandomDouble(0, 10, conf));
 
 		conf.addFunction(new Add());
 		conf.addFunction(new Times());
 		conf.addFunction(new Minus());
 		conf.addFunction(new Divide());
+		conf.addFunction(new Min());
+		conf.addFunction(new Max());
 		conf.addFunction(new Exp());
 		conf.addFunction(new Sin());
+		conf.addFunction(new Tan());
 
 		conf.fitnessObject = new ParallelFitness<MathImageFitness>(new MathImageFitness("sample.pnm"), 4, 21);
 		
@@ -81,7 +96,7 @@ public class SymImageMain {
 		p.setReturnType(ReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 
-		p.evolve(500);
+		p.evolve(10000);
 		
 		
 

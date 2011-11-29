@@ -24,10 +24,10 @@ public class Line extends Function {
 	{
 
 		super(ReturnImage.TYPENUM, 4, "line");
-		x1 = (int) Math.abs((conf.randomNumGenerator.nextLong() % ImageFitness.SIZE));
-		x2 = (int) Math.abs(conf.randomNumGenerator.nextLong() % ImageFitness.SIZE);
-		y1 = (int) Math.abs(conf.randomNumGenerator.nextLong() % ImageFitness.SIZE);
-		y2 = (int) Math.abs(conf.randomNumGenerator.nextLong() % ImageFitness.SIZE);
+		x1 = conf.randomNumGenerator.nextInt(ImageFitness.SIZE +1);
+		x2 = conf.randomNumGenerator.nextInt(ImageFitness.SIZE +1);
+		y1 = conf.randomNumGenerator.nextInt(ImageFitness.SIZE +1);
+		y2 = conf.randomNumGenerator.nextInt(ImageFitness.SIZE +1);
 
 		setArgNReturnType(0, ReturnColor.TYPENUM);
 		for (int i = 1; i < numArgs; i++) {
@@ -60,11 +60,7 @@ public class Line extends Function {
 	@SuppressWarnings("unchecked")
 	public Line generate(String name, GPConfig conf) {
 
-		if (name.equals("")) {
-			return (Line) NodeFactory.newNode(getKind(), conf);
-			// return new Line(conf);
-		} else if (name.startsWith(getName())) {
-			int x1, x2, y1, y2;
+		int x1, x2, y1, y2;
 			Scanner scan = new Scanner(name);
 			scan.useDelimiter("[a-z,A-Z]+");
 			x1 = scan.nextInt();
@@ -72,10 +68,6 @@ public class Line extends Function {
 			y1 = scan.nextInt();
 			y2 = scan.nextInt();
 			return ((Line) NodeFactory.newNode(getKind(), conf)).init(x1, x2, y1, y2);
-			// return new Line(x1, x2, y1, y2,conf);
-		}
-
-		return null;
 	}
 
 	public void evaluate(ReturnData out) {

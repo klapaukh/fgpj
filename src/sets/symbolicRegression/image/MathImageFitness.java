@@ -95,9 +95,9 @@ public class MathImageFitness implements Fitness {
 					im[1].setY(yVal);
 					im[2].setY(yVal);
 					p.evaluate(im);
-					totalFitness += Math.abs(toNumber((im[0].value()) - pixels[x][y][0]));
-					totalFitness += Math.abs(toNumber((im[1].value()) - pixels[x][y][1]));
-					totalFitness += Math.abs(toNumber((im[2].value()) - pixels[x][y][2]));
+					totalFitness += Math.abs(toNumber(im[0].value()) - pixels[x][y][0]);
+					totalFitness += Math.abs(toNumber(im[1].value()) - pixels[x][y][1]);
+					totalFitness += Math.abs(toNumber(im[2].value()) - pixels[x][y][2]);
 				}
 			}
 
@@ -236,6 +236,9 @@ public class MathImageFitness implements Fitness {
 //			int v= (int)( i % 512.0);
 //			return v%256;
 //		}
+		if(Double.isInfinite(i) || Double.isNaN(i)){
+			return 0;
+		}
 		int v = (int)i;
 		return  Math.abs(v % 256);
 	}

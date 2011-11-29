@@ -16,7 +16,7 @@ public class ReturnImage extends ReturnData {
 	public final int xSize;
 	public final int ySize;
 
-	public ReturnImage(int width, int height, GPConfig config) {
+	public ReturnImage(int width, int height) {
 		super(TYPENUM);
 		xSize = (width);
 		ySize = (height);

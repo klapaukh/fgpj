@@ -18,7 +18,6 @@ public class ImageFitness implements Fitness {
 
 	private int[][][] pixels = new int[XSIZE][YSIZE][3];
 	// private double power;
-	private static final double MAX_BADNESS = 7650000;
 
 	public ImageFitness() {
 	}
@@ -29,7 +28,7 @@ public class ImageFitness implements Fitness {
 			scan = new Scanner(new File("sample.pnm"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			throw new RuntimeException("sample.pnm cannot be read. No target to copmare to");
+			throw new RuntimeException("sample.pnm cannot be read. No target to compare to");
 		}
 
 		int y, x, c;
@@ -59,7 +58,7 @@ public class ImageFitness implements Fitness {
 			// initialise fitness to zero
 			totalFitness = 0;
 
-			ReturnImage im[] = new ReturnImage[] { new ReturnImage(SIZE, SIZE, config) };
+			ReturnImage im[] = new ReturnImage[] { new ReturnImage(SIZE, SIZE) };
 
 			pop.get(i).evaluate(im);
 
@@ -73,16 +72,8 @@ public class ImageFitness implements Fitness {
 				}
 			}
 
-			// SOME EPIC MAGIC TO CONVERT TO GOODNESS
-
-			totalFitness = 1 - (totalFitness / (double) MAX_BADNESS);
-
-			// totalFitness = pow(totalFitness,power);
-			// power += 0.000075;
 			pop.get(i).setFitness(totalFitness);
-			// System.out.println("Evaluated Program as " + totalFitness);
 		}
-		// power += 0.000075;
 	}
 
 	// Needs to be fixed
@@ -107,7 +98,7 @@ public class ImageFitness implements Fitness {
 		file.print("\n");
 		file.print("255\n");
 
-		ReturnImage[] im = new ReturnImage[] { new ReturnImage(size, size, config) };
+		ReturnImage[] im = new ReturnImage[] { new ReturnImage(size, size) };
 
 		program.evaluate(im);
 
@@ -141,20 +132,12 @@ public class ImageFitness implements Fitness {
 		return Double.compare(gp1.getFitness(), gp2.getFitness());
 	}
 
-	public double best() {
-		return 1;
-	}
-
-	public double worst() {
-		return 0;
-	}
-
 	// I realise, I am intentionally making square images.
-	public void getResult(GeneticProgram gp, int size, GPConfig config) {
+	public void getResult(GeneticProgram gp, int size, String fname) {
 
 		PrintStream file;
 		try {
-			file = new PrintStream(new File("out.pnm"));
+			file = new PrintStream(new File(fname));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return;
@@ -173,7 +156,7 @@ public class ImageFitness implements Fitness {
 		file.print("\n");
 		file.print("255\n");
 
-		ReturnImage[] im = new ReturnImage[] { new ReturnImage(size, size, config) };
+		ReturnImage[] im = new ReturnImage[] { new ReturnImage(size, size) };
 
 		gp.evaluate(im);
 

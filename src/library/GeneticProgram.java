@@ -337,13 +337,16 @@ public class GeneticProgram {
 		for (int i = 0; i < numParts; i++) {
 			int count = 0;
 
+			if (token.equalsIgnoreCase("|")) {
+				// End of Program
+				if(scan.hasNext()) token = scan.next();
+			}
+			
 			if (token.startsWith("Program")) {
 				token = scan.next();
 			}
 
-			if (token.equalsIgnoreCase("|")) {
-				// End of Program
-			} else if (token.equalsIgnoreCase("(")) // Start of function
+			if (token.equalsIgnoreCase("(")) // Start of function
 			{
 				token = scan.next();
 				tmpRoot[i] = config.funcSet.generateNodeByName(token, config);
@@ -375,6 +378,7 @@ public class GeneticProgram {
 		int count = 0;
 
 		if (token.equalsIgnoreCase("|")) {
+			System.err.println("Probably an error");
 			/* End of program */
 		} else if (token.equalsIgnoreCase("(")) // Start of function
 		{

@@ -9,7 +9,6 @@ import library.GPConfig;
 import library.GeneticProgram;
 
 public class SymbolicFitness implements Fitness {
-
 	Map<Double, Double> values;
 
 	@Override
@@ -28,16 +27,16 @@ public class SymbolicFitness implements Fitness {
 
 	private double f(double x) {
 //		return x*Math.exp(x + 3);
-		return x*Math.sin(x + 3);
+		return x*Math.tan(x + 3);
 	}
 
 	@Override
 	public void assignFitness(List<GeneticProgram> pop, GPConfig config) {
+		ReturnDouble d[] = new ReturnDouble[] { new ReturnDouble() };
 		for (GeneticProgram p : pop) {
-			ReturnDouble d[] = new ReturnDouble[] { new ReturnDouble() };
 			double error = 0;
 			for (Map.Entry<Double, Double> e : values.entrySet()) {
-				X.setValue(e.getKey());
+				d[0].setX(e.getKey());
 				p.evaluate(d);
 				error += Math.pow(d[0].value() - e.getValue(),2);
 			}
@@ -61,5 +60,6 @@ public class SymbolicFitness implements Fitness {
 	public void finish() {
 
 	}
+
 
 }

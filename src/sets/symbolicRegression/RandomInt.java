@@ -14,7 +14,7 @@ public class RandomInt extends Terminal{
 	private static int KIND;
 	
 	public RandomInt(int min, int max, GPConfig conf) {
-		super(ReturnDouble.TYPENUM, "Random");
+		super(ReturnDouble.TYPENUM, "RandomInt");
 		this.min = min;
 		this.max = max;
 		

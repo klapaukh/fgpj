@@ -1,14 +1,16 @@
-package sets.symbolicRegression;
+package sets.symbolicRegression.Bad;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import library.Fitness;
 import library.GPConfig;
 import library.GeneticProgram;
 
-public class SafeSymbolicFitness implements Fitness {
+public class UnsafeSymbolicFitness implements Fitness {
+
 	Map<Double, Double> values;
 
 	@Override
@@ -27,16 +29,16 @@ public class SafeSymbolicFitness implements Fitness {
 
 	private double f(double x) {
 //		return x*Math.exp(x + 3);
-		return x*Math.sin(x + 3);
+		return x*Math.tan(x + 3);
 	}
 
 	@Override
 	public void assignFitness(List<GeneticProgram> pop, GPConfig config) {
 		for (GeneticProgram p : pop) {
-			ReturnDouble d[] = new ReturnDouble[] { new ReturnDouble() };
+			UnsafeReturnDouble d[] = new UnsafeReturnDouble[] { new UnsafeReturnDouble() };
 			double error = 0;
 			for (Map.Entry<Double, Double> e : values.entrySet()) {
-				SafeX.setValue(e.getKey(),p);
+				UnsafeX.setValue(e.getKey());
 				p.evaluate(d);
 				error += Math.pow(d[0].value() - e.getValue(),2);
 			}
@@ -60,6 +62,5 @@ public class SafeSymbolicFitness implements Fitness {
 	public void finish() {
 
 	}
-
 
 }

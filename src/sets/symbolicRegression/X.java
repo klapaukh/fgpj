@@ -1,20 +1,20 @@
 package sets.symbolicRegression;
 
+import library.Function;
 import library.GPConfig;
+import library.GeneticProgram;
 import library.Node;
 import library.NodeFactory;
 import library.ReturnData;
 import library.Terminal;
 
-public class X extends Terminal{
-
-	private static double value;
+public class X extends Terminal {
 	private static int KIND;
-	
-	public X(){
-		super(ReturnDouble.TYPENUM,"X");
+
+	public X() {
+		super(ReturnDouble.TYPENUM, "SafeX");
 	}
-	
+
 	@Override
 	public X getNew(GPConfig config) {
 		return new X();
@@ -22,8 +22,8 @@ public class X extends Terminal{
 
 	@Override
 	public void evaluate(ReturnData out) {
-		ReturnDouble d = (ReturnDouble)out;
-		d.setValue(X.value);
+			ReturnDouble d = (ReturnDouble) out;
+			d.setValue(d.getX());
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class X extends Terminal{
 
 	@Override
 	public X generate(String s, GPConfig conf) {
-		if(s.startsWith(getName()))
+		if (s.startsWith(getName()))
 			return (X) NodeFactory.newNode(getKind(), conf);
 		return null;
 	}
@@ -52,10 +52,6 @@ public class X extends Terminal{
 	@Override
 	public X generate(GPConfig conf) {
 		return (X) NodeFactory.newNode(getKind(), conf);
-	}
-	
-	public static void setValue(double val){
-		X.value = val;
 	}
 
 }

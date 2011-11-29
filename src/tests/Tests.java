@@ -24,10 +24,10 @@ import sets.lines.ReturnImage;
 import sets.lines.SetColor;
 import sets.symbolicRegression.Add;
 import sets.symbolicRegression.RandomInt;
-import sets.symbolicRegression.ReturnDouble;
-import sets.symbolicRegression.SymbolicFitness;
 import sets.symbolicRegression.Times;
-import sets.symbolicRegression.X;
+import sets.symbolicRegression.Bad.UnsafeReturnDouble;
+import sets.symbolicRegression.Bad.UnsafeSymbolicFitness;
+import sets.symbolicRegression.Bad.UnsafeX;
 
 public class Tests {
 
@@ -43,16 +43,16 @@ public class Tests {
 	@Test
 	public void TestString1() {
 		GPConfig conf = new GPConfig(1, 2, 8, 0.50, 0.4, 0.1);
-		conf.addTerminal(new X());
+		conf.addTerminal(new UnsafeX());
 		conf.addTerminal(new RandomInt(0,10,conf));
 		conf.addFunction(new Times());
 		conf.addFunction(new Add());
-		conf.fitnessObject = new SymbolicFitness();
+		conf.fitnessObject = new UnsafeSymbolicFitness();
 		conf.selectionOperator = new TournamentSelection(5);
 
 		int size = 3;
 		Population p = new Population(size, conf);
-		p.setReturnType(ReturnDouble.TYPENUM);
+		p.setReturnType(UnsafeReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 		List<GeneticProgram> pop = p.getUnderlyingPopulation();
 
@@ -69,16 +69,16 @@ public class Tests {
 	@Test
 	public void TestString2() {
 		GPConfig conf = new GPConfig(1, 2, 8, 0.50, 0.4, 0.1);
-		conf.addTerminal(new X());
+		conf.addTerminal(new UnsafeX());
 		conf.addTerminal(new RandomInt(0,10,conf));
 		conf.addFunction(new Times());
 		conf.addFunction(new Add());
-		conf.fitnessObject = new SymbolicFitness();
+		conf.fitnessObject = new UnsafeSymbolicFitness();
 		conf.selectionOperator = new TournamentSelection(5);
 
 		int size = 3;
 		Population p = new Population(size, conf);
-		p.setReturnType(ReturnDouble.TYPENUM);
+		p.setReturnType(UnsafeReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 		List<GeneticProgram> pop = p.getUnderlyingPopulation();
 
@@ -96,14 +96,14 @@ public class Tests {
 	@Test
 	public void TestSize() {
 		GPConfig conf = new GPConfig(1, 2, 8, 0.50, 0.4, 0.1);
-		conf.addTerminal(new X());
+		conf.addTerminal(new UnsafeX());
 		conf.addFunction(new Times());
-		conf.fitnessObject = new SymbolicFitness();
+		conf.fitnessObject = new UnsafeSymbolicFitness();
 		conf.selectionOperator = new TournamentSelection(5);
 
 		int size = 100;
 		Population p = new Population(size, conf);
-		p.setReturnType(ReturnDouble.TYPENUM);
+		p.setReturnType(UnsafeReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 		List<GeneticProgram> pop = p.getUnderlyingPopulation();
 		assertTrue(pop.size() == size);
@@ -116,14 +116,14 @@ public class Tests {
 	@Test
 	public void TestParralelFitness() {
 		GPConfig conf = new GPConfig(1, 2, 8, 0.50, 0.4, 0.1);
-		conf.addTerminal(new X());
+		conf.addTerminal(new UnsafeX());
 		conf.addFunction(new Times());
-		conf.fitnessObject = new ParallelFitness<SymbolicFitness>(new SymbolicFitness(),4,7);
+		conf.fitnessObject = new ParallelFitness<UnsafeSymbolicFitness>(new UnsafeSymbolicFitness(),4,7);
 		conf.selectionOperator = new TournamentSelection(5);
 
 		int size = 100;
 		Population p = new Population(size, conf);
-		p.setReturnType(ReturnDouble.TYPENUM);
+		p.setReturnType(UnsafeReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 
 		p.evolve(1);
@@ -137,13 +137,13 @@ public class Tests {
 	@Test
 	public void TestDepthGeneration() {
 		GPConfig conf = new GPConfig(1, 2, 8, 0.50, 0.4, 0.1);
-		conf.addTerminal(new X());
+		conf.addTerminal(new UnsafeX());
 		conf.addFunction(new Times());
-		conf.fitnessObject = new SymbolicFitness();
+		conf.fitnessObject = new UnsafeSymbolicFitness();
 
 		int size = 1000;
 		Population p = new Population(size, conf);
-		p.setReturnType(ReturnDouble.TYPENUM);
+		p.setReturnType(UnsafeReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 		List<GeneticProgram> pop = p.getUnderlyingPopulation();
 
@@ -156,13 +156,13 @@ public class Tests {
 	@Test
 	public void TestChangeGeneration() {
 		GPConfig conf = new GPConfig(1, 1, 10, 0.50, 0.5, 0.0);
-		conf.addTerminal(new X());
+		conf.addTerminal(new UnsafeX());
 		conf.addFunction(new Times());
-		conf.fitnessObject = new SymbolicFitness();
+		conf.fitnessObject = new UnsafeSymbolicFitness();
 
 		int size = 100;
 		Population p = new Population(size, conf);
-		p.setReturnType(ReturnDouble.TYPENUM);
+		p.setReturnType(UnsafeReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 		List<GeneticProgram> pop1 = p.getUnderlyingPopulation();
 		
@@ -228,13 +228,13 @@ public class Tests {
 	@Test
 	public void TestDepthMutation() {
 		GPConfig conf = new GPConfig(1, 2, 8, 0.50, 0.4, 0.1);
-		conf.addTerminal(new X());
+		conf.addTerminal(new UnsafeX());
 		conf.addFunction(new Times());
-		conf.fitnessObject = new SymbolicFitness();
+		conf.fitnessObject = new UnsafeSymbolicFitness();
 
 		int size = 1000;
 		Population p = new Population(size, conf);
-		p.setReturnType(ReturnDouble.TYPENUM);
+		p.setReturnType(UnsafeReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 		List<GeneticProgram> pop = p.getUnderlyingPopulation();
 
@@ -247,14 +247,14 @@ public class Tests {
 	@Test
 	public void TestChangeMutation() {
 		GPConfig conf = new GPConfig(1, 2, 8, 0.50, 0.4, 0.1);
-		conf.addTerminal(new X());
+		conf.addTerminal(new UnsafeX());
 		conf.addFunction(new Times());
 		conf.addFunction(new Add());
-		conf.fitnessObject = new SymbolicFitness();
+		conf.fitnessObject = new UnsafeSymbolicFitness();
 
 		int size = 1000;
 		Population p = new Population(size, conf);
-		p.setReturnType(ReturnDouble.TYPENUM);
+		p.setReturnType(UnsafeReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 		List<GeneticProgram> pop = p.getUnderlyingPopulation();
 
@@ -278,13 +278,13 @@ public class Tests {
 	@Test
 	public void TestDepthCrossover() {
 		GPConfig conf = new GPConfig(1, 1, 8, 0.50, 0.4, 0.1);
-		conf.addTerminal(new X());
+		conf.addTerminal(new UnsafeX());
 		conf.addFunction(new Times());
-		conf.fitnessObject = new SymbolicFitness();
+		conf.fitnessObject = new UnsafeSymbolicFitness();
 
 		int size = 1000;
 		Population p = new Population(size, conf);
-		p.setReturnType(ReturnDouble.TYPENUM);
+		p.setReturnType(UnsafeReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 		List<GeneticProgram> pop = p.getUnderlyingPopulation();
 
@@ -297,13 +297,13 @@ public class Tests {
 	@Test
 	public void TestMemory() {
 		GPConfig conf = new GPConfig(1, 2, 3, 0.50, 0.4, 0.1);
-		conf.addTerminal(new X());
+		conf.addTerminal(new UnsafeX());
 		conf.addFunction(new Times());
-		conf.fitnessObject = new SymbolicFitness();
+		conf.fitnessObject = new UnsafeSymbolicFitness();
 
 		int size = 10;
 		Population p = new Population(size, conf);
-		p.setReturnType(ReturnDouble.TYPENUM);
+		p.setReturnType(UnsafeReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 
 		p.evolve(1000);
@@ -332,15 +332,15 @@ public class Tests {
 	@Test
 	public void TestNotWorseGeneration() {
 		GPConfig conf = new GPConfig(1, 1, 4, 0.50, 0.4, 0.1);
-		conf.addTerminal(new X());
+		conf.addTerminal(new UnsafeX());
 		conf.addFunction(new Times());
-		conf.fitnessObject = new SymbolicFitness();
+		conf.fitnessObject = new UnsafeSymbolicFitness();
 		conf.fitnessObject.initFitness();
 		conf.selectionOperator = new TournamentSelection(5);
 
 		int size = 200;
 		Population p = new Population(size, conf);
-		p.setReturnType(ReturnDouble.TYPENUM);
+		p.setReturnType(UnsafeReturnDouble.TYPENUM);
 		p.generateInitialPopulation();
 
 		conf.fitnessObject.assignFitness(p.getUnderlyingPopulation(), conf);

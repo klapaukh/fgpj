@@ -61,8 +61,8 @@ public class Main {
 
 		// Add the functions we need
 		symConfig.addFunction(new Line(symConfig));
-		symConfig.addFunction(new Rect(symConfig));
-		symConfig.addFunction(new Oval(symConfig));
+//		symConfig.addFunction(new Rect(symConfig));
+//		symConfig.addFunction(new Oval(symConfig));
 
 		// Set the fitness class to be used
 
@@ -91,9 +91,9 @@ public class Main {
 			pop.generateInitialPopulation();
 		}
 
-		/* Do 20 generations, returns true if solution is found */
+		/* Do 1000 generations, returns true if solution is found */
 
-		pop.evolve(1000);
+		pop.evolve(100000);
 		
 //		NodeFactory.report();
 		System.out.println("Best program");

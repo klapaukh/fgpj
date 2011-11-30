@@ -129,7 +129,7 @@ public class ImageFitness implements Fitness {
 	}
 
 	public int compare(GeneticProgram gp1, GeneticProgram gp2) {
-		return Double.compare(gp1.getFitness(), gp2.getFitness());
+		return -Double.compare(gp1.getFitness(), gp2.getFitness());
 	}
 
 	// I realise, I am intentionally making square images.

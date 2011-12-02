@@ -50,7 +50,7 @@ public class Main {
 		line = scan.nextLine().substring(1);
 		GeneticProgram p = new GeneticProgram(c);
 		p.parseProgram(line, c);
-		((ImageFitness) (c.fitnessObject)).getResult(p, size, "out.pnm");
+		((ImageFitness) (c.fitnessObject)).getResult(p, "out.pnm");
 	}
 
 	public static void main(String[] args) {
@@ -60,10 +60,10 @@ public class Main {
 		GPConfig symConfig = new GPConfig(1, 1, 8, 0.7, 0.28, 0.02);
 		symConfig.setLogFile("run-log.txt");
 		symConfig.selectionOperator = new TournamentSelection(5);
-		symConfig.configModifier = new ImageLogMod(50, "/tmp");
+		symConfig.configModifier = new ImageLogMod(100, "/tmp/roma");
 		
 		// Declare a population, giving the size and a log file name
-		Population pop = new Population(100,  symConfig);
+		Population pop = new Population(64,  symConfig);
 
 		// Set the return type for our programs
 //		pop.setReturnType(0,ReturnImage.TYPENUM);
@@ -78,18 +78,18 @@ public class Main {
 
 		// Add the functions we need
 		symConfig.addFunction(new Line(symConfig));
-//		symConfig.addFunction(new Rect(symConfig));
-//		symConfig.addFunction(new Oval(symConfig));
+		symConfig.addFunction(new Rect(symConfig));
+		symConfig.addFunction(new Oval(symConfig));
 
 		// Set the fitness class to be used
 
-		 symConfig.fitnessObject = new ParallelFitness<ImageFitness>(new ImageFitness());
+		 symConfig.fitnessObject = new ParallelFitness<ImageFitness>(new ImageFitness("sample.pnm"),64,1);
 //		symConfig.fitnessObject = new ImageFitness();
 		// Initialise the fitness
 		
 
 		if (args.length == 2) {
-			symConfig.fitnessObject = new ImageFitness();
+			symConfig.fitnessObject = new ImageFitness("sample.pnm");
 			enlarge(args, symConfig);
 			System.exit(0);
 		}
@@ -116,7 +116,7 @@ public class Main {
 		System.out.println("Fitness " + pop.getBest().getFitness());
 		System.out.println(pop.getBest());
 
-		 ((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).fitness.getResult(pop.getBest(),100, "res.pnm");
+		 ((ParallelFitness<ImageFitness>)(symConfig.fitnessObject)).fitness.getResult(pop.getBest(),"res.pnm");
 
 	}
 

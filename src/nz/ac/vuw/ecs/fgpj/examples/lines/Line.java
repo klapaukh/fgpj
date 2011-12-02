@@ -41,10 +41,10 @@ public class Line extends Function {
 	{
 
 		super(ReturnImage.TYPENUM, 4, "line");
-		x1 = conf.randomNumGenerator.nextInt(ImageFitness.SIZE +1);
-		x2 = conf.randomNumGenerator.nextInt(ImageFitness.SIZE +1);
-		y1 = conf.randomNumGenerator.nextInt(ImageFitness.SIZE +1);
-		y2 = conf.randomNumGenerator.nextInt(ImageFitness.SIZE +1);
+		x1 = conf.randomNumGenerator.nextInt(ImageFitness.xSize +1);
+		x2 = conf.randomNumGenerator.nextInt(ImageFitness.xSize +1);
+		y1 = conf.randomNumGenerator.nextInt(ImageFitness.ySize +1);
+		y2 = conf.randomNumGenerator.nextInt(ImageFitness.ySize +1);
 
 		setArgNReturnType(0, ReturnColor.TYPENUM);
 		for (int i = 1; i < numArgs; i++) {

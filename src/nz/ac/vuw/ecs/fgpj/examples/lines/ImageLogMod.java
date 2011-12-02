@@ -38,7 +38,7 @@ public class ImageLogMod implements ConfigModifier{
 	public void ModifyConfig(GPConfig g, Population pop) {
 		if(pop.getGenerationNumber() % freq == 0){
 			List<GeneticProgram> progs= pop.getUnderlyingPopulation();
-			((ParallelFitness<ImageFitness>)(g.fitnessObject)).fitness.getResult(progs.get(progs.size()-1), ImageFitness.SIZE, dir + "/sample_"+pop.getGenerationNumber() +".pnm");
+			((ParallelFitness<ImageFitness>)(g.fitnessObject)).fitness.getResult(progs.get(progs.size()-1),  dir + "/sample_"+pop.getGenerationNumber() +".pnm");
 		}
 		
 	}

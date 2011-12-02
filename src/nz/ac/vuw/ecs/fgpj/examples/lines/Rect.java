@@ -27,23 +27,20 @@ import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 
 public class Rect extends Function {
 
-	/**
-	 * 
-	 */
 	public static int kind;
 	public static final long serialVersionUID = 6154965376115885411L;
 
-	private int x1, x2, y1, y2;
+	private int x, width, y, height;
 
 	public Rect(GPConfig conf)
 
 	{
 
 		super(ReturnImage.TYPENUM, 4, "rect");
-		x1 = conf.randomNumGenerator.nextInt(ImageFitness.SIZE +1);
-		x2 = conf.randomNumGenerator.nextInt(ImageFitness.SIZE +1);
-		y1 = conf.randomNumGenerator.nextInt(ImageFitness.SIZE +1);
-		y2 = conf.randomNumGenerator.nextInt(ImageFitness.SIZE +1);
+		x = conf.randomNumGenerator.nextInt(ImageFitness.xSize +1);
+		width = conf.randomNumGenerator.nextInt(ImageFitness.xSize - x +1);
+		y = conf.randomNumGenerator.nextInt(ImageFitness.ySize +1);
+		height = conf.randomNumGenerator.nextInt(ImageFitness.ySize - y +1);
 
 		setArgNReturnType(0, ReturnColor.TYPENUM);
 		for (int i = 1; i < numArgs; i++) {
@@ -55,10 +52,10 @@ public class Rect extends Function {
 
 	{
 		super(ReturnImage.TYPENUM, 4, "rect");
-		x1 = (initx1);
-		x2 = (initx2);
-		y1 = (inity1);
-		y2 = (inity2);
+		x = (initx1);
+		width = (initx2);
+		y = (inity1);
+		height = (inity2);
 
 		setArgNReturnType(0, ReturnColor.TYPENUM);
 		for (int i = 1; i < numArgs; i++) {
@@ -96,7 +93,7 @@ public class Rect extends Function {
 
 		Graphics g = i.getGraphics();
 		g.setColor(c.getColor());
-		g.fillRect(x1, y1, x2, y2);
+		g.fillRect(x, y, width, height);
 
 		for (int j = 1; j < numArgs; j++) {
 			getArgN(j).evaluate(out);
@@ -106,7 +103,7 @@ public class Rect extends Function {
 	public void print(StringBuilder s) {
 
 		s.append(" ( ");
-		s.append(String.format("%sx%dx%dy%dy%d", getName(), x1, x2, y1, y2));
+		s.append(String.format("%sx%dx%dy%dy%d", getName(), x, width, y, height));
 
 		for (int i = 0; i < numArgs; i++) {
 			s.append(" ");
@@ -117,15 +114,15 @@ public class Rect extends Function {
 	}
 
 	private Rect init(int initx1, int initx2, int inity1, int inity2) {
-		x1 = (initx1);
-		x2 = (initx2);
-		y1 = (inity1);
-		y2 = (inity2);
+		x = (initx1);
+		width = (initx2);
+		y = (inity1);
+		height = (inity2);
 		return this;
 	}
 
 	public Rect copy(GPConfig config) {
-		Rect tmp = ((Rect) NodeFactory.newNode(getKind(),config)).init(x1, x2, y1, y2);
+		Rect tmp = ((Rect) NodeFactory.newNode(getKind(),config)).init(x, width, y, height);
 		// Function tmp = new Rect(x1, x2, y1, y2,config);
 
 		for (int i = 0; i < getNumArgs(); i++) {

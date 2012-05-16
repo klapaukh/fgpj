@@ -1,35 +1,42 @@
 package nz.ac.vuw.ecs.fgpj.examples.symbolicRegression;
 
 /*
-FGPJ Genetic Programming library
-Copyright (C) 2011  Roman Klapaukh
+ FGPJ Genetic Programming library
+ Copyright (C) 2011  Roman Klapaukh
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import nz.ac.vuw.ecs.fgpj.core.Function;
 import nz.ac.vuw.ecs.fgpj.core.GPConfig;
 import nz.ac.vuw.ecs.fgpj.core.Node;
 import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 
+/**
+ * The division operator. In the case of division by zero, it has the result
+ * zero.
+ * 
+ * @author roma
+ * 
+ */
 public class Divide extends Function {
 
 	private static int KIND;
-	
+
 	public Divide() {
 		super(ReturnDouble.TYPENUM, 2, "/");
-		for(int i = 0 ; i < numArgs; i++){
+		for (int i = 0; i < numArgs; i++) {
 			setArgNReturnType(i, ReturnDouble.TYPENUM);
 		}
 	}
@@ -42,22 +49,22 @@ public class Divide extends Function {
 	@Override
 	public void evaluate(ReturnData out) {
 		ReturnDouble d = (ReturnDouble) out;
-		
+
 		getArgN(0).evaluate(d);
 		double d1 = d.value();
-		
+
 		getArgN(1).evaluate(d);
-		
-		if(d.value() == 0){
+
+		if (d.value() == 0) {
 			d.setValue(0);
-		}else{
+		} else {
 			d.setValue(d1 / d.value());
 		}
 	}
 
 	@Override
 	public Divide copy(GPConfig conf) {
-		Divide a = (Divide)NodeFactory.newNode(getKind(), conf);
+		Divide a = (Divide) NodeFactory.newNode(getKind(), conf);
 		for (int i = 0; i < getNumArgs(); i++) {
 			a.setArgN(i, getArgN(i).copy(conf));
 		}
@@ -77,8 +84,8 @@ public class Divide extends Function {
 	}
 
 	@Override
-	public  Divide generate(String s, GPConfig conf) {
-		if(s.startsWith(getName())){
+	public Divide generate(String s, GPConfig conf) {
+		if (s.startsWith(getName())) {
 			return (Divide) NodeFactory.newNode(getKind(), conf);
 		}
 		return null;

@@ -23,6 +23,11 @@ import nz.ac.vuw.ecs.fgpj.core.Node;
 import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 
+/**
+ * Returns the minimum of two subtrees
+ * @author roma
+ *
+ */
 public class Min extends Function {
 
 	private static int KIND;

@@ -28,42 +28,84 @@ import nz.ac.vuw.ecs.fgpj.core.Fitness;
 import nz.ac.vuw.ecs.fgpj.core.GPConfig;
 import nz.ac.vuw.ecs.fgpj.core.GeneticProgram;
 
+/**
+ * An implementation of the Fitness interface. This class judges the quality of
+ * a program by how close to a target image is the resulting image. It requires
+ * a ppm image in P3 format as a target to compare against.
+ * 
+ * 
+ * It has a static x and y size field. While having it static seems silly, it
+ * allows for node classes like Line and Oval to be able to adjust their values
+ * according to the scale. This is not an ideal implementation though. It would
+ * be better to have the nodes limited from 0 - 1 and the Return image class
+ * scale them to the appropriate size. This however may lead to the impression
+ * that the image could be scaled up and down. This is not the case, as the
+ * spacing between lines would change, changing significantly how the image
+ * looks.
+ * 
+ * @author roma
+ * 
+ */
 public class ImageFitness implements Fitness {
-	public static int xSize =1000;
+
+	/**
+	 * This represents the width of the image.
+	 */
+	public static int xSize = 1000;
+
+	/**
+	 * This represents the height of the image
+	 */
 	public static int ySize = 1000;
 
+	// The filename of the image that is the target
 	private String filename;
+
+	// array of the color of each pixel as [x][y] and then the third index is
+	// the color rgb 0-2 respectively.
 	private int[][][] pixels;
 
-	// private double power;
-
+	/**
+	 * Create a new ImageFitness with the specified filename pointing to the
+	 * target image
+	 * 
+	 * @param filename
+	 *            PPM image in P3 format that is the "ideal" target
+	 */
 	public ImageFitness(String filename) {
 		this.filename = filename;
 	}
 
 	public void initFitness() {
 		Scanner scan;
+
+		// Open the image file for reading
 		try {
 			scan = new Scanner(new File(filename));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			throw new RuntimeException(filename + " cannot be read. No target to compare to");
+			throw new RuntimeException(filename
+					+ " cannot be read. No target to compare to");
 		}
 
 		int y, x, c;
+		// Ensure that it is a P3 ppm image (check magic number)
 		String type = scan.next();
 		if (!type.equals("P3")) {
-			throw new IllegalArgumentException(filename + " image is not a ppm image of type P3");
+			throw new IllegalArgumentException(filename
+					+ " image is not a ppm image of type P3");
 		}
 		xSize = scan.nextInt();
 		ySize = scan.nextInt();
 
 		int depth = scan.nextInt();
 
+		// Read all colors for each pixel
 		pixels = new int[xSize][ySize][3];
 		for (y = 0; y < ySize; y++) {
 			for (x = 0; x < xSize; x++) {
 				for (c = 0; c < 3; c++) {
+					// Should normalise by depth?
 					pixels[x][y][c] = scan.nextInt();
 				}
 			}
@@ -83,6 +125,7 @@ public class ImageFitness implements Fitness {
 			// initialise fitness to zero
 			totalFitness = 0;
 
+			// Create a new blank image of the required size
 			ReturnImage im[] = new ReturnImage[] { new ReturnImage(xSize, ySize) };
 
 			pop.get(i).evaluate(im);
@@ -102,13 +145,24 @@ public class ImageFitness implements Fitness {
 	}
 
 	public boolean solutionFound(List<GeneticProgram> pop) {
+		// no picture can ever be good enough to terminate early
 		return false;
 	}
 
 	public int compare(GeneticProgram gp1, GeneticProgram gp2) {
+		// Have to reverse the comparison, because lower fitness is better
 		return -Double.compare(gp1.getFitness(), gp2.getFitness());
 	}
 
+	/**
+	 * Print out a given problem as an image to a file. The file produced will
+	 * be a ppm file in P3 form.
+	 * 
+	 * @param gp
+	 *            The genetic program to draw
+	 * @param fname
+	 *            The file name to draw it to.
+	 */
 	public void getResult(GeneticProgram gp, String fname) {
 
 		PrintStream file;
@@ -137,6 +191,7 @@ public class ImageFitness implements Fitness {
 		gp.evaluate(im);
 
 		Color p;
+		//Write each pixel
 		for (int y = 0; y < ySize; y++) {
 			for (int x = 0; x < xSize; x++) {
 				p = im[0].getData(x, y);

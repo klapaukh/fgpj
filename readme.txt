@@ -49,4 +49,7 @@ SymbMain class directly. To change the fitness function you will
 need to modify the SymbolicFitness class that can be found in the
 same package. 
 
+Both SymbMain and SymbolicFitness contain comments attempting to
+explain how to use and modify them.
+
  

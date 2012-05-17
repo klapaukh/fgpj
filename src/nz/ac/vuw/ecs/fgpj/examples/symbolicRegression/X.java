@@ -26,7 +26,7 @@ public class X extends Terminal {
 	private static int KIND;
 
 	public X() {
-		super(ReturnDouble.TYPENUM, "SafeX");
+		super(ReturnDouble.TYPENUM, "X");
 	}
 
 	@Override

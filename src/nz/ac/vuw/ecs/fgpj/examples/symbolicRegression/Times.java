@@ -23,8 +23,15 @@ import nz.ac.vuw.ecs.fgpj.core.Node;
 import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 
-public class Times extends Function {
 
+/**
+ * This class implements a multiplication function node
+ * @author roma
+ *
+ */
+public class Times extends Function {
+	//All Node types must contain a static KIND variable for
+	//the memory management
 	private static int KIND;
 	
 	public Times() {

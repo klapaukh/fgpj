@@ -22,6 +22,12 @@ import nz.ac.vuw.ecs.fgpj.core.Node;
 import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 
+
+/**
+ * Implements a Sin function node for GP with ReturnDoubles.
+ * @author roma
+ *
+ */
 public class Sin extends Function{
 
 	private static int KIND;

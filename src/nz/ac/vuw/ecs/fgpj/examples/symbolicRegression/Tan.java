@@ -22,6 +22,11 @@ import nz.ac.vuw.ecs.fgpj.core.Node;
 import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 
+/**
+ * Implements the Tan function for ReturnDoubles.
+ * @author roma
+ *
+ */
 public class Tan extends Function{
 
 	private static int KIND;

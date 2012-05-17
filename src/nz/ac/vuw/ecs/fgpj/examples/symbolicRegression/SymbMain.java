@@ -165,21 +165,25 @@ public class SymbMain {
 		long start = System.currentTimeMillis();
 
 		// Run the GP algorithm for 500 generations
-		if (p.evolve(500)) {
-			//If evolve returns true, then it terminated before the 500 generations finished
-			//because it found a solution
+		int numGenerations = p.evolve(500); // return how many generations
+											// actually happened
+		if (numGenerations < 500) {
+			// If numGenerations < 500, then it terminated before the 500
+			// generations finished
+			// because it found a solution
 			System.out.println("Terminated early");
 		}
-		//end timing
+		// end timing
 		long end = System.currentTimeMillis();
 
-		//Get the best program
+		// Get the best program
 		GeneticProgram s = p.getBest();
-		
+
 		System.out.println("Best program fitness: " + s.getFitness());
 		System.out.println("Best program:");
 		System.out.println(s);
 
-		System.out.println("Run time (excluding setup and tear down): " + (end - start) + "ms");
+		System.out.println("Run time (excluding setup and tear down): "
+				+ (end - start) + "ms");
 	}
 }

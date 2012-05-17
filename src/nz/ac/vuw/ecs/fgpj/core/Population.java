@@ -124,7 +124,7 @@ public class Population {
 	 *            numGenerations number of generations to run the algorithm for
 	 * @return if an acceptable solution was found
 	 */
-	public boolean evolve(int numGenerations) {
+	public int evolve(int numGenerations) {
 		evaluations = 0;
 		config.fitnessObject.initFitness();
 		for (int i = 0; i < numGenerations; i++) {
@@ -139,7 +139,7 @@ public class Population {
 			if (config.fitnessObject.solutionFound(pop)) {
 				config.fitnessObject.finish();
 				config.log("Solution found!\n");
-				return true;
+				return i;
 			}
 
 			config.configModifier.ModifyConfig(config, this);
@@ -150,7 +150,7 @@ public class Population {
 		Collections.sort(pop, config.fitnessObject);
 		config.fitnessObject.finish(); // Finished with the fitness assessing now
 
-		return false;
+		return numGenerations;
 	}
 
 	/**

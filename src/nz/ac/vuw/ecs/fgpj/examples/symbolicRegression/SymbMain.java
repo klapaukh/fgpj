@@ -50,7 +50,10 @@ public class SymbMain {
 		boolean parallel = true;
 
 		// The GPConfig is the settings for the GP algorithm. It controls all
-		// the parameters and how the algorithm behaves
+		// the parameters and how the algorithm behaves. It sets mutation,
+		// crossover and elistism to their default functions. These can of
+		// course be simply replaced by directly assigning to them if special
+		// versions are required.
 		// Here we set the following parameters in order
 		// numParts = 1. Our trees only have one root, as there is only 1 result
 		// for each input value
@@ -89,46 +92,94 @@ public class SymbMain {
 
 		// Add the terminals
 		// This is the X terminal. It takes a value from the input. Essentially,
-		// as X is the only input variable the program will be a function of at most 1 variable
+		// as X is the only input variable the program will be a function of at
+		// most 1 variable
 		conf.addTerminal(new X());
-		//Add a random double terminal that ranges from [1,5]
+		// Add a random double terminal that ranges from [1,5]
 		conf.addTerminal(new RandomDouble(1, 5, conf));
-		conf.addTerminal(new RandomInt(1, 5, conf)); //same as above but integer
-		
-		//Add mathematical operators to the function set
-		//commented out functions are available in the library and can be safely uncommented
+		conf.addTerminal(new RandomInt(1, 5, conf)); // same as above but
+														// integer
+
+		// Add mathematical operators to the function set
+		// commented out functions are available in the library and can be
+		// safely uncommented
 		conf.addFunction(new Add());
 		conf.addFunction(new Times());
 		conf.addFunction(new Minus());
 		conf.addFunction(new Divide());
 		conf.addFunction(new Exp());
 		conf.addFunction(new Sin());
-//		conf.addFunction(new Min());
-//		conf.addFunction(new Max());
-//		conf.addFunction(new Tan());
-		
+		// conf.addFunction(new Min());
+		// conf.addFunction(new Max());
+		// conf.addFunction(new Tan());
+
+		// Create and appropriate fitness function, based the parallel value at
+		// the start of the method
 		if (parallel) {
+			// This creates a parallel fitness function. It takes the normal
+			// fitness function as an argument
+			// and transparently parallelised the checking of fitness. There is
+			// only one instance of the actual fitness function -
+			// SymbolicFitness - and it just has its methods called on it by
+			// several different threads
+			// If your fitness function or program representation are not thread
+			// safe, then this class should not be used
+			// The additional parameters are the number of threads (4) and the
+			// size of the chunk alloted
+			// to each thread in the thread pool. It is important to note that
+			// the number of threads should
+			// not be as large as possible, but rather it should be about the
+			// number of cores present in the computer to minimise overheads.
+			// The size of the chunk also has problems if it gets to big or too
+			// small. It will not cause an error to occur, but will result in
+			// suboptimal performance
 			conf.fitnessObject = new ParallelFitness<SymbolicFitness>(
-					new SymbolicFitness(), 4, 21);
+					new SymbolicFitness(), 4, 20);
 		} else {
+
+			// Create an instance of the SymbolicFitness class without any fancy
+			// automagical parallelism
 			conf.fitnessObject = new SymbolicFitness();
 		}
 
+		// Create a population of programs (that is currently empty).
+		// It takes a size (100) which defines how many individuals there will
+		// be, and also
+		// a GP config so it knows about the terminal and function sets
 		Population p = new Population(100, conf);
+
+		// Set the return type of the root node. This is important to ensure
+		// that the program returns the right thing. If there are multiple roots
+		// (not in this example) then the overloaded version that takes an index
+		// must be used.
 		p.setReturnType(ReturnDouble.TYPENUM);
-		// p.readFromFile("population.txt")
+
+		// p.readFromFile("population.txt")//the population can be generated
+		// from a file (like the logs) if needed
+
+		// Generate the intial population for the GP run. Assumes that
+		// setReturnType has been called
 		p.generateInitialPopulation();
 
+		// Begin timing
 		long start = System.currentTimeMillis();
+
+		// Run the GP algorithm for 500 generations
 		if (p.evolve(500)) {
-			System.out.println("Early Termination");
+			//If evolve returns true, then it terminated before the 500 generations finished
+			//because it found a solution
+			System.out.println("Terminated early");
 		}
+		//end timing
 		long end = System.currentTimeMillis();
 
+		//Get the best program
 		GeneticProgram s = p.getBest();
-		System.out.println(s.getFitness());
+		
+		System.out.println("Best program fitness: " + s.getFitness());
+		System.out.println("Best program:");
 		System.out.println(s);
 
-		System.out.println(end - start);
+		System.out.println("Run time (excluding setup and tear down): " + (end - start) + "ms");
 	}
 }

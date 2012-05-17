@@ -52,4 +52,27 @@ same package.
 Both SymbMain and SymbolicFitness contain comments attempting to
 explain how to use and modify them.
 
+The test package contains a small set of JUnit tests which can be
+run if desired.
+
+The symbolicFitness.bad package contains implementations of X,Y, 
+SymbolicFitness and ReturnDouble that while are technically correct,
+are not safe to use with the ParallelFitness class due to concurrency
+bugs. There is no performance benefit in using them, they are simple
+provided as an example of how a sensible sequential idea can break 
+with concurrency.
+
+The symbolicFitness.image package contains the additional files needed
+to use mathematical functions as used in symbolic regression to
+generate images. The fitness function attempts to copy a given image
+in ppm P3 format. The image can be of any size. Unfortunately, the
+final results of running this, so far have not produced any good
+results. Notably it does show off how a GP tree can have multiple 
+roots, and has a separate root for each color channel (RGB).
+
+Finally the examples.lines package is an example of using GP to 
+copy a given image (ppm image in P3 format or any size). The GP tree
+is made up of different shapes, colors, and null nodes to terminate
+the tree. This is a less standard example, but comes out of research
+this package was originally written for. 
  

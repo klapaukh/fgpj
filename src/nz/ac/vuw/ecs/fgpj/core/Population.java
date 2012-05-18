@@ -176,10 +176,15 @@ public class Population {
 			config.crossoverOperator.crossover(p1, p2, 100,
 					config);
 			
-//			p1.setNumCrossovers(p1.numCrossovers() + p2.numCrossovers() +1); //TODO Fix. Gets way to big. Can make it only track one side of the tree and then it works.
-			p1.setNumMutations(p1.numMutations() + p2.numMutations());
-			p1.setNumElitisms(p1.numElitisms() + p2.numElitisms());
+			p1.setNumCrossovers(p1.numCrossovers() +1); 
+			p1.setNumMutations(p1.numMutations());
+			p1.setNumElitisms(p1.numElitisms());
 			p1.resetLastChange();
+
+			p2.setNumCrossovers(p2.numCrossovers() +1); 
+			p2.setNumMutations(p2.numMutations());
+			p2.setNumElitisms(p2.numElitisms());
+			p2.resetLastChange();
 			
 			nextPop.add(p2);
 			nextPop.add(p1);

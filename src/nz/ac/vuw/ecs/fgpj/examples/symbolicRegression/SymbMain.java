@@ -181,9 +181,9 @@ public class SymbMain {
 
 		System.out.println("Best program fitness: " + s.getFitness());
 		System.out.println("Number of generations this program has been selected for by elitism: " + s.lastChange());
-		System.out.println("Number of programs created by crossover: " + s.numCrossovers());
-		System.out.println("Number of programs created by mutation: " + s.numMutations());
-		System.out.println("Number of programs created by elitism: " + s.numElitisms());
+		System.out.println("Crossover usage (ignoring data from other parents): " + s.numCrossovers());
+		System.out.println("Mutation usage (ignoring data from other parents): " + s.numMutations());
+		System.out.println("Elitism usage (ignoring data from other parents): " + s.numElitisms());
 		System.out.println("Best program:");
 		System.out.println(s);
 

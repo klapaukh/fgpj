@@ -62,17 +62,17 @@ public class GeneticProgram {
 	private long numElitisms;
 
 	/**
-	 * Stores the number of crossovers that were used to get this program
+	 * Stores the number of crossovers that were used to get this program along one path 
 	 */
 	private long numCrossovers;
 
 	/**
-	 * Stores the number mutations that occurred to get this program
+	 * Stores the number mutations that occurred to get this program along one path
 	 */
 	private long numMutations;
 
 	/**
-	 * Number of generations since this was not selected by elitism
+	 * Number of generations since this was not selected by elitism along one path
 	 */
 	private long lastChange;
 
@@ -316,7 +316,7 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Return the number of mutations that occurred to produce this program
+	 * Return the number of mutations along one path of the tree that occurred to produce this program
 	 * 
 	 * @return number of mutations
 	 */
@@ -325,18 +325,18 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Return the number of crossovers that occurred to produce this program
+	 * Return the number of crossovers along one path of the tree that occurred to produce this program
 	 * 
-	 * @return number of crossovers in programs history
+	 * @return number of crossovers
 	 */
 	public long numCrossovers() {
 		return numCrossovers;
 	}
 
 	/**
-	 * Return the number of elitisms that were used to create this program
+	 * Return the number of elitisms along one path of the tree that were used to create this program
 	 * 
-	 * @return number of elitisms used in creating this program
+	 * @return number of elitisms
 	 */
 	public long numElitisms() {
 		return numElitisms;
@@ -352,17 +352,17 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Set the number mutations used to produce this program
+	 * Set the number mutations along one path of the tree used to produce this program
 	 * 
 	 * @param num
-	 *            number of mutations in personal history
+	 *            number of mutations
 	 */
 	public void setNumMutations(long num) {
 		this.numMutations = num;
 	}
 
 	/**
-	 * Set the number of crossover used to produce this program
+	 * Set the number of crossover along one path of the tree used to get this program
 	 * 
 	 * @param num
 	 *            number of crossovers
@@ -372,7 +372,7 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Set the number of elitisms used to produce this program
+	 * Set the number of elitisms along one path of the tree used to produce this program
 	 * 
 	 * @param num
 	 *            number of elitismss

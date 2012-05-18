@@ -56,7 +56,7 @@ public class SymbolicFitness implements Fitness {
 		values = new HashMap<Double, Double>();
 
 		// Make a set of test points using the function f()
-		for (double i = 0.1; i < 10; i += 0.1) {
+		for (double i = 0; i < 100; i += 1) {
 			double x = i;
 			values.put(x, f(x));
 		}
@@ -70,7 +70,7 @@ public class SymbolicFitness implements Fitness {
 	 * @return The expected return value given the input x for ground truth
 	 */
 	private double f(double x) {
-		return x * (x + 3);
+		return x * Math.tan(x + 3);
 	}
 
 	@Override

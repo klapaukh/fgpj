@@ -17,13 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import nz.ac.vuw.ecs.fgpj.core.GPConfig;
-import nz.ac.vuw.ecs.fgpj.core.Node;
-import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 import nz.ac.vuw.ecs.fgpj.core.Terminal;
 
 public class Y extends Terminal {
-	private static int KIND;
 
 	public Y() {
 		super(ReturnDouble.TYPENUM, "Y");
@@ -38,34 +35,6 @@ public class Y extends Terminal {
 	public void evaluate(ReturnData out) {
 		ReturnDouble d = (ReturnDouble) out;
 		d.setValue(d.getY());
-	}
-
-	@Override
-	public Node copy(GPConfig conf) {
-		return NodeFactory.newNode(getKind(), conf);
-	}
-
-	@Override
-	public Node setKind(int kind) {
-		KIND = kind;
-		return this;
-	}
-
-	@Override
-	public int getKind() {
-		return KIND;
-	}
-
-	@Override
-	public Y generate(String s, GPConfig conf) {
-		if (s.startsWith(getName()))
-			return (Y) NodeFactory.newNode(getKind(), conf);
-		return null;
-	}
-
-	@Override
-	public Y generate(GPConfig conf) {
-		return (Y) NodeFactory.newNode(getKind(), conf);
 	}
 
 }

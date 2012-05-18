@@ -1,21 +1,22 @@
 package nz.ac.vuw.ecs.fgpj.core;
+
 /*
-FGPJ Genetic Programming library
-Copyright (C) 2011  Roman Klapaukh
+ FGPJ Genetic Programming library
+ Copyright (C) 2011  Roman Klapaukh
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import java.util.Scanner;
 
 /**
@@ -56,6 +57,26 @@ public class GeneticProgram {
 	private final int numRoots;
 
 	/**
+	 * Stores the number of elitisms used to get this program
+	 */
+	private long numElitisms;
+
+	/**
+	 * Stores the number of crossovers that were used to get this program
+	 */
+	private long numCrossovers;
+
+	/**
+	 * Stores the number mutations that occurred to get this program
+	 */
+	private long numMutations;
+
+	/**
+	 * Number of generations since this was not selected by elitism
+	 */
+	private long lastChange;
+
+	/**
 	 * Create a new genetic program based on conf
 	 * 
 	 * @param conf
@@ -72,13 +93,17 @@ public class GeneticProgram {
 	 *            number of root nodes
 	 */
 	public GeneticProgram(int numRoots) {
+		this.lastChange = 0;
+		this.numCrossovers = 0;
+		this.numMutations = 0;
+		this.numElitisms = 0;
 		this.numRoots = numRoots;
 		fitness = Double.NaN;
 		returnType = new int[numRoots];
 		root = new Node[numRoots];
 		depth = new int[numRoots];
 		size = new int[numRoots];
-		for(int i=0;i<numRoots;i++){
+		for (int i = 0; i < numRoots; i++) {
 			returnType[i] = -1;
 		}
 
@@ -123,11 +148,13 @@ public class GeneticProgram {
 
 	/**
 	 * Number of root nodes this program has
+	 * 
 	 * @return number of root nodes
 	 */
-	public int numRoots(){
+	public int numRoots() {
 		return numRoots;
 	}
+
 	/**
 	 * Delete the current tree. Returns it to the node factory and sets the root to null
 	 * 
@@ -140,8 +167,7 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Recursively deletes the tree whose root is pointed to by theRoot. This returns all nodes in the subtree to the
-	 * NodeFactory
+	 * Recursively deletes the tree whose root is pointed to by theRoot. This returns all nodes in the subtree to the NodeFactory
 	 * 
 	 * @param theRoot
 	 *            root node to delete from
@@ -206,7 +232,7 @@ public class GeneticProgram {
 	 */
 	public Node getRandomNode(int p, GPConfig config) {
 		int node = Math.abs(config.randomNumGenerator.nextInt() % size[p]);
-		Node n= root[p].getNode(node);
+		Node n = root[p].getNode(node);
 		return n;
 	}
 
@@ -290,6 +316,86 @@ public class GeneticProgram {
 	}
 
 	/**
+	 * Return the number of mutations that occurred to produce this program
+	 * 
+	 * @return number of mutations
+	 */
+	public long numMutations() {
+		return numMutations;
+	}
+
+	/**
+	 * Return the number of crossovers that occurred to produce this program
+	 * 
+	 * @return number of crossovers in programs history
+	 */
+	public long numCrossovers() {
+		return numCrossovers;
+	}
+
+	/**
+	 * Return the number of elitisms that were used to create this program
+	 * 
+	 * @return number of elitisms used in creating this program
+	 */
+	public long numElitisms() {
+		return numElitisms;
+	}
+
+	/**
+	 * Number of generations that this program has been continuously selected for by elitism
+	 * 
+	 * @return Number of generations that this program has not changed for
+	 */
+	public long lastChange() {
+		return lastChange;
+	}
+
+	/**
+	 * Set the number mutations used to produce this program
+	 * 
+	 * @param num
+	 *            number of mutations in personal history
+	 */
+	public void setNumMutations(long num) {
+		this.numMutations = num;
+	}
+
+	/**
+	 * Set the number of crossover used to produce this program
+	 * 
+	 * @param num
+	 *            number of crossovers
+	 */
+	public void setNumCrossovers(long num) {
+		this.numCrossovers = num;
+	}
+
+	/**
+	 * Set the number of elitisms used to produce this program
+	 * 
+	 * @param num
+	 *            number of elitismss
+	 */
+	public void setNumElitisms(long num) {
+		this.numElitisms = num;
+	}
+	
+	/**
+	 * Says that the program has been modified to be created. Not selected by elitism
+	 */
+	public void resetLastChange(){
+		this.lastChange = 0;
+	}
+	
+	/**
+	 * Increments the last change counter to show that this program was selected by elitism
+	 */
+	public void incrementLastChange(){
+		this.lastChange++;
+	}
+
+	/**
 	 * The copy method will create a new genetic program which is a copy of the current program
 	 * 
 	 * @param config
@@ -299,6 +405,10 @@ public class GeneticProgram {
 	public GeneticProgram copy(GPConfig config) {
 		GeneticProgram tmp = new GeneticProgram(numRoots);
 		tmp.setFitness(fitness);
+		tmp.numCrossovers = this.numCrossovers;
+		tmp.numElitisms = this.numElitisms;
+		tmp.numMutations = this.numMutations;
+		tmp.lastChange = this.lastChange;
 
 		for (int i = 0; i < numRoots; i++) {
 			tmp.setReturnType(i, returnType[i]);
@@ -355,9 +465,10 @@ public class GeneticProgram {
 
 			if (token.equalsIgnoreCase("|")) {
 				// End of Program
-				if(scan.hasNext()) token = scan.next();
+				if (scan.hasNext())
+					token = scan.next();
 			}
-			
+
 			if (token.startsWith("Program")) {
 				token = scan.next();
 			}

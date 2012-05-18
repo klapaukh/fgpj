@@ -36,7 +36,7 @@ public class Main {
 			return;
 		}
 		String file = args[0];
-		int size = Integer.parseInt(args[1]);
+//		int size = Integer.parseInt(args[1]);
 		Scanner scan;
 		try {
 			scan = new Scanner(new File(file));

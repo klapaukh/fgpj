@@ -19,20 +19,15 @@ package nz.ac.vuw.ecs.fgpj.examples.symbolicRegression;
  */
 import nz.ac.vuw.ecs.fgpj.core.Function;
 import nz.ac.vuw.ecs.fgpj.core.GPConfig;
-import nz.ac.vuw.ecs.fgpj.core.Node;
-import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 
 /**
- * The division operator. In the case of division by zero, it has the result
- * zero.
+ * The division operator. In the case of division by zero, it has the result zero.
  * 
  * @author roma
  * 
  */
 public class Divide extends Function {
-
-	private static int KIND;
 
 	public Divide() {
 		super(ReturnDouble.TYPENUM, 2, "/");
@@ -60,40 +55,6 @@ public class Divide extends Function {
 		} else {
 			d.setValue(d1 / d.value());
 		}
-	}
-
-	@Override
-	public Divide copy(GPConfig conf) {
-		Divide a = (Divide) NodeFactory.newNode(getKind(), conf);
-		for (int i = 0; i < getNumArgs(); i++) {
-			a.setArgN(i, getArgN(i).copy(conf));
-		}
-		return a;
-
-	}
-
-	@Override
-	public Node setKind(int kind) {
-		KIND = kind;
-		return this;
-	}
-
-	@Override
-	public int getKind() {
-		return KIND;
-	}
-
-	@Override
-	public Divide generate(String s, GPConfig conf) {
-		if (s.startsWith(getName())) {
-			return (Divide) NodeFactory.newNode(getKind(), conf);
-		}
-		return null;
-	}
-
-	@Override
-	public Divide generate(GPConfig conf) {
-		return (Divide) NodeFactory.newNode(getKind(), conf);
 	}
 
 }

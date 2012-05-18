@@ -105,8 +105,8 @@ public class ImageFitness implements Fitness {
 		for (y = 0; y < ySize; y++) {
 			for (x = 0; x < xSize; x++) {
 				for (c = 0; c < 3; c++) {
-					// Should normalise by depth?
-					pixels[x][y][c] = scan.nextInt();
+					pixels[x][y][c] = (int) (depth!= 255 ? 255*((float)scan.nextInt()/depth):scan.nextInt());
+					
 				}
 			}
 		}

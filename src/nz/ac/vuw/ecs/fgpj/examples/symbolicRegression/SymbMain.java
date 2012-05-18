@@ -111,7 +111,7 @@ public class SymbMain {
 		conf.addFunction(new Sin());
 		// conf.addFunction(new Min());
 		// conf.addFunction(new Max());
-		// conf.addFunction(new Tan());
+		 conf.addFunction(new Tan());
 
 		// Create and appropriate fitness function, based the parallel value at
 		// the start of the method
@@ -165,9 +165,9 @@ public class SymbMain {
 		long start = System.currentTimeMillis();
 
 		// Run the GP algorithm for 500 generations
-		int numGenerations = p.evolve(500); // return how many generations
+		int numGenerations = p.evolve(5000); // return how many generations
 											// actually happened
-		if (numGenerations < 500) {
+		if (numGenerations < 5000) {
 			// If numGenerations < 500, then it terminated before the 500
 			// generations finished
 			// because it found a solution
@@ -180,6 +180,10 @@ public class SymbMain {
 		GeneticProgram s = p.getBest();
 
 		System.out.println("Best program fitness: " + s.getFitness());
+		System.out.println("Number of generations this program has been selected for by elitism: " + s.lastChange());
+		System.out.println("Number of programs created by crossover: " + s.numCrossovers());
+		System.out.println("Number of programs created by mutation: " + s.numMutations());
+		System.out.println("Number of programs created by elitism: " + s.numElitisms());
 		System.out.println("Best program:");
 		System.out.println(s);
 

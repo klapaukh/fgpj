@@ -165,25 +165,47 @@ public class Population {
 		int numCrossover = (int) (pop.size() * config.crossoverRate());
 		int numMutation = (int) (pop.size() * config.mutationRate());
 
+		//Do crossover
 		for (int i = 0; i < numCrossover; i += 2) {
 			indiv1 = config.selectionOperator.select(pop, config);
 			indiv2 = config.selectionOperator.select(pop, config);
-			nextPop.add(pop.get(indiv1).copy(config));
-			nextPop.add(pop.get(indiv2).copy(config));
+			
+			GeneticProgram p1 = pop.get(indiv1).copy(config);
+			GeneticProgram p2 = pop.get(indiv2).copy(config);
 
-			config.crossoverOperator.crossover(nextPop.get(nextPop.size() - 2), (nextPop.get(nextPop.size() - 1)), 100,
+			config.crossoverOperator.crossover(p1, p2, 100,
 					config);
+			
+			p1.setNumCrossovers(p1.numCrossovers() + p2.numCrossovers() +1);
+			p1.setNumMutations(p1.numMutations() + p2.numMutations());
+			p1.setNumElitisms(p1.numElitisms() + p2.numElitisms());
+			p1.resetLastChange();
+			
+			nextPop.add(p2);
+			nextPop.add(p1);
 		}
 
+		//Do mutation
 		for (int i = 0; i < numMutation; i++) {
 			indiv1 = config.selectionOperator.select(pop, config);
-			nextPop.add(pop.get(indiv1).copy(config));
-			config.mutationOperator.mutate(nextPop.get(nextPop.size() - 1), config);
+			GeneticProgram p = pop.get(indiv1).copy(config);
+			config.mutationOperator.mutate(p, config);
+			
+			p.setNumMutations(p.numMutations() +1);
+			p.resetLastChange();
+			
+			nextPop.add(p);
 		}
 
+		//Fill rest with elitism
 		int i = pop.size() - 1;
 		while (nextPop.size() < pop.size()) {
-			nextPop.add(pop.get(i--).copy(config));
+			GeneticProgram p = pop.get(i--).copy(config);
+			
+			p.setNumElitisms(p.numElitisms()+1);
+			p.incrementLastChange();
+			
+			nextPop.add(p);
 		}
 
 		for (GeneticProgram m : pop) {

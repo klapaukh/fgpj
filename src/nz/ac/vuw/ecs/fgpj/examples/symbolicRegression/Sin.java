@@ -18,8 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import nz.ac.vuw.ecs.fgpj.core.Function;
 import nz.ac.vuw.ecs.fgpj.core.GPConfig;
-import nz.ac.vuw.ecs.fgpj.core.Node;
-import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 
 
@@ -30,7 +28,6 @@ import nz.ac.vuw.ecs.fgpj.core.ReturnData;
  */
 public class Sin extends Function{
 
-	private static int KIND;
 
 	public Sin() {
 		super(ReturnDouble.TYPENUM, 1, "Sin");
@@ -49,40 +46,6 @@ public class Sin extends Function{
 		ReturnDouble d = (ReturnDouble) out;
 		getArgN(0).evaluate(d);
 		d.setValue(Math.sin(d.value()));
-	}
-
-	@Override
-	public Sin copy(GPConfig conf) {
-		Sin a = (Sin) NodeFactory.newNode(getKind(), conf);
-		for (int i = 0; i < getNumArgs(); i++) {
-			a.setArgN(i, getArgN(i).copy(conf));
-		}
-		return a;
-
-	}
-
-	@Override
-	public Node setKind(int kind) {
-		KIND = kind;
-		return this;
-	}
-
-	@Override
-	public int getKind() {
-		return KIND;
-	}
-
-	@Override
-	public Sin generate(String s, GPConfig conf) {
-		if (s.startsWith(getName())) {
-			return (Sin) NodeFactory.newNode(getKind(), conf);
-		}
-		return null;
-	}
-
-	@Override
-	public Sin generate(GPConfig conf) {
-		return (Sin) NodeFactory.newNode(getKind(), conf);
 	}
 
 }

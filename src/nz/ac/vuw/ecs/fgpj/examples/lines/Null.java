@@ -17,8 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 import nz.ac.vuw.ecs.fgpj.core.GPConfig;
-import nz.ac.vuw.ecs.fgpj.core.Node;
-import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 import nz.ac.vuw.ecs.fgpj.core.Terminal;
 
@@ -27,22 +25,10 @@ public class Null extends Terminal {
 	/**
 	 * 
 	 */
-	public static int kind;
 	public static final long serialVersionUID = 5747126155380314948L;
 
 	public Null(GPConfig conf) {
 		super(ReturnImage.TYPENUM, "null");
-	}
-
-	public Terminal generate(GPConfig conf) {
-		return (Terminal) NodeFactory.newNode(getKind(), conf);
-		// return new Null(conf);
-	}
-
-	public Terminal generate(String name, GPConfig conf) {
-		if(name.startsWith(getName()))
-			return generate(conf);
-		return null;
 	}
 
 	public void evaluate(ReturnData out) {
@@ -54,24 +40,9 @@ public class Null extends Terminal {
 		s.append(getName());
 	}
 
-	public Node copy(GPConfig config) {
-		return NodeFactory.newNode(getKind(), config);
-		// return new Null(config);
-	}
-
 	@Override
 	public Null getNew(GPConfig config) {
 		return new Null(config);
 	}
 
-	@Override
-	public Null setKind(int kind) {
-		Null.kind = kind;
-		return this;
-	}
-
-	@Override
-	public int getKind() {
-		return kind;
-	}
 }

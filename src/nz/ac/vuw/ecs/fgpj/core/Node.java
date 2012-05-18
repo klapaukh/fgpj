@@ -1,21 +1,22 @@
 package nz.ac.vuw.ecs.fgpj.core;
+
 /*
-FGPJ Genetic Programming library
-Copyright (C) 2011  Roman Klapaukh
+ FGPJ Genetic Programming library
+ Copyright (C) 2011  Roman Klapaukh
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import java.util.List;
 
 /**
@@ -25,6 +26,12 @@ import java.util.List;
  * 
  */
 public abstract class Node {
+
+	/**
+	 * Represents what sort of node this is for memory management Default value is -1 to try force errors
+	 */
+	private int kind = -1;
+
 	/**
 	 * Return type of this node
 	 */
@@ -79,7 +86,7 @@ public abstract class Node {
 	 *            config to generate the node with
 	 * @return the new node
 	 */
-	public abstract <T extends Node> T getNew(GPConfig config);
+	public abstract Node getNew(GPConfig config);
 
 	/**
 	 * Get the return type of this node
@@ -147,8 +154,8 @@ public abstract class Node {
 	}
 
 	/**
-	 * Evaluate this node and its subtree where out is the running value being computed Doing it this way allows for
-	 * computation orderings that do work on the way down the tree
+	 * Evaluate this node and its subtree where out is the running value being computed Doing it this way allows for computation orderings that do
+	 * work on the way down the tree
 	 * 
 	 * @param out
 	 *            The running value being computed
@@ -179,6 +186,7 @@ public abstract class Node {
 	 * @return depth of longest subtree
 	 */
 	public abstract int traceDepth(int curDepth);
+
 	/**
 	 * Add this node and all its children to the List (double dispatch trick)
 	 * 
@@ -220,20 +228,34 @@ public abstract class Node {
 	 * @param kind
 	 *            The kind of the node - a unique int per type
 	 */
-	public abstract Node setKind(int kind);
+	public Node setKind(int kind) {
+		this.kind = kind;
+		return this;
+	}
+
+	/**
+	 * Initialise the node based on the values in n. n is guaranteed to be of the same type as you.
+	 * 
+	 * @param n object of the same type as yourself
+	 */
+	public void init(Node n) {
+	}
 
 	/**
 	 * Returns the kind of the node. Must be the same as the last setKind
 	 * 
 	 * @return the kind of the node
 	 */
-	public abstract int getKind();
+	public int getKind() {
+		return this.kind;
+	}
 
 	/**
-	 * Generate this node based on a string
+	 * Generate this node based on a string. This string is guaranteed to start with your name. The default implementation assumes that it is just the
+	 * name, and has no other information
 	 * 
 	 * @param s
-	 *            generate this node based on this string represenation of it
+	 *            generate this node based on this string representation of it
 	 * @param conf
 	 *            the config to generate it using
 	 * @return the generated Node
@@ -266,36 +288,44 @@ public abstract class Node {
 
 	/**
 	 * Get the closest node to a specified position that has a specified type
-	 * @param i position to look at
-	 * @param type the type of the desired node
+	 * 
+	 * @param i
+	 *            position to look at
+	 * @param type
+	 *            the type of the desired node
 	 * @return closest node to i that has type type
 	 */
-	public Node getNode(int i, int type){
-		return this.getNode(i,type,null);
+	public Node getNode(int i, int type) {
+		return this.getNode(i, type, null);
 	}
-	
+
 	public abstract Node getNode(int i, int type, Node best);
-	
+
 	/**
 	 * work out the numbering of each node
-	 * @param parent the number of your parent
+	 * 
+	 * @param parent
+	 *            the number of your parent
 	 * @return the number of your largest child
 	 */
 	public abstract int computePositions(int parent);
-	
-	/** 
+
+	/**
 	 * Set the position of this node
-	 * @param pos position of this node
+	 * 
+	 * @param pos
+	 *            position of this node
 	 */
-	public void setPosition(int pos){
+	public void setPosition(int pos) {
 		this.position = pos;
 	}
-	
+
 	/**
 	 * get the position of this node
+	 * 
 	 * @return position of this node
 	 */
-	public int getPosition(){
+	public int getPosition() {
 		return this.position;
 	}
 }

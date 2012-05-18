@@ -86,4 +86,23 @@ public abstract class Terminal extends Node {
 		}
 		return best;
 	}
+	
+
+	@SuppressWarnings("unchecked")
+	public Terminal generate(String s, GPConfig conf){
+		return (Terminal) NodeFactory.newNode(this.getKind(),conf);
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public Terminal generate(GPConfig conf){
+		return (Terminal) NodeFactory.newNode(this.getKind(),conf);
+	}
+	
+	@Override
+	public final Node copy(GPConfig conf) {
+		Node n = NodeFactory.newNode(getKind(), conf);
+		n.init(this);
+		return n;
+	}
 }

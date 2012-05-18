@@ -24,8 +24,8 @@ import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 import nz.ac.vuw.ecs.fgpj.core.Terminal;
 
 /**
- * Represents a random int terminal value. Unlike a X or Y value, this always
- * returns the same value (which is decided upon its creation). Used for constants
+ * Represents a random int terminal value. Unlike a X or Y value, this always returns the same value (which is decided upon its creation). Used for
+ * constants
  * 
  * @author roma
  * 
@@ -34,7 +34,6 @@ public class RandomInt extends Terminal {
 
 	private int value;
 	private int min, max;
-	private static int KIND;
 
 	public RandomInt(int min, int max, GPConfig conf) {
 		super(ReturnDouble.TYPENUM, "RandomInt");
@@ -59,40 +58,17 @@ public class RandomInt extends Terminal {
 		((ReturnDouble) out).setValue(value);
 	}
 
-	@Override
-	public Node copy(GPConfig conf) {
-		return ((RandomInt) NodeFactory.newNode(getKind(), conf)).init(value);
-	}
-
-	private RandomInt init(int v) {
-		this.value = v;
-		return this;
-	}
-
-	@Override
-	public Node setKind(int kind) {
-		KIND = kind;
-		return this;
-	}
-
-	@Override
-	public int getKind() {
-		return KIND;
+	public void init(Node n) {
+		RandomInt v = (RandomInt)n;
+		this.value = v.value;
 	}
 
 	@Override
 	public RandomInt generate(String s, GPConfig conf) {
-		if (s.startsWith(getName())) {
-			String v = s.substring(getName().length() + 1);
-			return ((RandomInt) NodeFactory.newNode(getKind(), conf))
-					.init(Integer.parseInt(v));
-		}
-		return null;
-	}
-
-	@Override
-	public RandomInt generate(GPConfig conf) {
-		return ((RandomInt) NodeFactory.newNode(getKind(), conf));
+		String v = s.substring(getName().length() + 1);
+		RandomInt r = ((RandomInt) NodeFactory.newNode(getKind(), conf));
+		r.value = Integer.parseInt(v);
+		return r;
 	}
 
 }

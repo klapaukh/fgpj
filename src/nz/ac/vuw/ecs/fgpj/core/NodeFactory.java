@@ -68,7 +68,7 @@ public class NodeFactory {
 		Queue<Node> l = n.nodes[kind];
 		if (l.size() == 1) {
 			n.miss++;
-			return l.peek().getNew(conf);
+			return l.peek().getNew(conf).setKind(kind);
 		} else {
 			n.hit++;
 			return l.poll();
@@ -83,7 +83,8 @@ public class NodeFactory {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void teach(Node node, GPConfig config) {
-		node.setKind(n.kinds++);
+		int newKind = n.kinds++;
+		node.setKind(newKind);
 		Queue<Node>[] t = n.nodes;
 		n.nodes = new Queue[n.kinds];
 		int i = 0;
@@ -91,7 +92,7 @@ public class NodeFactory {
 			n.nodes[i] = t[i];
 		}
 		n.nodes[i] = new LinkedList<Node>();
-		n.nodes[i].add(node.getNew(config));
+		n.nodes[i].add(node.getNew(config).setKind(newKind));
 	}
 
 	/**

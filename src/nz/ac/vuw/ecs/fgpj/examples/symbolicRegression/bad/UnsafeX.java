@@ -22,18 +22,26 @@ import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 import nz.ac.vuw.ecs.fgpj.core.Terminal;
 
 /**
- * This class represents the constant input value X. It represents a terminal in the data set. I.e. the value depends only on itself, rather than some
+ * This class represents the constant input value X. It represents a terminal in
+ * the data set. I.e. the value depends only on itself, rather than some
  * combination of properties of its children.
  * 
- * It uses a static field to keep track of what the value of the input is. While this is a sensible way of writing the class, it does not work in a
- * concurrent environment. As it uses a static variable X can only have a single value assigned to it. In a concurrent setting you may require X to
- * have arbitrarily many different values at the same. For this reason this version is not thread safe.
+ * It uses a static field to keep track of what the value of the input is. While
+ * this is a sensible way of writing the class, it does not work in a concurrent
+ * environment. As it uses a static variable X can only have a single value
+ * assigned to it. In a concurrent setting you may require X to have arbitrarily
+ * many different values at the same. For this reason this version is not thread
+ * safe.
  * 
  * @author roma
  * 
  */
 public class UnsafeX extends Terminal {
 
+	/**
+	 * Static field to store the value. Makes it very easy to assign a value,
+	 * but not thread safe
+	 */
 	private static double value;
 
 	/**
@@ -45,20 +53,25 @@ public class UnsafeX extends Terminal {
 
 	@Override
 	public UnsafeX getNew(GPConfig config) {
+		// return a new unsafeX
 		return new UnsafeX();
 	}
 
 	@Override
 	public void evaluate(ReturnData out) {
+		//Just return the value in the static field
 		UnsafeReturnDouble d = (UnsafeReturnDouble) out;
 		d.setValue(UnsafeX.value);
 	}
 
 	/**
 	 * Make the value of the X be val
-	 * @param val the value of the X terminal
+	 * 
+	 * @param val
+	 *            the value of the X terminal
 	 */
 	public static void setValue(double val) {
+		//Makes it visible everywhere!
 		UnsafeX.value = val;
 	}
 

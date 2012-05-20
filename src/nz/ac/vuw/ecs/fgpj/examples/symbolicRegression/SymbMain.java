@@ -111,7 +111,7 @@ public class SymbMain {
 		conf.addFunction(new Sin());
 		// conf.addFunction(new Min());
 		// conf.addFunction(new Max());
-		 conf.addFunction(new Tan());
+		conf.addFunction(new Tan());
 
 		// Create and appropriate fitness function, based the parallel value at
 		// the start of the method
@@ -165,9 +165,9 @@ public class SymbMain {
 		long start = System.currentTimeMillis();
 
 		// Run the GP algorithm for 500 generations
-		int numGenerations = p.evolve(5000); // return how many generations
-											// actually happened
-		if (numGenerations < 5000) {
+		int numGenerations = p.evolve(500); // return how many generations
+												// actually happened
+		if (numGenerations < 500) {
 			// If numGenerations < 500, then it terminated before the 500
 			// generations finished
 			// because it found a solution
@@ -180,14 +180,34 @@ public class SymbMain {
 		GeneticProgram s = p.getBest();
 
 		System.out.println("Best program fitness: " + s.getFitness());
-		System.out.println("Number of generations this program has been selected for by elitism: " + s.lastChange());
-		System.out.println("Crossover usage (ignoring data from other parents): " + s.numCrossovers());
-		System.out.println("Mutation usage (ignoring data from other parents): " + s.numMutations());
-		System.out.println("Elitism usage (ignoring data from other parents): " + s.numElitisms());
+		System.out
+				.println("Number of generations this program has been selected for by elitism: "
+						+ s.lastChange());
+		System.out
+				.println("Crossover usage (ignoring data from other parents): "
+						+ s.numCrossovers());
+		System.out
+				.println("Mutation usage (ignoring data from other parents): "
+						+ s.numMutations());
+		System.out.println("Elitism usage (ignoring data from other parents): "
+				+ s.numElitisms());
 		System.out.println("Best program:");
 		System.out.println(s);
 
 		System.out.println("Run time (excluding setup and tear down): "
 				+ (end - start) + "ms");
+	}
+
+	/**
+	 * Validate the results on a test set. This only happends once at the end of
+	 * the program
+	 * 
+	 * @param p
+	 *            The genetic program to evaluate on the test set
+	 * @return The fitness of the resulting program on the test set
+	 */
+	public static double testSet(GeneticProgram p) {
+		//TODO: put in some values for it to test
+		return 0;
 	}
 }

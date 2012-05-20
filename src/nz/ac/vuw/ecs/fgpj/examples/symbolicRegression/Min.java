@@ -29,23 +29,31 @@ import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 public class Min extends Function {
 
 	public Min() {
+		//Min returns a ReturnDouble, has two children and is called "Min"
 		super(ReturnDouble.TYPENUM, 2, "Min");
 		for(int i = 0 ; i < numArgs; i++){
+			//Set the expected return type of each child to be ReturnDouble
 			setArgNReturnType(i, ReturnDouble.TYPENUM);
 		}
 	}
 
 	@Override
 	public Min getNew(GPConfig config) {
+		//Return a new Min
 		return new Min();
 	}
 
 	@Override
 	public void evaluate(ReturnData out) {
+		//Cast is safe as we specified what we expect in the constructor
 		ReturnDouble d = (ReturnDouble) out;
+		//Evaluate the first subtree 
 		getArgN(0).evaluate(d);
+		//save the value
 		double d1 = d.value();
+		//evaluate the second subtree
 		getArgN(1).evaluate(d);
+		//save the minimum
 		d.setValue(Math.min(d.value() , d1));
 	}
 

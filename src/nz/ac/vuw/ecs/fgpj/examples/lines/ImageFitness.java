@@ -211,5 +211,6 @@ public class ImageFitness implements Fitness {
 	}
 
 	public void finish() {
+		//No clean up is required
 	}
 }

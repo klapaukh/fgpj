@@ -28,7 +28,8 @@ import java.util.List;
 public abstract class Node {
 
 	/**
-	 * Represents what sort of node this is for memory management Default value is -1 to try force errors
+	 * Represents what sort of node this is for memory management Default value
+	 * is -1 to try force errors
 	 */
 	private int kind = -1;
 
@@ -63,7 +64,8 @@ public abstract class Node {
 	private int position;
 
 	/**
-	 * Make a new node with the specified number of arguments, return type and name
+	 * Make a new node with the specified number of arguments, return type and
+	 * name
 	 * 
 	 * @param retType
 	 *            The return type of this node
@@ -80,7 +82,9 @@ public abstract class Node {
 	}
 
 	/**
-	 * Gets a new copy of the node. Guaranteed to be new and not come from the cache
+	 * Gets a new copy of the node. Guaranteed to be new and not come from the
+	 * cache. This code always just calls the constructor of the implementing
+	 * type and returns that result.
 	 * 
 	 * @param config
 	 *            config to generate the node with
@@ -154,8 +158,11 @@ public abstract class Node {
 	}
 
 	/**
-	 * Evaluate this node and its subtree where out is the running value being computed Doing it this way allows for computation orderings that do
-	 * work on the way down the tree
+	 * Evaluate this node and its subtree where out is the running value being
+	 * computed. Doing it this way allows for computation orderings that do work
+	 * on the way down the tree. This method does not need to return a value, as
+	 * changes to the argument will be visible to the calling nodes as it is a
+	 * reference
 	 * 
 	 * @param out
 	 *            The running value being computed
@@ -170,7 +177,8 @@ public abstract class Node {
 	public abstract int computeSize();
 
 	/**
-	 * Compute the depth of the longest subtree, and set the value for depth of current node
+	 * Compute the depth of the longest subtree, and set the value for depth of
+	 * current node
 	 * 
 	 * @param curDepth
 	 *            depth at so far
@@ -196,7 +204,8 @@ public abstract class Node {
 	public abstract void addTreeToVector(List<Node> list);
 
 	/**
-	 * Add all the nodes in the subtree that are of the type typeNum (double dispatch trick)
+	 * Add all the nodes in the subtree that are of the type typeNum (double
+	 * dispatch trick)
 	 * 
 	 * @param list
 	 *            the list to add the nodes to
@@ -206,7 +215,8 @@ public abstract class Node {
 	public abstract void addTreeToVector(List<Node> list, int typeNum);
 
 	/**
-	 * Print this node to s
+	 * Print this node to s. This allows programs to be written to a file. Uses
+	 * Lisp like brackets to show what owns what.
 	 * 
 	 * @param s
 	 *            The StringBuffer to print to
@@ -234,11 +244,24 @@ public abstract class Node {
 	}
 
 	/**
-	 * Initialise the node based on the values in n. n is guaranteed to be of the same type as you.
+	 * Initialise the node based on the values in n. n is guaranteed to be of
+	 * the same type as you.
 	 * 
-	 * @param n object of the same type as yourself
+	 * @param n
+	 *            object of the same type as yourself
 	 */
 	public void init(Node n) {
+	}
+
+	/**
+	 * Re-initialise the state of the node to having a random value. This is
+	 * necessary as when a node is gotten from the NodeFactory as a 'new' node
+	 * it still has it old state which may need to be re-initialised. In general
+	 * nodes do not have state, so the default implementation is simply blank.
+	 * 
+	 * @param conf
+	 */
+	public void reinit(GPConfig conf) {
 	}
 
 	/**
@@ -251,7 +274,8 @@ public abstract class Node {
 	}
 
 	/**
-	 * Generate this node based on a string. This string is guaranteed to start with your name. The default implementation assumes that it is just the
+	 * Generate this node based on a string. This string is guaranteed to start
+	 * with your name. The default implementation assumes that it is just the
 	 * name, and has no other information
 	 * 
 	 * @param s

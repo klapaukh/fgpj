@@ -32,23 +32,31 @@ import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 public class Add extends Function {
 
 	public Add() {
+		//The add Function returns a ReturnDouble, has 2 children and is represented by "+"
 		super(ReturnDouble.TYPENUM, 2, "+");
 		for (int i = 0; i < numArgs; i++) {
+			//Set the expected return type of each child to ReturnDouble
 			setArgNReturnType(i, ReturnDouble.TYPENUM);
 		}
 	}
 
 	@Override
 	public Add getNew(GPConfig config) {
+		//Return a new Add
 		return new Add();
 	}
 
 	@Override
 	public void evaluate(ReturnData out) {
+		//Cast is safe as we specified what the expected type is
 		ReturnDouble d = (ReturnDouble) out;
+		//Evaluate the first subtree
 		getArgN(0).evaluate(d);
+		//save the value
 		double d1 = d.value();
+		//evaluate the second subtree
 		getArgN(1).evaluate(d);
+		//Set the result to be the sum
 		d.setValue(d.value() + d1);
 	}
 

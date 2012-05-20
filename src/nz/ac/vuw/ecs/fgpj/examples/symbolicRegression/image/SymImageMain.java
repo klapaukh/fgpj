@@ -44,6 +44,7 @@ import nz.ac.vuw.ecs.fgpj.examples.symbolicRegression.Y;
 
 public class SymImageMain {
 	
+	@SuppressWarnings("unchecked")
 	private static void enlarge(String args[], GPConfig c) {
 		if (args.length != 2) {
 			System.err
@@ -76,6 +77,7 @@ public class SymImageMain {
 		System.out.println(p.getFitness());
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 
 		

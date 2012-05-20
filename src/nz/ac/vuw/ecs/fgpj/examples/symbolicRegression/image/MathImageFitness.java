@@ -1,21 +1,22 @@
 package nz.ac.vuw.ecs.fgpj.examples.symbolicRegression.image;
+
 /*
-FGPJ Genetic Programming library
-Copyright (C) 2011  Roman Klapaukh
+ FGPJ Genetic Programming library
+ Copyright (C) 2011  Roman Klapaukh
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -27,27 +28,58 @@ import nz.ac.vuw.ecs.fgpj.core.GPConfig;
 import nz.ac.vuw.ecs.fgpj.core.GeneticProgram;
 import nz.ac.vuw.ecs.fgpj.examples.symbolicRegression.ReturnDouble;
 
-
-
+/**
+ * Fitness function to copy a given image using Math functions only. Essentially
+ * the same as ImageFitness
+ * 
+ * @author roma
+ * 
+ */
 public class MathImageFitness implements Fitness {
+	/**
+	 * width of image
+	 */
 	private int xSize;
+	/**
+	 * Height of image
+	 */
 	private int ySize;
+
+	/**
+	 * Image to copy
+	 */
 	private final String filename;
+
+	/**
+	 * Arbitrary numbers that specify the image bounds. Allows for unbounded
+	 * scaling
+	 */
 	private final double min = 0, max = 10;
 
+	/**
+	 * The image to compare to
+	 */
 	private int[][][] pixels;
 
+	/**
+	 * Create a new MathImage fitness that will try copy the specified image
+	 * which is a ppm image in P3 format
+	 * 
+	 * @param filename image to copy
+	 */
 	public MathImageFitness(String filename) {
 		this.filename = filename;
 	}
 
 	public void initFitness() {
+		//Read in the image to be used for comparison later
 		Scanner scan;
 		try {
 			scan = new Scanner(new File(filename));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			throw new RuntimeException("sample.pnm cannot be read. No target to copmare to");
+			throw new RuntimeException(
+					"sample.pnm cannot be read. No target to copmare to");
 		}
 
 		int y, x, c;
@@ -55,7 +87,8 @@ public class MathImageFitness implements Fitness {
 		String type = scan.next();
 
 		if (!type.equals("P3")) {
-			throw new RuntimeException("File " + filename + " has type " + type + " but should be P3");
+			throw new RuntimeException("File " + filename + " has type " + type
+					+ " but should be P3");
 		}
 
 		xSize = scan.nextInt();
@@ -91,7 +124,8 @@ public class MathImageFitness implements Fitness {
 		double totalFitness;
 
 		// outerloop - selects a program
-		ReturnDouble im[] = { new ReturnDouble(), new ReturnDouble(), new ReturnDouble() };
+		ReturnDouble im[] = { new ReturnDouble(), new ReturnDouble(),
+				new ReturnDouble() };
 		for (i = 0; i < pop.size(); i++) {
 			// initialise fitness to zero
 			totalFitness = 0;
@@ -105,6 +139,7 @@ public class MathImageFitness implements Fitness {
 			for (int y = 0; y < ySize; y++, yVal += yStep) {
 				double xVal = min;
 				for (int x = 0; x < xSize; x++, xVal += xStep) {
+					//calculate the color of this pixel
 					im[0].setX(xVal);
 					im[1].setX(xVal);
 					im[2].setX(xVal);
@@ -112,9 +147,13 @@ public class MathImageFitness implements Fitness {
 					im[1].setY(yVal);
 					im[2].setY(yVal);
 					p.evaluate(im);
-					totalFitness += Math.abs(toNumber(im[0].value()) - pixels[x][y][0]);
-					totalFitness += Math.abs(toNumber(im[1].value()) - pixels[x][y][1]);
-					totalFitness += Math.abs(toNumber(im[2].value()) - pixels[x][y][2]);
+					//compare each color channel
+					totalFitness += Math.abs(toNumber(im[0].value())
+							- pixels[x][y][0]);
+					totalFitness += Math.abs(toNumber(im[1].value())
+							- pixels[x][y][1]);
+					totalFitness += Math.abs(toNumber(im[2].value())
+							- pixels[x][y][2]);
 				}
 			}
 
@@ -122,7 +161,14 @@ public class MathImageFitness implements Fitness {
 		}
 	}
 
-	public void outputResults(GeneticProgram program, String filename, GPConfig config) {
+	/**
+	 * Draw the resulting GeneticProgram to a ppm file in P3 format
+	 * @param program The GeneticProgram to draw
+	 * @param filename file to draw to
+	 * @param config GPConfig used for the GP
+	 */
+	public void outputResults(GeneticProgram program, String filename,
+			GPConfig config) {
 		PrintStream file;
 		try {
 			file = new PrintStream(new File(filename));
@@ -142,7 +188,8 @@ public class MathImageFitness implements Fitness {
 		file.print("\n");
 		file.print("255\n");
 
-		ReturnDouble[] im = new ReturnDouble[] { new ReturnDouble(), new ReturnDouble(), new ReturnDouble() };
+		ReturnDouble[] im = new ReturnDouble[] { new ReturnDouble(),
+				new ReturnDouble(), new ReturnDouble() };
 
 		double xStep = (max - min) / xSize;
 		double yStep = (max - min) / ySize;
@@ -174,18 +221,37 @@ public class MathImageFitness implements Fitness {
 	}
 
 	public boolean solutionFound(List<GeneticProgram> pop) {
+		//No picture is ever close enough!
 		return false;
 	}
 
 	public int compare(GeneticProgram gp1, GeneticProgram gp2) {
+		//Lower fitness is better, so inverted order
 		return -Double.compare(gp1.getFitness(), gp2.getFitness());
 	}
 
-	public void getResult(GeneticProgram gp, int sizeX, int sizeY, GPConfig config) {
-		getResult(gp,sizeX,sizeY,"out.pnm",config);
+	/**
+	 * Draw the image with a given size to out.pnm. It will be in P3 format
+	 * @param gp The GeneticProgram to draw
+	 * @param sizeX image width
+	 * @param sizeY image height
+	 * @param config GPConfig to use
+	 */
+	public void getResult(GeneticProgram gp, int sizeX, int sizeY,
+			GPConfig config) {
+		getResult(gp, sizeX, sizeY, "out.pnm", config);
 	}
-	
-	public void getResult(GeneticProgram gp, int sizeX, int sizeY, String fname, GPConfig config) {
+
+	/**
+	 * Draw the program to a give file in P3 format
+	 * @param gp The genetic program to draw
+	 * @param sizeX width
+	 * @param sizeY height
+	 * @param fname filename
+	 * @param config GPconfig used
+	 */
+	public void getResult(GeneticProgram gp, int sizeX, int sizeY,
+			String fname, GPConfig config) {
 
 		PrintStream file;
 		try {
@@ -208,8 +274,8 @@ public class MathImageFitness implements Fitness {
 		file.print("\n");
 		file.print("255\n");
 
-		ReturnDouble[] im = new ReturnDouble[] { new ReturnDouble(), new ReturnDouble(), new ReturnDouble() };
-
+		ReturnDouble[] im = new ReturnDouble[] { new ReturnDouble(),
+				new ReturnDouble(), new ReturnDouble() };
 
 		double xStep = (max - min) / sizeX;
 		double yStep = (max - min) / sizeY;
@@ -241,22 +307,21 @@ public class MathImageFitness implements Fitness {
 
 	}
 
-	public void finish() {
-	}
 	
-	private int toNumber(double i){
-//		int comp = (int) Math.signum(Double.compare(i, 0));
-//		switch(comp){
-//		case 0: return 0;
-//		case -1: i = Math.abs(i);
-//		default:
-//			int v= (int)( i % 512.0);
-//			return v%256;
-//		}
-		if(Double.isInfinite(i) || Double.isNaN(i)){
+	public void finish() {
+		//No clean up
+	}
+
+	/**
+	 * Change number into a valid color intensity
+	 * @param i Number
+	 * @return [0-255]
+	 */
+	private int toNumber(double i) {
+		if (Double.isInfinite(i) || Double.isNaN(i)) {
 			return 0;
 		}
-		int v = (int)i;
-		return  Math.abs(v % 256);
+		int v = (int) i;
+		return Math.abs(v % 256);
 	}
 }

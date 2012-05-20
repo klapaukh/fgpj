@@ -46,16 +46,19 @@ public class ReturnDouble extends ReturnData {
 	// Y inputs
 	private double x, y;
 
-	//Magic constant that identifies what the return type of this value is. Must not clash with any other
+	// Magic constant that identifies what the return type of this value is.
+	// Must not clash with any other
 	// in the same GP run. This is not checked.
 	public final static int TYPENUM = 4;
-	
-	//The return value that it will hold
+
+	// The return value that it will hold
 	private double value;
 
 	/**
 	 * Set the value of this return double to a specific value
-	 * @param val The new value that this return double contains
+	 * 
+	 * @param val
+	 *            The new value that this return double contains
 	 */
 	public void setValue(double val) {
 		this.value = val;
@@ -63,6 +66,7 @@ public class ReturnDouble extends ReturnData {
 
 	/**
 	 * Get the value that this ReturnDouble represents
+	 * 
 	 * @return the double contained within
 	 */
 	public double value() {
@@ -73,11 +77,15 @@ public class ReturnDouble extends ReturnData {
 	 * Constructor. Needs no arguments
 	 */
 	public ReturnDouble() {
+		// This informs allows for TypeNum tests without knowing the exact type
+		// by making it available in the supertype
 		super(TYPENUM);
 	}
 
 	/**
-	 * Get the X input value this is carrying. Should only be used by the X class.
+	 * Get the X input value this is carrying. Should only be used by the X
+	 * class.
+	 * 
 	 * @return the x input value carried
 	 */
 	public double getX() {
@@ -85,7 +93,9 @@ public class ReturnDouble extends ReturnData {
 	}
 
 	/**
-	 * Get the Y input value this is carrying. Should only be used by the Y class.
+	 * Get the Y input value this is carrying. Should only be used by the Y
+	 * class.
+	 * 
 	 * @return the Y input value carried.
 	 */
 	public double getY() {
@@ -94,15 +104,19 @@ public class ReturnDouble extends ReturnData {
 
 	/**
 	 * Set the X input value for this computation
-	 * @param x the X input value
+	 * 
+	 * @param x
+	 *            the X input value
 	 */
 	public void setX(double x) {
 		this.x = x;
 	}
 
-	/** 
+	/**
 	 * Set the Y input value for this computation.
-	 * @param y the Y input value
+	 * 
+	 * @param y
+	 *            the Y input value
 	 */
 	public void setY(double y) {
 		this.y = y;

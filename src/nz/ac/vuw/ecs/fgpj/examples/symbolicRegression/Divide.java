@@ -30,29 +30,38 @@ import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 public class Divide extends Function {
 
 	public Divide() {
+		//Divide returns a ReturnDouble, has to children and is represented by "/"
 		super(ReturnDouble.TYPENUM, 2, "/");
 		for (int i = 0; i < numArgs; i++) {
+			//Set the expected return type of each child to ReturnDouble.
 			setArgNReturnType(i, ReturnDouble.TYPENUM);
 		}
 	}
 
 	@Override
 	public Divide getNew(GPConfig config) {
+		//Return a new Divide
 		return new Divide();
 	}
 
 	@Override
 	public void evaluate(ReturnData out) {
+		//cast is safe as we specified the type we expect
 		ReturnDouble d = (ReturnDouble) out;
 
+		//Evaluate the first subtree
 		getArgN(0).evaluate(d);
+		//save the value
 		double d1 = d.value();
-
+		//evaluate the second subtree
 		getArgN(1).evaluate(d);
-
+		
+		//Set the right return value
 		if (d.value() == 0) {
+			//if the bottom part is zero, just return zero
 			d.setValue(0);
 		} else {
+			//actually divide
 			d.setValue(d1 / d.value());
 		}
 	}

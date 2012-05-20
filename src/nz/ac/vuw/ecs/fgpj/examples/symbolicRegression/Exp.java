@@ -30,21 +30,27 @@ import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 public class Exp extends Function {
 
 	public Exp() {
+		// This returns a ReturnDouble, has one child and is written "e"
 		super(ReturnDouble.TYPENUM, 1, "e");
 		for (int i = 0; i < numArgs; i++) {
+			// set the expected child return type to being ReturnDouble
 			setArgNReturnType(i, ReturnDouble.TYPENUM);
 		}
 	}
 
 	@Override
 	public Exp getNew(GPConfig config) {
+		// Return a new Exp
 		return new Exp();
 	}
 
 	@Override
 	public void evaluate(ReturnData out) {
+		// The cast is safe as we specified what we expect in the constructor
 		ReturnDouble d = (ReturnDouble) out;
+		//evaluate the subtree
 		getArgN(0).evaluate(d);
+		//The result is e^(subtree)
 		d.setValue(Math.exp(d.value()));
 	}
 

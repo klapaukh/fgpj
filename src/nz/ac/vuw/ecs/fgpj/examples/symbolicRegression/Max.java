@@ -31,7 +31,9 @@ import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 public class Max extends Function {
 
 	public Max() {
+		// A max returns a ReturnDouble, has two children and is called "Max"
 		super(ReturnDouble.TYPENUM, 2, "Max");
+		// Set the expected return type of each child to being ReturnDouble
 		for (int i = 0; i < numArgs; i++) {
 			setArgNReturnType(i, ReturnDouble.TYPENUM);
 		}
@@ -39,15 +41,21 @@ public class Max extends Function {
 
 	@Override
 	public Max getNew(GPConfig config) {
+		// Get a new Max
 		return new Max();
 	}
 
 	@Override
 	public void evaluate(ReturnData out) {
+		// Cast is safe as we say what we expect in the constructor
 		ReturnDouble d = (ReturnDouble) out;
+		//Evaluate the first subtree
 		getArgN(0).evaluate(d);
+		//save the  result
 		double d1 = d.value();
+		//evaluate the second subtree
 		getArgN(1).evaluate(d);
+		// return the max of the two subtrees
 		d.setValue(Math.max(d.value(), d1));
 	}
 

@@ -1,21 +1,22 @@
 package nz.ac.vuw.ecs.fgpj.examples.symbolicRegression.bad;
+
 /*
-FGPJ Genetic Programming library
-Copyright (C) 2011  Roman Klapaukh
+ FGPJ Genetic Programming library
+ Copyright (C) 2011  Roman Klapaukh
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +25,13 @@ import nz.ac.vuw.ecs.fgpj.core.Fitness;
 import nz.ac.vuw.ecs.fgpj.core.GPConfig;
 import nz.ac.vuw.ecs.fgpj.core.GeneticProgram;
 
-
-
+/**
+ * Essentially the same as SymbolicFitness from the symbolicFitness package,
+ * just modified to use unsafex
+ * 
+ * @author roma
+ * 
+ */
 public class UnsafeSymbolicFitness implements Fitness {
 
 	Map<Double, Double> values;
@@ -45,8 +51,8 @@ public class UnsafeSymbolicFitness implements Fitness {
 	}
 
 	private double f(double x) {
-//		return x*Math.exp(x + 3);
-		return x*Math.tan(x + 3);
+		// return x*Math.exp(x + 3);
+		return x * Math.tan(x + 3);
 	}
 
 	@Override
@@ -57,7 +63,7 @@ public class UnsafeSymbolicFitness implements Fitness {
 			for (Map.Entry<Double, Double> e : values.entrySet()) {
 				UnsafeX.setValue(e.getKey());
 				p.evaluate(d);
-				error += Math.pow(d[0].value() - e.getValue(),2);
+				error += Math.pow(d[0].value() - e.getValue(), 2);
 			}
 			error /= values.size();
 			p.setFitness(Math.sqrt(error));

@@ -25,18 +25,37 @@ import nz.ac.vuw.ecs.fgpj.core.ParallelFitness;
 import nz.ac.vuw.ecs.fgpj.core.Population;
 
 
+/**
+ * Records the best image every fixed number of generations and saves it to a given directory
+ * @author roma
+ *
+ */
 public class ImageLoggerModifier implements ConfigModifier{
 
+	/**
+	 * Number of generations to save after
+	 */
 	private int freq;
+	/**
+	 * Directory to save to
+	 */
 	private final String dir;
 	
+	/**
+	 * Make an new ImageLoggerModifier
+	 * @param freq How many generations between images
+	 * @param dir Directory to save to
+	 */
 	public ImageLoggerModifier(int freq, String dir){
 		this.freq = freq;
 		this.dir = dir;
 	}
+	@SuppressWarnings("unchecked")
 	@Override
 	public void ModifyConfig(GPConfig g, Population pop) {
+		//Check if it is the right generation
 		if(pop.getGenerationNumber() % freq == 0){
+			//save the image
 			List<GeneticProgram> progs= pop.getUnderlyingPopulation();
 			((ParallelFitness<MathImageFitness>)(g.fitnessObject)).fitness.getResult(progs.get(progs.size()-1), 100, 100, dir + "/sample_"+pop.getGenerationNumber() + ".pnm",g);
 		}

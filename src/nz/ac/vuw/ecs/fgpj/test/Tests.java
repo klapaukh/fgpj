@@ -211,7 +211,7 @@ public class Tests {
 	public void TestRandom() {
 		GPConfig conf = new GPConfig(1, 3, 8, 0.50, 0.4, 0.1);
 		conf.addFunction(new Line(conf));
-		conf.addTerminal(new Null(conf));
+		conf.addTerminal(new Null());
 		conf.addTerminal(new SetColor(conf));
 
 		int size = 100;

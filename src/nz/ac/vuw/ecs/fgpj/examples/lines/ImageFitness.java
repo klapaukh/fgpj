@@ -114,34 +114,32 @@ public class ImageFitness extends Fitness {
 		// close the file
 		scan.close();
 	}
+	
+	public boolean isDirty(){
+		//Fitness function never changes
+		return false;
+	}
 
-	public void assignFitness(List<GeneticProgram> pop, GPConfig config) {
-		int i;
+	public void assignFitness(GeneticProgram p, GPConfig config) {
 
-		double totalFitness;
-
-		// outerloop - selects a program
-		for (i = 0; i < pop.size(); i++) {
-			// initialise fitness to zero
-			totalFitness = 0;
+		double totalFitness=0;
 
 			// Create a new blank image of the required size
 			ReturnImage im[] = new ReturnImage[] { new ReturnImage(xSize, ySize) };
 
-			pop.get(i).evaluate(im);
+			p.evaluate(im);
 
-			Color p;
+			Color c;
 			for (int y = 0; y < ySize; y++) {
 				for (int x = 0; x < xSize; x++) {
-					p = im[0].getData(x, y);
-					totalFitness += Math.abs((p.getRed()) - pixels[x][y][0]);
-					totalFitness += Math.abs((p.getGreen()) - pixels[x][y][1]);
-					totalFitness += Math.abs((p.getBlue()) - pixels[x][y][2]);
+					c = im[0].getData(x, y);
+					totalFitness += Math.abs((c.getRed()) - pixels[x][y][0]);
+					totalFitness += Math.abs((c.getGreen()) - pixels[x][y][1]);
+					totalFitness += Math.abs((c.getBlue()) - pixels[x][y][2]);
 				}
 			}
 
-			pop.get(i).setFitness(totalFitness);
-		}
+			p.setFitness(totalFitness);
 	}
 
 	public boolean solutionFound(List<GeneticProgram> pop) {

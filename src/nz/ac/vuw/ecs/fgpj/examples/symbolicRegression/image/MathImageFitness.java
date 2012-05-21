@@ -118,19 +118,19 @@ public class MathImageFitness extends Fitness {
 		scan.close();
 	}
 
-	public void assignFitness(List<GeneticProgram> pop, GPConfig config) {
-		int i;
-
+	public boolean isDirty(){
+		//Fitness function never changes
+		return false;
+	}
+	
+	public void assignFitness(GeneticProgram p, GPConfig config) {
 		double totalFitness;
 
 		// outerloop - selects a program
 		ReturnDouble im[] = { new ReturnDouble(), new ReturnDouble(),
 				new ReturnDouble() };
-		for (i = 0; i < pop.size(); i++) {
 			// initialise fitness to zero
 			totalFitness = 0;
-
-			GeneticProgram p = pop.get(i);
 
 			double xStep = (max - min) / xSize;
 			double yStep = (max - min) / ySize;
@@ -157,8 +157,7 @@ public class MathImageFitness extends Fitness {
 				}
 			}
 
-			pop.get(i).setFitness(totalFitness);
-		}
+			p.setFitness(totalFitness);
 	}
 
 	/**

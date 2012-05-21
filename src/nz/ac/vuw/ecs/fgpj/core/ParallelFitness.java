@@ -72,6 +72,11 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 		workers = new Worker[numThreads];
 	}
 
+	public boolean isDirty(){
+		//Just return the state of the internal fitness
+		return fitness.isDirty();
+	}
+	
 	/**
 	 * Initialises the underlying fitness function and starts up all the workers
 	 */
@@ -104,6 +109,10 @@ public class ParallelFitness<T extends Fitness> extends Fitness {
 		}
 		
 		gen++;
+	}
+	
+	public void assignFitness(GeneticProgram p, GPConfig config){
+		this.fitness.assignFitness(p,config);
 	}
 
 	public boolean solutionFound(List<GeneticProgram> pop) {

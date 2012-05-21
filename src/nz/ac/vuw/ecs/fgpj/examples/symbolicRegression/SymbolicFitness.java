@@ -26,10 +26,8 @@ import nz.ac.vuw.ecs.fgpj.core.GPConfig;
 import nz.ac.vuw.ecs.fgpj.core.GeneticProgram;
 
 /**
- * SymbolicFitness attempts to be a general fitness function using Root Mean
- * Squared error for the fitness. It should be able to generalise to most single
- * variable symbolic regression problems. It also is thread safe with regards to
- * being used with the ParalellFitness class.
+ * SymbolicFitness attempts to be a general fitness function using Root Mean Squared error for the fitness. It should be able to generalise to most
+ * single variable symbolic regression problems. It also is thread safe with regards to being used with the ParalellFitness class.
  * 
  * @author roma
  * 
@@ -63,53 +61,56 @@ public class SymbolicFitness extends Fitness {
 	}
 
 	/**
-	 * Example function to learn. This can be changed, or even removed entirely
-	 * if initFitness is fixed to use a different data source
+	 * Example function to learn. This can be changed, or even removed entirely if initFitness is fixed to use a different data source
 	 * 
-	 * @param x The x value to run the function on
+	 * @param x
+	 *            The x value to run the function on
 	 * @return The expected return value given the input x for ground truth
 	 */
 	private double f(double x) {
 		return x * Math.tan(x + 3);
 	}
 
-	@Override
-	public void assignFitness(List<GeneticProgram> pop, GPConfig config) {
-		//Create space for the return values and variables
-		ReturnDouble d[] = new ReturnDouble[] { new ReturnDouble() };
-		
-		//For each program, calculate its fitness
-		for (GeneticProgram p : pop) {
-			double error = 0;
-			
-			//Test each program on every point in the hash map and sum the squared error
-			for (Map.Entry<Double, Double> e : values.entrySet()) {
-				d[0].setX(e.getKey());
-				p.evaluate(d);
-				error += Math.pow(d[0].value() - e.getValue(), 2);
-			}
-			//Make into RMS error and assign to the program
-			error /= values.size();
-			p.setFitness(Math.sqrt(error));
+	public boolean isDirty() {
+		// Fitness function never changes
+		return false;
+	}
 
+	@Override
+	public void assignFitness(GeneticProgram p, GPConfig config) {
+		// Create space for the return values and variables
+		ReturnDouble d[] = new ReturnDouble[] { new ReturnDouble() };
+
+		// For each program, calculate its fitness
+		double error = 0;
+
+		// Test each program on every point in the hash map and sum the squared error
+		for (Map.Entry<Double, Double> e : values.entrySet()) {
+			d[0].setX(e.getKey());
+			p.evaluate(d);
+			error += Math.pow(d[0].value() - e.getValue(), 2);
 		}
+		// Make into RMS error and assign to the program
+		error /= values.size();
+		p.setFitness(Math.sqrt(error));
+
 	}
 
 	@Override
 	public boolean solutionFound(List<GeneticProgram> pop) {
 		for (GeneticProgram p : pop) {
-			//There is a solution if any program has a fitness of 0
+			// There is a solution if any program has a fitness of 0
 			if (Double.compare(p.getFitness(), 0) == 0) {
 				return true;
 			}
 		}
-		//otherwise, they can still get better
+		// otherwise, they can still get better
 		return false;
 	}
 
 	@Override
 	public void finish() {
-		//There is no required clean up for this fitness function.
+		// There is no required clean up for this fitness function.
 	}
 
 }

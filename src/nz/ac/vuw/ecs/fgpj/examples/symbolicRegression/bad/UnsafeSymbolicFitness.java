@@ -56,8 +56,7 @@ public class UnsafeSymbolicFitness extends Fitness {
 	}
 
 	@Override
-	public void assignFitness(List<GeneticProgram> pop, GPConfig config) {
-		for (GeneticProgram p : pop) {
+	public void assignFitness(GeneticProgram p, GPConfig config) {
 			UnsafeReturnDouble d[] = new UnsafeReturnDouble[] { new UnsafeReturnDouble() };
 			double error = 0;
 			for (Map.Entry<Double, Double> e : values.entrySet()) {
@@ -67,8 +66,6 @@ public class UnsafeSymbolicFitness extends Fitness {
 			}
 			error /= values.size();
 			p.setFitness(Math.sqrt(error));
-
-		}
 	}
 
 	@Override
@@ -81,6 +78,11 @@ public class UnsafeSymbolicFitness extends Fitness {
 		return false;
 	}
 
+	public boolean isDirty(){
+		//It never changes
+		return false;
+	}
+	
 	@Override
 	public void finish() {
 

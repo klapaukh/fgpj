@@ -165,9 +165,9 @@ public class SymbMain {
 		long start = System.currentTimeMillis();
 
 		// Run the GP algorithm for 500 generations
-		int numGenerations = p.evolve(50000); // return how many generations
+		int numGenerations = p.evolve(500); // return how many generations
 												// actually happened
-		if (numGenerations < 50000) {
+		if (numGenerations < 500) {
 			// If numGenerations < 500, then it terminated before the 500
 			// generations finished
 			// because it found a solution

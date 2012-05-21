@@ -36,7 +36,32 @@ public abstract class Fitness implements Comparator<GeneticProgram> {
 	 * @param pop
 	 *            List of programs that need fitness testing
 	 */
-	public abstract void assignFitness(List<GeneticProgram> pop, GPConfig config);
+	public void assignFitness(List<GeneticProgram> pop, GPConfig config) {
+		for (GeneticProgram p : pop) {
+			if(!(!isDirty() && p.lastOperation() == GeneticProgram.ELITISM)){
+				//Skip values which are just elitismed and clean
+				assignFitness(p, config);
+			}
+		}
+	}
+
+	/**
+	 * Returns if the fitness function has changed. If it is non dirty it allows calculation of elitism selected program without actually evaluating
+	 * by using the old value
+	 * 
+	 * @return true if the old elitism fitness would still be valid
+	 */
+	public abstract boolean isDirty();
+
+	/**
+	 * Calculate and assign the fitness for a single program
+	 * 
+	 * @param p
+	 *            Program to assign the fitness to
+	 * @param config
+	 *            GPConfig for this run
+	 */
+	public abstract void assignFitness(GeneticProgram p, GPConfig config);
 
 	/**
 	 * return if a good enough solution has been found in a set of programs that have had their fitness tested

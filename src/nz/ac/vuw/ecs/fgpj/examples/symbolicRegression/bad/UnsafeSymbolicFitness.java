@@ -32,13 +32,13 @@ import nz.ac.vuw.ecs.fgpj.core.GeneticProgram;
  * @author roma
  * 
  */
-public class UnsafeSymbolicFitness implements Fitness {
+public class UnsafeSymbolicFitness extends Fitness {
 
 	Map<Double, Double> values;
 
 	@Override
-	public int compare(GeneticProgram arg0, GeneticProgram arg1) {
-		return -1 * Double.compare(arg0.getFitness(), arg1.getFitness());
+	public int compare(double arg0, double arg1) {
+		return -1 * Double.compare(arg0, arg1);
 	}
 
 	@Override

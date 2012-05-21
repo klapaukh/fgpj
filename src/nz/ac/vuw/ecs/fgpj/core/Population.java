@@ -1,21 +1,22 @@
 package nz.ac.vuw.ecs.fgpj.core;
+
 /*
-FGPJ Genetic Programming library
-Copyright (C) 2011  Roman Klapaukh
+ FGPJ Genetic Programming library
+ Copyright (C) 2011  Roman Klapaukh
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -48,6 +49,13 @@ public class Population {
 	private double worstFitness;
 	private double avgFitness;
 
+	private long crossoverBetter;
+	private long crossoverWorse;
+	private long mutationBetter;
+	private long mutationWorse;
+	private long elitismBetter;
+	private long elitismWorse;
+
 	private double avgDepth;
 	private double avgSize;
 
@@ -68,6 +76,13 @@ public class Population {
 	 *            config used
 	 */
 	public Population(int size, GPConfig conf) {
+		this.crossoverBetter = 0;
+		this.crossoverWorse = 0;
+		this.mutationBetter = 0;
+		this.mutationWorse = 0;
+		this.elitismBetter = 0;
+		this.elitismWorse = 0;
+
 		bestFitness = (0.0);
 		worstFitness = (0.0);
 		avgFitness = (0.0);
@@ -98,7 +113,6 @@ public class Population {
 		return l;
 	}
 
-	
 	/**
 	 * Get the underlying population be Careful!
 	 * 
@@ -117,8 +131,8 @@ public class Population {
 	}
 
 	/**
-	 * Run the GP algorithm using the settings in the config for up to numGenerations generations. It will terminate
-	 * early if the fitness function says that an acceptable solution was found.
+	 * Run the GP algorithm using the settings in the config for up to numGenerations generations. It will terminate early if the fitness function
+	 * says that an acceptable solution was found.
 	 * 
 	 * @param numGenerations
 	 *            numGenerations number of generations to run the algorithm for
@@ -149,6 +163,8 @@ public class Population {
 		config.fitnessObject.assignFitness(pop, config);
 		Collections.sort(pop, config.fitnessObject);
 		config.fitnessObject.finish(); // Finished with the fitness assessing now
+		computeStatistics(); // Calculate some statistics for the population
+		writeLog(); // Write some information to the log file
 
 		return numGenerations;
 	}
@@ -160,56 +176,68 @@ public class Population {
 		int indiv1, indiv2;
 
 		// Write the pop to a file if it's time
-		if ((generationNumber % config.loggingFrequency()) == 0) writeToFile();
+		if ((generationNumber % config.loggingFrequency()) == 0)
+			writeToFile();
 
 		int numCrossover = (int) (pop.size() * config.crossoverRate());
 		int numMutation = (int) (pop.size() * config.mutationRate());
 
-		//Do crossover
+		// Do crossover
 		for (int i = 0; i < numCrossover; i += 2) {
 			indiv1 = config.selectionOperator.select(pop, config);
 			indiv2 = config.selectionOperator.select(pop, config);
-			
+
 			GeneticProgram p1 = pop.get(indiv1).copy(config);
 			GeneticProgram p2 = pop.get(indiv2).copy(config);
 
-			config.crossoverOperator.crossover(p1, p2, 100,
-					config);
-			
-			p1.setNumCrossovers(p1.numCrossovers() +1); 
+			config.crossoverOperator.crossover(p1, p2, 100, config);
+
+			p1.setNumCrossovers(p1.numCrossovers() + 1);
 			p1.setNumMutations(p1.numMutations());
 			p1.setNumElitisms(p1.numElitisms());
 			p1.resetLastChange();
 
-			p2.setNumCrossovers(p2.numCrossovers() +1); 
+			p2.setNumCrossovers(p2.numCrossovers() + 1);
 			p2.setNumMutations(p2.numMutations());
 			p2.setNumElitisms(p2.numElitisms());
 			p2.resetLastChange();
-			
+
+			p1.setLastOperator(GeneticProgram.CROSSOVER);
+			p2.setLastOperator(GeneticProgram.CROSSOVER);
+
+			p1.setLastFitness(p1.getFitness());
+			p2.setLastFitness(p2.getFitness());
+
 			nextPop.add(p2);
 			nextPop.add(p1);
 		}
 
-		//Do mutation
+		// Do mutation
 		for (int i = 0; i < numMutation; i++) {
 			indiv1 = config.selectionOperator.select(pop, config);
 			GeneticProgram p = pop.get(indiv1).copy(config);
 			config.mutationOperator.mutate(p, config);
-			
-			p.setNumMutations(p.numMutations() +1);
+
+			p.setNumMutations(p.numMutations() + 1);
 			p.resetLastChange();
-			
+
+			p.setLastOperator(GeneticProgram.MUTATION);
+			p.setLastFitness(p.getFitness());
+
 			nextPop.add(p);
 		}
 
-		//Fill rest with elitism
+		// Fill rest with elitism
 		int i = pop.size() - 1;
 		while (nextPop.size() < pop.size()) {
 			GeneticProgram p = pop.get(i--).copy(config);
-			
-			p.setNumElitisms(p.numElitisms()+1);
+
+			p.setNumElitisms(p.numElitisms() + 1);
 			p.incrementLastChange();
-			
+
+			p.setLastOperator(GeneticProgram.ELITISM);
+			p.setLastFitness(p.getFitness());
+
 			nextPop.add(p);
 		}
 
@@ -229,8 +257,7 @@ public class Population {
 	}
 
 	/**
-	 * This resizes the population. Removal is from the from, weakest first. If Adding the last entry (best fitness) is
-	 * duplicated
+	 * This resizes the population. Removal is from the from, weakest first. If Adding the last entry (best fitness) is duplicated
 	 * 
 	 * @param num
 	 *            new size of population
@@ -277,8 +304,11 @@ public class Population {
 
 	/**
 	 * Set the return type for a particular subtree
-	 * @param root which subtree to set the return type of
-	 * @param type the return type
+	 * 
+	 * @param root
+	 *            which subtree to set the return type of
+	 * @param type
+	 *            the return type
 	 */
 	public void setReturnType(int root, int type) {
 		returnType[root] = type;
@@ -289,7 +319,9 @@ public class Population {
 
 	/**
 	 * Set all roots to this return type
-	 * @param type return type
+	 * 
+	 * @param type
+	 *            return type
 	 */
 	public void setReturnType(int type) {
 		for (int i = 0; i < config.getNumRoots(); i++) {
@@ -304,16 +336,18 @@ public class Population {
 
 	/**
 	 * Get the return type for the root
-	 * @param root root in question
+	 * 
+	 * @param root
+	 *            root in question
 	 * @return return type
 	 */
 	public int getReturnType(int root) {
 		return returnType[root];
 	}
 
-	
 	/**
 	 * Get the program with the best fitness
+	 * 
 	 * @return Program with best fitness in population
 	 */
 	public GeneticProgram getBest() {
@@ -330,6 +364,7 @@ public class Population {
 
 	/**
 	 * Get program with worse fitness in population
+	 * 
 	 * @return program with worst fitness
 	 */
 	public GeneticProgram getWorst() {
@@ -356,11 +391,43 @@ public class Population {
 		worstFitness = getWorst().getFitness();
 
 		for (int i = 0; i < pop.size(); i++) {
-			totalFitness += pop.get(i).getFitness();
+			GeneticProgram p = pop.get(i);
+			totalFitness += p.getFitness();
+
+			int diff = config.fitnessObject.compare(p.getFitness(), p.lastFitness());
+
+			if (diff <= 0) {
+				// current not better than old
+				switch (p.lastOperation()) {
+				case GeneticProgram.CROSSOVER:
+					crossoverWorse++;
+					break;
+				case GeneticProgram.MUTATION:
+					mutationWorse++;
+					break;
+				case GeneticProgram.ELITISM:
+					elitismWorse++;
+					break;
+				}
+			} else {
+				// Current is better
+				switch (p.lastOperation()) {
+				case GeneticProgram.CROSSOVER:
+					crossoverBetter++;
+					break;
+				case GeneticProgram.MUTATION:
+					mutationBetter++;
+					break;
+				case GeneticProgram.ELITISM:
+					elitismBetter++;
+					break;
+				}
+			}
+
 			// find the average depth and size of the program
 			for (int j = 0; j < config.getNumRoots(); j++) {
-				totalDepth += pop.get(i).getDepth(j);
-				totalSize += pop.get(i).getSize(j);
+				totalDepth += p.getDepth(j);
+				totalSize += p.getSize(j);
 			}
 		}
 
@@ -389,7 +456,9 @@ public class Population {
 
 	/**
 	 * Read the population from a file
-	 * @param filename file to read from
+	 * 
+	 * @param filename
+	 *            file to read from
 	 */
 	public void readFromFile(String filename) {
 		try {
@@ -415,7 +484,8 @@ public class Population {
 
 				// If we read a hash at the start of the line, then
 				// the header info is finished
-				if (line.startsWith("#")) break;
+				if (line.startsWith("#"))
+					break;
 
 				if (line.startsWith("numIndividuals")) {
 					iValue = Integer.parseInt(line.substring("numIndividuals".length() + 1));
@@ -454,7 +524,8 @@ public class Population {
 			config.setRates(mutationRate, crossoverRate, elitismRate);
 
 			while (true) {
-				if (individual > this.pop.size()) break;
+				if (individual > this.pop.size())
+					break;
 
 				if (!scan.hasNext()) {
 					break;
@@ -492,7 +563,7 @@ public class Population {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public String toString() {
 		StringBuffer s = new StringBuffer();
 
@@ -558,12 +629,56 @@ public class Population {
 
 	/**
 	 * Formatted date string of time
+	 * 
 	 * @return Formatted current time string
 	 */
 	public String now() {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
 		return sdf.format(cal.getTime());
+	}
+	
+	/**
+	 * Return the number of times that crossover improved the fitness of a program
+	 * @return number of times that crossover improved the fitness of a program
+	 */
+	public long crossoverBetter(){
+		return crossoverBetter;
+	}
+	/**
+	 * Return the number of times that crossover did not improve the fitness of a program
+	 * @return number of times that crossover did not improve the fitness of a program
+	 */
+	public long crossoverNotBetter(){
+		return crossoverWorse;
+	}
+	/**
+	 * Return the number of times that mutation improved the fitness of a program
+	 * @return number of times that mutation improved the fitness of a program
+	 */
+	public long mutationBetter(){
+		return mutationBetter;
+	}
+	/**
+	 * Return the number of times that mutation did not improve the fitness of a program
+	 * @return number of times that mutation did not improve the fitness of a program
+	 */
+	public long mutationNotBetter(){
+		return mutationWorse;
+	}
+	/**
+	 * Return the number of times that elitism improved the fitness of a program
+	 * @return number of times that elitism improved the fitness of a program
+	 */
+	public long elitismBetter(){
+		return elitismBetter;
+	}
+	/**
+	 * Return the number of times that elitism did not improve the fitness of a program
+	 * @return number of times that elitism did not improve the fitness of a program
+	 */
+	public long elitismNotBetter(){
+		return elitismWorse;
 	}
 
 }

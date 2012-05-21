@@ -111,7 +111,7 @@ public class SymbMain {
 		conf.addFunction(new Sin());
 		// conf.addFunction(new Min());
 		// conf.addFunction(new Max());
-		conf.addFunction(new Tan());
+//		conf.addFunction(new Tan());
 
 		// Create and appropriate fitness function, based the parallel value at
 		// the start of the method
@@ -165,9 +165,9 @@ public class SymbMain {
 		long start = System.currentTimeMillis();
 
 		// Run the GP algorithm for 500 generations
-		int numGenerations = p.evolve(500); // return how many generations
+		int numGenerations = p.evolve(50000); // return how many generations
 												// actually happened
-		if (numGenerations < 500) {
+		if (numGenerations < 50000) {
 			// If numGenerations < 500, then it terminated before the 500
 			// generations finished
 			// because it found a solution
@@ -181,7 +181,7 @@ public class SymbMain {
 
 		System.out.println("Best program fitness: " + s.getFitness());
 		System.out
-				.println("Number of generations this program has been selected for by elitism: "
+				.println("Number of generations this program has been selected for by elitism immediately prior: "
 						+ s.lastChange());
 		System.out
 				.println("Crossover usage (ignoring data from other parents): "
@@ -194,6 +194,20 @@ public class SymbMain {
 		System.out.println("Best program:");
 		System.out.println(s);
 
+		System.out.println();
+		System.out.println("Crossover Improvements "+ p.crossoverBetter());
+		System.out.println("Crossover Not Improvements "+ p.crossoverNotBetter());
+		System.out.println("Mutation Improvements "+ p.mutationBetter());
+		System.out.println("Mutation Not Improvements "+ p.mutationNotBetter());
+		System.out.println("Elitism Improvements "+ p.elitismBetter());
+		System.out.println("Elitism Not Improvements "+ p.elitismNotBetter());
+		
+		System.out.println("% crossover makes it better: " + (100.0*p.crossoverBetter()/(float)(p.crossoverBetter() + p.crossoverNotBetter())) + "%");
+		System.out.println("% mutation makes it better: " + (100.0*p.mutationBetter()/(float)(p.mutationBetter() + p.mutationNotBetter())) + "%");
+		System.out.println("% elitism makes it better: " + (100.0*p.elitismBetter()/(float)(p.elitismBetter() + p.elitismNotBetter())) + "%");
+		
+		System.out.println("% time improvement happens: " + 100.0*(p.elitismBetter()+p.mutationBetter()+p.crossoverBetter())/(float)(p.elitismBetter() + p.elitismNotBetter()+p.mutationBetter() + p.mutationNotBetter()+p.crossoverBetter() + p.crossoverNotBetter()) + "%");
+		
 		System.out.println("Run time (excluding setup and tear down): "
 				+ (end - start) + "ms");
 	}

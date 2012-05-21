@@ -34,6 +34,11 @@ public class GeneticProgram {
 	private double fitness;
 
 	/**
+	 * Fitness of the program before a genetic operator was applied
+	 */
+	private double lastFitness;
+
+	/**
 	 * Depth of this program
 	 */
 	private final int[] depth;
@@ -62,7 +67,7 @@ public class GeneticProgram {
 	private long numElitisms;
 
 	/**
-	 * Stores the number of crossovers that were used to get this program along one path 
+	 * Stores the number of crossovers that were used to get this program along one path
 	 */
 	private long numCrossovers;
 
@@ -75,6 +80,26 @@ public class GeneticProgram {
 	 * Number of generations since this was not selected by elitism along one path
 	 */
 	private long lastChange;
+
+	/**
+	 * A place holder to show what the last GP operator was to make this program
+	 */
+	private int lastOperation;
+
+	/**
+	 * Constant to say that lastOperatoin was crossover
+	 */
+	public static final int CROSSOVER = 1;
+
+	/**
+	 * Constant to say that lastOperatoin was mutation
+	 */
+	public static final int MUTATION = 2;
+
+	/**
+	 * Constant to say that lastOperatoin was elitism
+	 */
+	public static final int ELITISM = 3;
 
 	/**
 	 * Create a new genetic program based on conf
@@ -93,6 +118,7 @@ public class GeneticProgram {
 	 *            number of root nodes
 	 */
 	public GeneticProgram(int numRoots) {
+		this.lastOperation = 0;
 		this.lastChange = 0;
 		this.numCrossovers = 0;
 		this.numMutations = 0;
@@ -380,19 +406,57 @@ public class GeneticProgram {
 	public void setNumElitisms(long num) {
 		this.numElitisms = num;
 	}
-	
+
 	/**
 	 * Says that the program has been modified to be created. Not selected by elitism
 	 */
-	public void resetLastChange(){
+	public void resetLastChange() {
 		this.lastChange = 0;
 	}
-	
+
 	/**
 	 * Increments the last change counter to show that this program was selected by elitism
 	 */
-	public void incrementLastChange(){
+	public void incrementLastChange() {
 		this.lastChange++;
+	}
+
+	/**
+	 * Set what the last operation to get this program was. One of the constants CROSSOVER, MUTATION, ELITISM
+	 * 
+	 * @param lastOperator
+	 *            the last operation used to generate this program
+	 */
+	public void setLastOperator(int lastOperator) {
+		this.lastOperation = lastOperator;
+	}
+
+	/**
+	 * Get what the last operation on this program was
+	 * 
+	 * @return the last operation on this program
+	 */
+	public int lastOperation() {
+		return this.lastOperation;
+	}
+
+	/**
+	 * Returns the fitness before a genetic operator was applied
+	 * 
+	 * @return last fitness
+	 */
+	public double lastFitness() {
+		return lastFitness;
+	}
+
+	/**
+	 * Set what the fitness of the parent was
+	 * 
+	 * @param fit
+	 *            parents fitness
+	 */
+	public void setLastFitness(double fit) {
+		this.lastFitness = fit;
 	}
 
 	/**

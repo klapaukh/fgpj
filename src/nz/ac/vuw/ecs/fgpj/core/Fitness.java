@@ -1,21 +1,22 @@
 package nz.ac.vuw.ecs.fgpj.core;
+
 /*
-FGPJ Genetic Programming library
-Copyright (C) 2011  Roman Klapaukh
+ FGPJ Genetic Programming library
+ Copyright (C) 2011  Roman Klapaukh
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,9 +24,9 @@ import java.util.List;
  * This is the interface for all fitness functions
  * 
  * @author Roman Klapaukh
- *
+ * 
  */
-public interface Fitness extends Comparator<GeneticProgram> {
+public abstract class Fitness implements Comparator<GeneticProgram> {
 
 	public abstract void initFitness();
 
@@ -45,8 +46,22 @@ public interface Fitness extends Comparator<GeneticProgram> {
 	 * @return true is a good enough solution is in the list
 	 */
 	public abstract boolean solutionFound(List<GeneticProgram> pop);
-	
-	
+
+	public int compare(GeneticProgram p1, GeneticProgram p2) {
+		return compare(p1.getFitness(), p2.getFitness());
+	}
+
+	/**
+	 * Compare two fitnesses
+	 * 
+	 * @param fitness1
+	 *            Fitness 1
+	 * @param fitness2
+	 *            Fitness 2
+	 * @return a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
+	 */
+	public abstract int compare(double fitness1, double fitness2);
+
 	/**
 	 * GP has now finished, any resources can be freed
 	 */

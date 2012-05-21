@@ -34,17 +34,17 @@ import nz.ac.vuw.ecs.fgpj.core.GeneticProgram;
  * @author roma
  * 
  */
-public class SymbolicFitness implements Fitness {
+public class SymbolicFitness extends Fitness {
 	// This hashmap is a listing of all the test cases. It maps the input value
 	// to the expected output. E.g. if I wanted to train a classifier on x^2 I
 	// would put in examples like 1 -> 1, 2 -> 4, 3 -> 9
 	private Map<Double, Double> values;
 
 	@Override
-	public int compare(GeneticProgram arg0, GeneticProgram arg1) {
+	public int compare(double arg0, double arg1) {
 		// Must multiply by -1 as smaller is better rather than larger is better
 		// as in normal doubles
-		return -1 * Double.compare(arg0.getFitness(), arg1.getFitness());
+		return -1 * Double.compare(arg0, arg1);
 	}
 
 	@Override

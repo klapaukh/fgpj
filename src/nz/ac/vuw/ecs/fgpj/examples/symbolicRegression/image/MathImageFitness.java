@@ -35,7 +35,7 @@ import nz.ac.vuw.ecs.fgpj.examples.symbolicRegression.ReturnDouble;
  * @author roma
  * 
  */
-public class MathImageFitness implements Fitness {
+public class MathImageFitness extends Fitness {
 	/**
 	 * width of image
 	 */
@@ -225,9 +225,9 @@ public class MathImageFitness implements Fitness {
 		return false;
 	}
 
-	public int compare(GeneticProgram gp1, GeneticProgram gp2) {
+	public int compare(double gp1, double gp2) {
 		//Lower fitness is better, so inverted order
-		return -Double.compare(gp1.getFitness(), gp2.getFitness());
+		return -Double.compare(gp1, gp2);
 	}
 
 	/**

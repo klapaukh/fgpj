@@ -30,7 +30,7 @@ import java.util.concurrent.CyclicBarrier;
  * 
  * @param <T>
  */
-public class ParallelFitness<T extends Fitness> implements Fitness {
+public class ParallelFitness<T extends Fitness> extends Fitness {
 	public final T fitness;
 	private int gen;
 	private final int numThreads;
@@ -111,7 +111,7 @@ public class ParallelFitness<T extends Fitness> implements Fitness {
 	}
 
 	@Override
-	public int compare(GeneticProgram p0, GeneticProgram p1) {
+	public int compare(double p0, double p1) {
 		return fitness.compare(p0, p1);
 	}
 

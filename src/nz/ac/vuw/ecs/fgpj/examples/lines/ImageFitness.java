@@ -46,7 +46,7 @@ import nz.ac.vuw.ecs.fgpj.core.GeneticProgram;
  * @author roma
  * 
  */
-public class ImageFitness implements Fitness {
+public class ImageFitness extends Fitness {
 
 	/**
 	 * This represents the width of the image.
@@ -149,9 +149,9 @@ public class ImageFitness implements Fitness {
 		return false;
 	}
 
-	public int compare(GeneticProgram gp1, GeneticProgram gp2) {
+	public int compare(double gp1, double gp2) {
 		// Have to reverse the comparison, because lower fitness is better
-		return -Double.compare(gp1.getFitness(), gp2.getFitness());
+		return -Double.compare(gp1, gp2);
 	}
 
 	/**

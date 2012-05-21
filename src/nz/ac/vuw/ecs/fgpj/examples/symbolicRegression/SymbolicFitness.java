@@ -26,8 +26,10 @@ import nz.ac.vuw.ecs.fgpj.core.GPConfig;
 import nz.ac.vuw.ecs.fgpj.core.GeneticProgram;
 
 /**
- * SymbolicFitness attempts to be a general fitness function using Root Mean Squared error for the fitness. It should be able to generalise to most
- * single variable symbolic regression problems. It also is thread safe with regards to being used with the ParalellFitness class.
+ * SymbolicFitness attempts to be a general fitness function using Root Mean
+ * Squared error for the fitness. It should be able to generalise to most single
+ * variable symbolic regression problems. It also is thread safe with regards to
+ * being used with the ParalellFitness class.
  * 
  * @author roma
  * 
@@ -61,13 +63,16 @@ public class SymbolicFitness extends Fitness {
 	}
 
 	/**
-	 * Example function to learn. This can be changed, or even removed entirely if initFitness is fixed to use a different data source
+	 * Example function to learn. This can be changed, or even removed entirely
+	 * if initFitness is fixed to use a different data source. It is static to
+	 * allow a test set to be built up in the main class. Realisitically you
+	 * would be getting data from a file, for both the train and test sets
 	 * 
 	 * @param x
 	 *            The x value to run the function on
 	 * @return The expected return value given the input x for ground truth
 	 */
-	private double f(double x) {
+	private static double f(double x) {
 		return x * Math.tan(x + 3);
 	}
 
@@ -84,7 +89,8 @@ public class SymbolicFitness extends Fitness {
 		// For each program, calculate its fitness
 		double error = 0;
 
-		// Test each program on every point in the hash map and sum the squared error
+		// Test each program on every point in the hash map and sum the squared
+		// error
 		for (Map.Entry<Double, Double> e : values.entrySet()) {
 			d[0].setX(e.getKey());
 			p.evaluate(d);

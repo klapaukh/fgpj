@@ -213,7 +213,7 @@ public class SymbMain {
 	}
 
 	/**
-	 * Validate the results on a test set. This only happends once at the end of
+	 * Validate the results on a test set. This only happens once at the end of
 	 * the program
 	 * 
 	 * @param p
@@ -221,7 +221,10 @@ public class SymbMain {
 	 * @return The fitness of the resulting program on the test set
 	 */
 	public static double testSet(GeneticProgram p) {
-		//TODO: put in some values for it to test
+		for(double i = 500; i < 1000; i++){
+			ReturnDouble d = new ReturnDouble();
+			d.setX(i);
+		}
 		return 0;
 	}
 }

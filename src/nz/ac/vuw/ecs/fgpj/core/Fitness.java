@@ -38,16 +38,18 @@ public abstract class Fitness implements Comparator<GeneticProgram> {
 	 */
 	public void assignFitness(List<GeneticProgram> pop, GPConfig config) {
 		for (GeneticProgram p : pop) {
-			if(!(!isDirty() && p.lastOperation() == GeneticProgram.ELITISM)){
-				//Skip values which are just elitismed and clean
+			if (isDirty() || p.lastOperation() != GeneticProgram.ELITISM) {
+				// Skip values which are just elitismed and where the fitness
+				// won't have changed
 				assignFitness(p, config);
 			}
 		}
 	}
 
 	/**
-	 * Returns if the fitness function has changed. If it is non dirty it allows calculation of elitism selected program without actually evaluating
-	 * by using the old value
+	 * Returns if the fitness function has changed. If it is non dirty it allows
+	 * calculation of elitism selected program without actually evaluating by
+	 * using the old value
 	 * 
 	 * @return true if the old elitism fitness would still be valid
 	 */
@@ -64,7 +66,8 @@ public abstract class Fitness implements Comparator<GeneticProgram> {
 	public abstract void assignFitness(GeneticProgram p, GPConfig config);
 
 	/**
-	 * return if a good enough solution has been found in a set of programs that have had their fitness tested
+	 * return if a good enough solution has been found in a set of programs that
+	 * have had their fitness tested
 	 * 
 	 * @param pop
 	 *            population of evaluated programs
@@ -83,7 +86,8 @@ public abstract class Fitness implements Comparator<GeneticProgram> {
 	 *            Fitness 1
 	 * @param fitness2
 	 *            Fitness 2
-	 * @return a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
+	 * @return a negative integer, zero, or a positive integer as the first
+	 *         argument is less than, equal to, or greater than the second.
 	 */
 	public abstract int compare(double fitness1, double fitness2);
 

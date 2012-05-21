@@ -111,7 +111,7 @@ public class SymbMain {
 		conf.addFunction(new Sin());
 		// conf.addFunction(new Min());
 		// conf.addFunction(new Max());
-//		conf.addFunction(new Tan());
+		// conf.addFunction(new Tan());
 
 		// Create and appropriate fitness function, based the parallel value at
 		// the start of the method
@@ -166,7 +166,7 @@ public class SymbMain {
 
 		// Run the GP algorithm for 500 generations
 		int numGenerations = p.evolve(500); // return how many generations
-												// actually happened
+											// actually happened
 		if (numGenerations < 500) {
 			// If numGenerations < 500, then it terminated before the 500
 			// generations finished
@@ -179,7 +179,11 @@ public class SymbMain {
 		// Get the best program
 		GeneticProgram s = p.getBest();
 
+		// Find the fitness of the program on the test set
+		double testSetFitness = testSet(s);
+
 		System.out.println("Best program fitness: " + s.getFitness());
+		System.out.println("Test set fitness: " + testSetFitness);
 		System.out
 				.println("Number of generations this program has been selected for by elitism immediately prior: "
 						+ s.lastChange());
@@ -195,19 +199,37 @@ public class SymbMain {
 		System.out.println(s);
 
 		System.out.println();
-		System.out.println("Crossover Improvements "+ p.crossoverBetter());
-		System.out.println("Crossover Not Improvements "+ p.crossoverNotBetter());
-		System.out.println("Mutation Improvements "+ p.mutationBetter());
-		System.out.println("Mutation Not Improvements "+ p.mutationNotBetter());
-		System.out.println("Elitism Improvements "+ p.elitismBetter());
-		System.out.println("Elitism Not Improvements "+ p.elitismNotBetter());
-		
-		System.out.println("% crossover makes it better: " + (100.0*p.crossoverBetter()/(float)(p.crossoverBetter() + p.crossoverNotBetter())) + "%");
-		System.out.println("% mutation makes it better: " + (100.0*p.mutationBetter()/(float)(p.mutationBetter() + p.mutationNotBetter())) + "%");
-		System.out.println("% elitism makes it better: " + (100.0*p.elitismBetter()/(float)(p.elitismBetter() + p.elitismNotBetter())) + "%");
-		
-		System.out.println("% time improvement happens: " + 100.0*(p.elitismBetter()+p.mutationBetter()+p.crossoverBetter())/(float)(p.elitismBetter() + p.elitismNotBetter()+p.mutationBetter() + p.mutationNotBetter()+p.crossoverBetter() + p.crossoverNotBetter()) + "%");
-		
+		System.out.println("Crossover Improvements " + p.crossoverBetter());
+		System.out.println("Crossover Not Improvements "
+				+ p.crossoverNotBetter());
+		System.out.println("Mutation Improvements " + p.mutationBetter());
+		System.out
+				.println("Mutation Not Improvements " + p.mutationNotBetter());
+		System.out.println("Elitism Improvements " + p.elitismBetter());
+		System.out.println("Elitism Not Improvements " + p.elitismNotBetter());
+
+		System.out
+				.println("% crossover makes it better: "
+						+ (100.0 * p.crossoverBetter() / (float) (p
+								.crossoverBetter() + p.crossoverNotBetter()))
+						+ "%");
+		System.out.println("% mutation makes it better: "
+				+ (100.0 * p.mutationBetter() / (float) (p.mutationBetter() + p
+						.mutationNotBetter())) + "%");
+		System.out.println("% elitism makes it better: "
+				+ (100.0 * p.elitismBetter() / (float) (p.elitismBetter() + p
+						.elitismNotBetter())) + "%");
+
+		System.out
+				.println("% time improvement happens: "
+						+ 100.0
+						* (p.elitismBetter() + p.mutationBetter() + p
+								.crossoverBetter())
+						/ (float) (p.elitismBetter() + p.elitismNotBetter()
+								+ p.mutationBetter() + p.mutationNotBetter()
+								+ p.crossoverBetter() + p.crossoverNotBetter())
+						+ "%");
+
 		System.out.println("Run time (excluding setup and tear down): "
 				+ (end - start) + "ms");
 	}
@@ -221,10 +243,25 @@ public class SymbMain {
 	 * @return The fitness of the resulting program on the test set
 	 */
 	public static double testSet(GeneticProgram p) {
-		for(double i = 500; i < 1000; i++){
-			ReturnDouble d = new ReturnDouble();
-			d.setX(i);
+		// We are just going to use the static ground truth function
+		// in the SymbolicFitness class. Normally you would get the data from a
+		// file of some sort
+
+		// Create space for the return values and variables
+		ReturnDouble d[] = new ReturnDouble[] { new ReturnDouble() };
+
+		// For each program, calculate its fitness
+		double error = 0;
+		int numTests = 0;
+		// For each data point in the test set
+		for (double i = 500; i < 1000; i++) {
+			d[0].setX(i);
+			p.evaluate(d);
+			error += Math.pow(d[0].value() - SymbolicFitness.f(i), 2);
+			numTests++;
+			// Make into RMS error and assign to the program
 		}
-		return 0;
+		error /= numTests;
+		return Math.sqrt(error);
 	}
 }

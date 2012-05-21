@@ -72,7 +72,7 @@ public class SymbolicFitness extends Fitness {
 	 *            The x value to run the function on
 	 * @return The expected return value given the input x for ground truth
 	 */
-	private static double f(double x) {
+	public static double f(double x) {
 		return x * Math.tan(x + 3);
 	}
 
@@ -86,7 +86,7 @@ public class SymbolicFitness extends Fitness {
 		// Create space for the return values and variables
 		ReturnDouble d[] = new ReturnDouble[] { new ReturnDouble() };
 
-		// For each program, calculate its fitness
+		// total error starts at zero
 		double error = 0;
 
 		// Test each program on every point in the hash map and sum the squared

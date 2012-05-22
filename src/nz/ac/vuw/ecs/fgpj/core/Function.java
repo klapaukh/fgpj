@@ -270,7 +270,7 @@ public abstract class Function extends Node {
 
 	@Override
 	public final Function copy(GPConfig conf) {
-		Function a = (Function) NodeFactory.newNode(getKind(), conf);
+		Function a = NodeFactory.newNode(this, conf);
 		a.init(this);
 		for (int i = 0; i < getNumArgs(); i++) {
 			a.setArgN(i, getArgN(i).copy(conf));
@@ -281,11 +281,11 @@ public abstract class Function extends Node {
 
 	@SuppressWarnings("unchecked")
 	public Function generate(String s, GPConfig conf) {
-		return (Function) NodeFactory.newNode(this.getKind(), conf);
+		return NodeFactory.newNode(this, conf);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Function generate(GPConfig conf) {
-		return (Function) NodeFactory.newNode(this.getKind(), conf);
+		return NodeFactory.newNode(this, conf);
 	}
 }

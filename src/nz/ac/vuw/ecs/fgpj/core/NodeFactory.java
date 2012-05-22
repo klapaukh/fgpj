@@ -86,7 +86,7 @@ public class NodeFactory {
 	 *            The config to create the node with
 	 * @return A new node
 	 */
-	public static Node newNode(int kind, GPConfig conf) {
+	private static Node newNode(int kind, GPConfig conf) {
 		Queue<Node> l = n.nodes[kind];
 		if (l.size() == 1) {
 			n.miss++;

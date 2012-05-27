@@ -198,38 +198,6 @@ public class SymbMain {
 		System.out.println("Best program:");
 		System.out.println(s);
 
-		System.out.println();
-		System.out.println("Crossover Improvements " + p.crossoverBetter());
-		System.out.println("Crossover Not Improvements "
-				+ p.crossoverNotBetter());
-		System.out.println("Mutation Improvements " + p.mutationBetter());
-		System.out
-				.println("Mutation Not Improvements " + p.mutationNotBetter());
-		System.out.println("Elitism Improvements " + p.elitismBetter());
-		System.out.println("Elitism Not Improvements " + p.elitismNotBetter());
-
-		System.out
-				.println("% crossover makes it better: "
-						+ (100.0 * p.crossoverBetter() / (float) (p
-								.crossoverBetter() + p.crossoverNotBetter()))
-						+ "%");
-		System.out.println("% mutation makes it better: "
-				+ (100.0 * p.mutationBetter() / (float) (p.mutationBetter() + p
-						.mutationNotBetter())) + "%");
-		System.out.println("% elitism makes it better: "
-				+ (100.0 * p.elitismBetter() / (float) (p.elitismBetter() + p
-						.elitismNotBetter())) + "%");
-
-		System.out
-				.println("% time improvement happens: "
-						+ 100.0
-						* (p.elitismBetter() + p.mutationBetter() + p
-								.crossoverBetter())
-						/ (float) (p.elitismBetter() + p.elitismNotBetter()
-								+ p.mutationBetter() + p.mutationNotBetter()
-								+ p.crossoverBetter() + p.crossoverNotBetter())
-						+ "%");
-
 		System.out.println("Run time (excluding setup and tear down): "
 				+ (end - start) + "ms");
 	}

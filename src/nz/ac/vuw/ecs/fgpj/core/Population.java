@@ -49,12 +49,12 @@ public class Population {
 	private double worstFitness;
 	private double avgFitness;
 
-	private long crossoverBetter;
-	private long crossoverWorse;
-	private long mutationBetter;
-	private long mutationWorse;
-	private long elitismBetter;
-	private long elitismWorse;
+	private int[] crossoverBetter;
+	private int[] crossoverWorse;
+	private int[] mutationBetter;
+	private int[] mutationWorse;
+	private int[] elitismBetter;
+	private int[] elitismWorse;
 
 	private double avgDepth;
 	private double avgSize;
@@ -76,13 +76,6 @@ public class Population {
 	 *            config used
 	 */
 	public Population(int size, GPConfig conf) {
-		this.crossoverBetter = 0;
-		this.crossoverWorse = 0;
-		this.mutationBetter = 0;
-		this.mutationWorse = 0;
-		this.elitismBetter = 0;
-		this.elitismWorse = 0;
-
 		bestFitness = (0.0);
 		worstFitness = (0.0);
 		avgFitness = (0.0);
@@ -139,13 +132,20 @@ public class Population {
 	 * @return if an acceptable solution was found
 	 */
 	public int evolve(int numGenerations) {
+		this.crossoverBetter = new int[numGenerations+1];
+		this.crossoverWorse = new int[numGenerations+1];
+		this.mutationBetter = new int[numGenerations+1];
+		this.mutationWorse = new int[numGenerations+1];
+		this.elitismBetter = new int[numGenerations+1];
+		this.elitismWorse = new int[numGenerations+1];
+		
 		evaluations = 0;
 		config.fitnessObject.initFitness();
 		for (int i = 0; i < numGenerations; i++) {
 			config.fitnessObject.assignFitness(pop, config); // Evaluate the programs and assign their fitness values
 			evaluations += pop.size(); // Update the number of evaluations performed
 			Collections.sort(pop, config.fitnessObject); // Sort the population based on fitness
-			computeStatistics(); // Calculate some statistics for the population
+			computeStatistics(i); // Calculate some statistics for the population
 			writeLog(); // Write some information to the log file
 
 			// If the solution has been found quit and return true to
@@ -163,7 +163,7 @@ public class Population {
 		config.fitnessObject.assignFitness(pop, config);
 		Collections.sort(pop, config.fitnessObject);
 		config.fitnessObject.finish(); // Finished with the fitness assessing now
-		computeStatistics(); // Calculate some statistics for the population
+		computeStatistics(numGenerations); // Calculate some statistics for the population
 		writeLog(); // Write some information to the log file
 
 		return numGenerations;
@@ -382,7 +382,7 @@ public class Population {
 	/**
 	 * Computes statistics about the current population
 	 */
-	public void computeStatistics() {
+	private void computeStatistics(int gen) {
 		double totalFitness = 0.0;
 		double totalDepth = 0.0;
 		double totalSize = 0.0;
@@ -400,26 +400,26 @@ public class Population {
 				// current not better than old
 				switch (p.lastOperation()) {
 				case GeneticProgram.CROSSOVER:
-					crossoverWorse++;
+					crossoverWorse[gen]++;
 					break;
 				case GeneticProgram.MUTATION:
-					mutationWorse++;
+					mutationWorse[gen]++;
 					break;
 				case GeneticProgram.ELITISM:
-					elitismWorse++;
+					elitismWorse[gen]++;
 					break;
 				}
 			} else {
 				// Current is better
 				switch (p.lastOperation()) {
 				case GeneticProgram.CROSSOVER:
-					crossoverBetter++;
+					crossoverBetter[gen]++;
 					break;
 				case GeneticProgram.MUTATION:
-					mutationBetter++;
+					mutationBetter[gen]++;
 					break;
 				case GeneticProgram.ELITISM:
-					elitismBetter++;
+					elitismBetter[gen]++;
 					break;
 				}
 			}
@@ -639,45 +639,45 @@ public class Population {
 	}
 	
 	/**
-	 * Return the number of times that crossover improved the fitness of a program
-	 * @return number of times that crossover improved the fitness of a program
+	 * Return the number of times for each generation that crossover improved the fitness of a program
+	 * @return number of times for each generation that crossover improved the fitness of a program
 	 */
-	public long crossoverBetter(){
+	public int[] crossoverBetter(){
 		return crossoverBetter;
 	}
 	/**
-	 * Return the number of times that crossover did not improve the fitness of a program
-	 * @return number of times that crossover did not improve the fitness of a program
+	 * Return the number of times for each generation that crossover did not improve the fitness of a program
+	 * @return number of times for each generation that crossover did not improve the fitness of a program
 	 */
-	public long crossoverNotBetter(){
+	public int[] crossoverNotBetter(){
 		return crossoverWorse;
 	}
 	/**
-	 * Return the number of times that mutation improved the fitness of a program
-	 * @return number of times that mutation improved the fitness of a program
+	 * Return the number of times for each generation that mutation improved the fitness of a program
+	 * @return number of times for each generation that mutation improved the fitness of a program
 	 */
-	public long mutationBetter(){
+	public int[] mutationBetter(){
 		return mutationBetter;
 	}
 	/**
-	 * Return the number of times that mutation did not improve the fitness of a program
-	 * @return number of times that mutation did not improve the fitness of a program
+	 * Return the number of times for each generation that mutation did not improve the fitness of a program
+	 * @return number of times for each generation that mutation did not improve the fitness of a program
 	 */
-	public long mutationNotBetter(){
+	public int[] mutationNotBetter(){
 		return mutationWorse;
 	}
 	/**
-	 * Return the number of times that elitism improved the fitness of a program
-	 * @return number of times that elitism improved the fitness of a program
+	 * Return the number of times for each generation that elitism improved the fitness of a program
+	 * @return number of times for each generation that elitism improved the fitness of a program
 	 */
-	public long elitismBetter(){
+	public int[] elitismBetter(){
 		return elitismBetter;
 	}
 	/**
-	 * Return the number of times that elitism did not improve the fitness of a program
-	 * @return number of times that elitism did not improve the fitness of a program
+	 * Return the number of times for each generation that elitism did not improve the fitness of a program
+	 * @return number of times for each generation that elitism did not improve the fitness of a program
 	 */
-	public long elitismNotBetter(){
+	public int[] elitismNotBetter(){
 		return elitismWorse;
 	}
 

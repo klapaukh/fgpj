@@ -87,8 +87,8 @@ public class Main {
 			pop.generateInitialPopulation();
 		}
 
-		//Run for 20,000 generations
-		pop.evolve(20000);
+		//Run for 2,000 generations
+		pop.evolve(2000);
 
 		System.out.println("Best program");
 		System.out.println("Fitness: " + pop.getBest().getFitness());

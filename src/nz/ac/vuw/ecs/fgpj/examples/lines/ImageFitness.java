@@ -142,6 +142,15 @@ public class ImageFitness extends Fitness {
 			}
 		}
 
+//		Color c;
+//		for (int y = 0; y < ySize; y++) {
+//			for (int x = 0; x < xSize; x++) {
+//				c = im[0].getData(x, y);
+//				totalFitness += Math.abs((c.getRed()) - pixels[x][y][0]);
+//				totalFitness += Math.abs((c.getGreen()) - pixels[x][y][1]);
+//				totalFitness += Math.abs((c.getBlue()) - pixels[x][y][2]);
+//			}
+//		}
 		p.setFitness(totalFitness);
 	}
 

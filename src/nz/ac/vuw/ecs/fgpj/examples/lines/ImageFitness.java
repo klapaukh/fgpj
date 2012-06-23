@@ -105,8 +105,9 @@ public class ImageFitness extends Fitness {
 		for (y = 0; y < ySize; y++) {
 			for (x = 0; x < xSize; x++) {
 				for (c = 0; c < 3; c++) {
-					pixels[x][y][c] = (int) (depth!= 255 ? 255*((float)scan.nextInt()/depth):scan.nextInt());
-					
+					pixels[x][y][c] = (int) (depth != 255 ? 255 * ((float) scan
+							.nextInt() / depth) : scan.nextInt());
+
 				}
 			}
 		}
@@ -114,32 +115,34 @@ public class ImageFitness extends Fitness {
 		// close the file
 		scan.close();
 	}
-	
-	public boolean isDirty(){
-		//Fitness function never changes
+
+	public boolean isDirty() {
+		// Fitness function never changes
 		return false;
 	}
 
 	public void assignFitness(GeneticProgram p, GPConfig config) {
 
-		double totalFitness=0;
+		double totalFitness = 0;
 
-			// Create a new blank image of the required size
-			ReturnImage im[] = new ReturnImage[] { new ReturnImage(xSize, ySize) };
+		// Create a new blank image of the required size
+		ReturnImage im[] = new ReturnImage[] { new ReturnImage(xSize, ySize) };
 
-			p.evaluate(im);
+		p.evaluate(im);
 
-			Color c;
-			for (int y = 0; y < ySize; y++) {
-				for (int x = 0; x < xSize; x++) {
-					c = im[0].getData(x, y);
-					totalFitness += Math.abs((c.getRed()) - pixels[x][y][0]);
-					totalFitness += Math.abs((c.getGreen()) - pixels[x][y][1]);
-					totalFitness += Math.abs((c.getBlue()) - pixels[x][y][2]);
-				}
+		byte[] pd = im[0].getData();
+		for (int y = 0; y < ySize; y++) {
+			for (int x = 0; x < xSize; x++) {
+				totalFitness += Math.abs((0xFF & pd[(y * xSize + x) * 3 + 2])
+						- pixels[x][y][0]);
+				totalFitness += Math.abs((0xFF & pd[(y * xSize + x) * 3 + 1])
+						- pixels[x][y][1]);
+				totalFitness += Math.abs((0xFF & pd[(y * xSize + x) * 3 + 0])
+						- pixels[x][y][2]);
 			}
+		}
 
-			p.setFitness(totalFitness);
+		p.setFitness(totalFitness);
 	}
 
 	public boolean solutionFound(List<GeneticProgram> pop) {
@@ -189,7 +192,7 @@ public class ImageFitness extends Fitness {
 		gp.evaluate(im);
 
 		Color p;
-		//Write each pixel
+		// Write each pixel
 		for (int y = 0; y < ySize; y++) {
 			for (int x = 0; x < xSize; x++) {
 				p = im[0].getData(x, y);
@@ -209,6 +212,6 @@ public class ImageFitness extends Fitness {
 	}
 
 	public void finish() {
-		//No clean up is required
+		// No clean up is required
 	}
 }

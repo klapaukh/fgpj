@@ -20,6 +20,7 @@ package nz.ac.vuw.ecs.fgpj.examples.lines;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 
@@ -41,12 +42,12 @@ public class ReturnImage extends ReturnData {
 	 * Typenum is a unique number that serves as the type of the return data
 	 */
 	public static final int TYPENUM = 2;
-	
+
 	/**
 	 * width of the image
 	 */
 	private final int xSize;
-	
+
 	/**
 	 * Height of the image
 	 */
@@ -54,21 +55,25 @@ public class ReturnImage extends ReturnData {
 
 	/**
 	 * Create a new ReturnImage with a given width and height
-	 * @param width image width
-	 * @param height image height
+	 * 
+	 * @param width
+	 *            image width
+	 * @param height
+	 *            image height
 	 */
 	public ReturnImage(int width, int height) {
-		//notify supertype of what the typenum is
+		// notify supertype of what the typenum is
 		super(TYPENUM);
-		
+
 		xSize = (width);
 		ySize = (height);
 		// Allocate an image to actually draw on
-		im = new BufferedImage(xSize, ySize, BufferedImage.TYPE_INT_ARGB);
+		im = new BufferedImage(xSize, ySize, BufferedImage.TYPE_3BYTE_BGR);
 	}
 
 	/**
-	 * Returns a graphics on which you can actually draw on 
+	 * Returns a graphics on which you can actually draw on
+	 * 
 	 * @return Graphics to draw on
 	 */
 	public Graphics getGraphics() {
@@ -77,12 +82,25 @@ public class ReturnImage extends ReturnData {
 
 	/**
 	 * Return the color of a specific point in the image
-	 * @param x x coordinate in the image
-	 * @param y y coordinate in the image
+	 * 
+	 * @param x
+	 *            x coordinate in the image
+	 * @param y
+	 *            y coordinate in the image
 	 * @return color a the point (x,y)
 	 */
 	public Color getData(int x, int y) {
 		return new Color(im.getRGB(x, y));
+	}
+
+	/**
+	 * The image data for the whole image
+	 * 
+	 * @return The colors for the whole image
+	 */
+	public byte[] getData() {
+		return ((DataBufferByte) im.getRaster().getDataBuffer()).getData();
+
 	}
 
 }

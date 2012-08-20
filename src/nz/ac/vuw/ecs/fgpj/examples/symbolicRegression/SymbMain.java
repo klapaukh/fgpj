@@ -24,13 +24,11 @@ import nz.ac.vuw.ecs.fgpj.core.Population;
 import nz.ac.vuw.ecs.fgpj.core.TournamentSelection;
 
 /**
- * The main entry class for the Symbolic Regression example. This class is
- * intended to show a basic common use case of the GP library, as well as show
+ * The main entry class for the Symbolic Regression example. This class is intended to show a basic common use case of the GP library, as well as show
  * of how simple the parallelism features are to use.
  * 
- * This is the set up to find the formula to match a given list of points. This
- * class contains only a main method as all of the core computation and work is
- * taken care of by other classes.
+ * This is the set up to find the formula to match a given list of points. This class contains only a main method as all of the core computation and
+ * work is taken care of by other classes.
  * 
  * @author roma
  * 
@@ -38,8 +36,7 @@ import nz.ac.vuw.ecs.fgpj.core.TournamentSelection;
 public class SymbMain {
 
 	/**
-	 * The main method. This will run the GP algorithm for the symbolic
-	 * regression example
+	 * The main method. This will run the GP algorithm for the symbolic regression example
 	 * 
 	 * @param args
 	 *            The values passed in this array are ignored
@@ -133,8 +130,7 @@ public class SymbMain {
 			// The size of the chunk also has problems if it gets to big or too
 			// small. It will not cause an error to occur, but will result in
 			// suboptimal performance
-			conf.fitnessObject = new ParallelFitness<SymbolicFitness>(
-					new SymbolicFitness(), 4, 20);
+			conf.fitnessObject = new ParallelFitness<SymbolicFitness>(new SymbolicFitness(), 4, 20);
 		} else {
 
 			// Create an instance of the SymbolicFitness class without any fancy
@@ -165,9 +161,9 @@ public class SymbMain {
 		long start = System.currentTimeMillis();
 
 		// Run the GP algorithm for 500 generations
-		int numGenerations = p.evolve(500); // return how many generations
+		int numGenerations = p.evolve(5000); // return how many generations
 											// actually happened
-		if (numGenerations < 500) {
+		if (numGenerations < 5000) {
 			// If numGenerations < 500, then it terminated before the 500
 			// generations finished
 			// because it found a solution
@@ -184,27 +180,80 @@ public class SymbMain {
 
 		System.out.println("Best program fitness: " + s.getFitness());
 		System.out.println("Test set fitness: " + testSetFitness);
-		System.out
-				.println("Number of generations this program has been selected for by elitism immediately prior: "
-						+ s.lastChange());
-		System.out
-				.println("Crossover usage (ignoring data from other parents): "
-						+ s.numCrossovers());
-		System.out
-				.println("Mutation usage (ignoring data from other parents): "
-						+ s.numMutations());
-		System.out.println("Elitism usage (ignoring data from other parents): "
-				+ s.numElitisms());
+		System.out.println("Number of generations this program has been selected for by elitism immediately prior: " + s.lastChange());
+		System.out.println("Crossover usage (ignoring data from other parents): " + s.numCrossovers());
+		System.out.println("Mutation usage (ignoring data from other parents): " + s.numMutations());
+		System.out.println("Elitism usage (ignoring data from other parents): " + s.numElitisms());
 		System.out.println("Best program:");
 		System.out.println(s);
 
-		System.out.println("Run time (excluding setup and tear down): "
-				+ (end - start) + "ms");
+		System.out.println("Run time (excluding setup and tear down): " + (end - start) + "ms");
+		
+		
+		System.out.print("cUp = c(");
+		int[] t = p.crossoverBetter();
+		for(int i=1;i<t.length;i++){
+			System.out.print(t[i]);
+			if(i != t.length -1 ){
+				System.out.print(",");
+			}
+		}
+		System.out.println(")");
+		
+		System.out.print("cdown = c(");
+		t = p.crossoverNotBetter();
+		for(int i=1;i<t.length;i++){
+			System.out.print(t[i]);
+			if(i != t.length -1 ){
+				System.out.print(",");
+			}
+		}
+		System.out.println(")");
+		
+		System.out.print("mUp = c(");
+		t = p.mutationBetter();
+		for(int i=1;i<t.length;i++){
+			System.out.print(t[i]);
+			if(i != t.length -1 ){
+				System.out.print(",");
+			}
+		}
+		System.out.println(")");
+		
+		System.out.print("mdown = c(");
+		t = p.mutationNotBetter();
+		for(int i=1;i<t.length;i++){
+			System.out.print(t[i]);
+			if(i != t.length -1 ){
+				System.out.print(",");
+			}
+		}
+		System.out.println(")");
+		
+		System.out.print("eUp = c(");
+		t = p.elitismBetter();
+		for(int i=1;i<t.length;i++){
+			System.out.print(t[i]);
+			if(i != t.length -1 ){
+				System.out.print(",");
+			}
+		}
+		System.out.println(")");
+		
+		System.out.print("edown = c(");
+		t = p.elitismNotBetter();
+		for(int i=1;i<t.length;i++){
+			System.out.print(t[i]);
+			if(i != t.length -1 ){
+				System.out.print(",");
+			}
+		}
+		System.out.println(")");
+		
 	}
 
 	/**
-	 * Validate the results on a test set. This only happens once at the end of
-	 * the program
+	 * Validate the results on a test set. This only happens once at the end of the program
 	 * 
 	 * @param p
 	 *            The genetic program to evaluate on the test set

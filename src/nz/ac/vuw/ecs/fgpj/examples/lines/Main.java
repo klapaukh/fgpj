@@ -33,14 +33,14 @@ public class Main {
 		GPConfig symConfig = new GPConfig(1, 1, 8, 0.7, 0.28, 0.02);
 
 		// output the statistics about each generation to run-log.txt
-		symConfig.setLogFile("run-log.txt");
+		symConfig.setLogFile("/dev/null");
 
 		// Use tournament selection with a tournament sizeof 5
 		symConfig.selectionOperator = new TournamentSelection(5);
 
 		// Record intermediate best image results every 100 generations and save
 		// them to the current directory
-		symConfig.configModifier = new ImageLogMod(100, ".");
+//		symConfig.configModifier = new ImageLogMod(100, ".");
 
 		// Declare a population, with 100 individuals and using symConfig as the
 		// config
@@ -88,7 +88,7 @@ public class Main {
 		}
 
 		//Run for 2,000 generations
-		pop.evolve(2000);
+		pop.evolve(100);
 
 		System.out.println("Best program");
 		System.out.println("Fitness: " + pop.getBest().getFitness());

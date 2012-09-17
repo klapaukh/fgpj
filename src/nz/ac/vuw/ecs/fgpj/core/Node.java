@@ -317,7 +317,8 @@ public abstract class Node {
 	 *            position to look at
 	 * @param type
 	 *            the type of the desired node
-	 * @return closest node to i that has type type
+	 * @return closest node to i that has type type. Can be null if no matching
+	 *         nodes of the right type
 	 */
 	public Node getNode(int i, int type) {
 		return this.getNode(i, type, null);

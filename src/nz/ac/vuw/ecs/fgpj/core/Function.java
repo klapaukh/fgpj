@@ -256,6 +256,7 @@ public abstract class Function extends Node {
 		// Check to make sure your children aren't it
 		for (int i = 0; i < args.length; i++) {
 			best = args[i].getNode(node, type, best);
+			if(best == null) continue;
 			if (best.getPosition() == node
 					|| (i < args.length - 1 && args[i + 1].getPosition() > node && Math
 							.abs(best.getPosition() - node) < Math

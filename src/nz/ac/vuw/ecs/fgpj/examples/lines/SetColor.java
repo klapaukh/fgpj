@@ -22,7 +22,6 @@ import java.util.Scanner;
 
 import nz.ac.vuw.ecs.fgpj.core.GPConfig;
 import nz.ac.vuw.ecs.fgpj.core.Node;
-import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 import nz.ac.vuw.ecs.fgpj.core.Terminal;
 
@@ -67,7 +66,7 @@ public class SetColor extends Terminal {
 		a = scan.nextInt();
 
 		//Get a new SetColor node
-		SetColor c = NodeFactory.newNode(this, conf);
+		SetColor c = new SetColor(conf);
 		//Set its color to be the one from the string
 		c.col = new Color(r, g, b, a);
 		//return the constructed color

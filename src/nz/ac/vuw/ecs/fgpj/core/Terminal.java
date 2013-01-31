@@ -96,18 +96,24 @@ public abstract class Terminal extends Node {
 
 	@SuppressWarnings("unchecked")
 	public Terminal generate(String s, GPConfig conf) {
-		return NodeFactory.newNode(this, conf);
+		return (Terminal) this.getNew(conf);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Terminal generate(GPConfig conf) {
-		return  NodeFactory.newNode(this, conf);
+		return  (Terminal) this.getNew(conf);
 	}
 
 	@Override
 	public final Node copy(GPConfig conf) {
-		Node n = NodeFactory.newNode(this, conf);
+		Node n =  this.getNew(conf);
 		n.init(this);
 		return n;
+	}
+	
+	@Override
+	public void delete() {
+		this.setParent(null);
+		this.setDepth(0);
 	}
 }

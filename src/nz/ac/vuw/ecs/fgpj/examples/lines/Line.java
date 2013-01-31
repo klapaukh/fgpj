@@ -23,7 +23,6 @@ import java.util.Scanner;
 import nz.ac.vuw.ecs.fgpj.core.Function;
 import nz.ac.vuw.ecs.fgpj.core.GPConfig;
 import nz.ac.vuw.ecs.fgpj.core.Node;
-import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 
 /**
@@ -82,7 +81,7 @@ public class Line extends Function {
 		y1 = scan.nextInt();
 		y2 = scan.nextInt();
 		// Create a new line from the factory
-		Line l = NodeFactory.newNode(this, conf);
+		Line l = new Line(conf);
 		// assign the read values
 		l.x1 = x1;
 		l.x2 = x2;

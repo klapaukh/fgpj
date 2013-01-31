@@ -215,7 +215,7 @@ public class ProgramGenerator {
 						if (argNReturnType == tmpNode.getReturnType()) {
 							found = true;
 						}
-						NodeFactory.delete(tmpNode);
+						tmpNode.delete();
 					}
 
 					if (!found) {
@@ -247,7 +247,7 @@ public class ProgramGenerator {
 						if (argNReturnType == tmpNode.getReturnType()) {
 							found = true;
 						}
-						NodeFactory.delete(tmpNode);
+						tmpNode.delete();
 					}
 
 					if (!found) {
@@ -277,7 +277,7 @@ public class ProgramGenerator {
 							if (argNReturnType == tmpNode.getReturnType()) {
 								found = true;
 							}
-							NodeFactory.delete(tmpNode);
+							tmpNode.delete();
 						}
 
 						if (!found) {
@@ -289,7 +289,7 @@ public class ProgramGenerator {
 									found = true;
 									fullTable[curDepth - 1].add(tmpNode);
 								} else {
-									NodeFactory.delete(tmpNode);
+									tmpNode.delete();
 								}
 							}
 						}

@@ -299,7 +299,6 @@ public class GPConfig {
 	 *            an instance of the terminal
 	 */
 	public void addTerminal(Terminal n) {
-		NodeFactory.teach(n, this);
 		this.termSet.add(n);
 	}
 
@@ -312,7 +311,6 @@ public class GPConfig {
 	 *            an instance of the function
 	 */
 	public void addFunction(Function n) {
-		NodeFactory.teach(n, this);
 		this.funcSet.add(n);
 	}
 }

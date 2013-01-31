@@ -19,7 +19,6 @@ package nz.ac.vuw.ecs.fgpj.examples.symbolicRegression;
  */
 import nz.ac.vuw.ecs.fgpj.core.GPConfig;
 import nz.ac.vuw.ecs.fgpj.core.Node;
-import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 import nz.ac.vuw.ecs.fgpj.core.Terminal;
 
@@ -112,7 +111,7 @@ public class RandomDouble extends Terminal {
 
 		// Create a new node of the same type as this one. We pass in ourselves
 		// so the factory knows what sort of node to return.
-		RandomDouble res = NodeFactory.newNode(this, conf);
+		RandomDouble res = new RandomDouble(min,max,conf);
 
 		// Read in the value represented and assign it
 		res.value = Double.parseDouble(v);

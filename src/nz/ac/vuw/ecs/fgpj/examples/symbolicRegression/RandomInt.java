@@ -19,7 +19,6 @@ package nz.ac.vuw.ecs.fgpj.examples.symbolicRegression;
  */
 import nz.ac.vuw.ecs.fgpj.core.GPConfig;
 import nz.ac.vuw.ecs.fgpj.core.Node;
-import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 import nz.ac.vuw.ecs.fgpj.core.Terminal;
 
@@ -117,7 +116,7 @@ public class RandomInt extends Terminal {
 		// Create an new instance of a RandomInt. Gives itself to the factory so
 		// the factory knows what kind of new node to construct. NB This may not
 		// call getNew(), and so cannot be replaced that way
-		RandomInt r = NodeFactory.newNode(this, conf);
+		RandomInt r = new RandomInt(min,max,conf);
 		// Set the value of the new node to be the value held in the string
 		r.value = Integer.parseInt(v);
 		// return the new RandomInt that has been created

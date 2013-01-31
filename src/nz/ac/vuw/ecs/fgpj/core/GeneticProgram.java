@@ -193,13 +193,13 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Recursively deletes the tree whose root is pointed to by theRoot. This returns all nodes in the subtree to the NodeFactory
+	 * Recursively deletes the tree whose root is pointed to by theRoot. 
 	 * 
 	 * @param theRoot
 	 *            root node to delete from
 	 */
 	public void deleteTree(Node theRoot) {
-		NodeFactory.delete(theRoot);
+		theRoot.delete();
 	}
 
 	/**

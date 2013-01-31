@@ -353,4 +353,10 @@ public abstract class Node {
 	public int getPosition() {
 		return this.position;
 	}
+	
+	/**
+	 * Delete a node and unhook it so it can be garbage collected
+	 * @param node The node to collect
+	 */
+	public abstract void delete(); 
 }

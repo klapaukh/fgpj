@@ -23,7 +23,6 @@ import java.util.Scanner;
 import nz.ac.vuw.ecs.fgpj.core.Function;
 import nz.ac.vuw.ecs.fgpj.core.GPConfig;
 import nz.ac.vuw.ecs.fgpj.core.Node;
-import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 
 /**
@@ -75,7 +74,7 @@ public class Oval extends Function {
 		height = scan.nextInt();
 		
 		//Get a new oval from the factory 
-		Oval o = NodeFactory.newNode(this, conf);
+		Oval o = new Oval(conf);
 		//assign the values from the string
 		o.x = x;
 		o.width = width;

@@ -32,13 +32,10 @@ public abstract class Function extends Node {
 	private int argReturnTypes[];
 
 	/**
-	 * Make a new Function. It has a fixed number of children. A return type and
-	 * a name. The name cannot contain any whitespace.
+	 * Make a new Function. It has a fixed number of children. A return type and a name. The name cannot contain any whitespace.
 	 * 
-	 * Another important restriction is that you cannot have two Nodes such that
-	 * the name of one is the prefix of another, e.g., Int and Integer. This is
-	 * because of the way that nodes are identified when being parsed from
-	 * files. While this problem could be avoided it would require more code on
+	 * Another important restriction is that you cannot have two Nodes such that the name of one is the prefix of another, e.g., Int and Integer. This
+	 * is because of the way that nodes are identified when being parsed from files. While this problem could be avoided it would require more code on
 	 * the user end which does not seem worth while.
 	 * 
 	 * @param type
@@ -80,8 +77,7 @@ public abstract class Function extends Node {
 			throw new IllegalArgumentException("Node is NULL");
 
 		if (node.getReturnType() != argReturnTypes[N])
-			throw new IllegalArgumentException(
-					"Incorrect return type for argument " + N);
+			throw new IllegalArgumentException("Incorrect return type for argument " + N);
 
 		args[N] = node;
 		node.setParent(this);
@@ -181,10 +177,8 @@ public abstract class Function extends Node {
 	}
 
 	/**
-	 * Append a String representing yourself to the StringBuilder passed in.
-	 * This allows a program to be saved to a String. Functions are printed in
-	 * prefix notation Brackets are used to show which function has which
-	 * children. A function foo with n children would be printed as (foo
+	 * Append a String representing yourself to the StringBuilder passed in. This allows a program to be saved to a String. Functions are printed in
+	 * prefix notation Brackets are used to show which function has which children. A function foo with n children would be printed as (foo
 	 * child<SUB>0</SUB> ... child<SUB>n</SUB>)
 	 * 
 	 */
@@ -248,19 +242,17 @@ public abstract class Function extends Node {
 			return this;
 		}
 		// if you are the best so far, nominate yourself
-		if (this.getReturnType() == type
-				&& (best == null || Math.abs(best.getPosition() - node) > Math
-						.abs(this.getPosition() - node))) {
+		if (this.getReturnType() == type && (best == null || Math.abs(best.getPosition() - node) > Math.abs(this.getPosition() - node))) {
 			best = this;
 		}
 		// Check to make sure your children aren't it
 		for (int i = 0; i < args.length; i++) {
 			best = args[i].getNode(node, type, best);
-			if(best == null) continue;
+			if (best == null)
+				continue;
 			if (best.getPosition() == node
-					|| (i < args.length - 1 && args[i + 1].getPosition() > node && Math
-							.abs(best.getPosition() - node) < Math
-							.abs(args[i + 1].getPosition() - node))) {
+					|| (i < args.length - 1 && args[i + 1].getPosition() > node && Math.abs(best.getPosition() - node) < Math.abs(args[i + 1]
+							.getPosition() - node))) {
 				// can't get any better by searching
 				return best;
 			}
@@ -271,7 +263,7 @@ public abstract class Function extends Node {
 
 	@Override
 	public final Function copy(GPConfig conf) {
-		Function a = NodeFactory.newNode(this, conf);
+		Function a = (Function) this.getNew(conf);
 		a.init(this);
 		for (int i = 0; i < getNumArgs(); i++) {
 			a.setArgN(i, getArgN(i).copy(conf));
@@ -282,11 +274,22 @@ public abstract class Function extends Node {
 
 	@SuppressWarnings("unchecked")
 	public Function generate(String s, GPConfig conf) {
-		return NodeFactory.newNode(this, conf);
+		return (Function) this.getNew(conf);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Function generate(GPConfig conf) {
-		return NodeFactory.newNode(this, conf);
+		return (Function) this.getNew(conf);
+	}
+
+	@Override
+	public void delete(){
+		this.setParent(null);
+		this.setDepth(0);
+		// need to maul it's children
+		for (int i = 0; i < this.numArgs; i++) {
+			this.getArgN(i).delete();
+		}
+		this.unhook();
 	}
 }

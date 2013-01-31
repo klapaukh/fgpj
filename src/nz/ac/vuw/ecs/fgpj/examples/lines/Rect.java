@@ -23,7 +23,6 @@ import java.util.Scanner;
 import nz.ac.vuw.ecs.fgpj.core.Function;
 import nz.ac.vuw.ecs.fgpj.core.GPConfig;
 import nz.ac.vuw.ecs.fgpj.core.Node;
-import nz.ac.vuw.ecs.fgpj.core.NodeFactory;
 import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 
 /**
@@ -85,7 +84,7 @@ public class Rect extends Function {
 		height = scan.nextInt();
 
 		// Create a new Rect from the factory
-		Rect r = NodeFactory.newNode(this, conf);
+		Rect r = new Rect(conf);
 
 		// Assign the fields to the new Rect
 		r.x = x;

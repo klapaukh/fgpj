@@ -288,7 +288,10 @@ public abstract class Function extends Node {
 		this.setDepth(0);
 		// need to maul it's children
 		for (int i = 0; i < this.numArgs; i++) {
-			this.getArgN(i).delete();
+			Node f = this.getArgN(i);
+			if( f != null ){
+				f.delete();
+			}
 		}
 		this.unhook();
 	}

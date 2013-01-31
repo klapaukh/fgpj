@@ -44,7 +44,7 @@ public class SymbMain {
 	public static void main(String[] args) {
 
 		// Flag to determine if the fitness function should be run in parallel
-		boolean parallel = true;
+		boolean parallel = false;
 
 		// The GPConfig is the settings for the GP algorithm. It controls all
 		// the parameters and how the algorithm behaves. It sets mutation,
@@ -70,7 +70,7 @@ public class SymbMain {
 		// is good in that it preserves good programs, too much of it will not
 		// allow
 		// many new programs to be created.
-		GPConfig conf = new GPConfig(1, 1, 5, 0.6, 0.38, 0.02);
+		GPConfig conf = new GPConfig(1, 1,6, 0.28,0.70,0.02);
 
 		// Each generation basic statistics about that generation will be logged
 		// to this file.
@@ -85,7 +85,7 @@ public class SymbMain {
 		// the fitness which is, lower is better. Roulette wheel is good for the
 		// opposite case,
 		// however, its general statement doesn't work as well for this case.
-		conf.selectionOperator = new TournamentSelection(5);
+		//conf.selectionOperator = new TournamentSelection(5);
 
 		// Add the terminals
 		// This is the X terminal. It takes a value from the input. Essentially,
@@ -94,7 +94,7 @@ public class SymbMain {
 		conf.addTerminal(new X());
 		// Add a random double terminal that ranges from [1,5]
 		conf.addTerminal(new RandomDouble(1, 5, conf));
-		conf.addTerminal(new RandomInt(1, 5, conf)); // same as above but
+//		conf.addTerminal(new RandomInt(1, 5, conf)); // same as above but
 														// integer
 
 		// Add mathematical operators to the function set
@@ -104,8 +104,8 @@ public class SymbMain {
 		conf.addFunction(new Times());
 		conf.addFunction(new Minus());
 		conf.addFunction(new Divide());
-		conf.addFunction(new Exp());
-		conf.addFunction(new Sin());
+//		conf.addFunction(new Exp());
+//		conf.addFunction(new Sin());
 		// conf.addFunction(new Min());
 		// conf.addFunction(new Max());
 		// conf.addFunction(new Tan());
@@ -130,7 +130,7 @@ public class SymbMain {
 			// The size of the chunk also has problems if it gets to big or too
 			// small. It will not cause an error to occur, but will result in
 			// suboptimal performance
-			conf.fitnessObject = new ParallelFitness<SymbolicFitness>(new SymbolicFitness(), 4, 20);
+			conf.fitnessObject = new ParallelFitness<SymbolicFitness>(new SymbolicFitness(), 4, 125);
 		} else {
 
 			// Create an instance of the SymbolicFitness class without any fancy
@@ -142,7 +142,7 @@ public class SymbMain {
 		// It takes a size (100) which defines how many individuals there will
 		// be, and also
 		// a GP config so it knows about the terminal and function sets
-		Population p = new Population(100, conf);
+		Population p = new Population(1000, conf);
 
 		// Set the return type of the root node. This is important to ensure
 		// that the program returns the right thing. If there are multiple roots
@@ -161,9 +161,9 @@ public class SymbMain {
 		long start = System.currentTimeMillis();
 
 		// Run the GP algorithm for 500 generations
-		int numGenerations = p.evolve(5000); // return how many generations
+		int numGenerations = p.evolve(1000); // return how many generations
 											// actually happened
-		if (numGenerations < 5000) {
+		if (numGenerations < 1000) {
 			// If numGenerations < 500, then it terminated before the 500
 			// generations finished
 			// because it found a solution
@@ -190,65 +190,65 @@ public class SymbMain {
 		System.out.println("Run time (excluding setup and tear down): " + (end - start) + "ms");
 		
 		
-		System.out.print("cUp = c(");
-		int[] t = p.crossoverBetter();
-		for(int i=1;i<t.length;i++){
-			System.out.print(t[i]);
-			if(i != t.length -1 ){
-				System.out.print(",");
-			}
-		}
-		System.out.println(")");
-		
-		System.out.print("cdown = c(");
-		t = p.crossoverNotBetter();
-		for(int i=1;i<t.length;i++){
-			System.out.print(t[i]);
-			if(i != t.length -1 ){
-				System.out.print(",");
-			}
-		}
-		System.out.println(")");
-		
-		System.out.print("mUp = c(");
-		t = p.mutationBetter();
-		for(int i=1;i<t.length;i++){
-			System.out.print(t[i]);
-			if(i != t.length -1 ){
-				System.out.print(",");
-			}
-		}
-		System.out.println(")");
-		
-		System.out.print("mdown = c(");
-		t = p.mutationNotBetter();
-		for(int i=1;i<t.length;i++){
-			System.out.print(t[i]);
-			if(i != t.length -1 ){
-				System.out.print(",");
-			}
-		}
-		System.out.println(")");
-		
-		System.out.print("eUp = c(");
-		t = p.elitismBetter();
-		for(int i=1;i<t.length;i++){
-			System.out.print(t[i]);
-			if(i != t.length -1 ){
-				System.out.print(",");
-			}
-		}
-		System.out.println(")");
-		
-		System.out.print("edown = c(");
-		t = p.elitismNotBetter();
-		for(int i=1;i<t.length;i++){
-			System.out.print(t[i]);
-			if(i != t.length -1 ){
-				System.out.print(",");
-			}
-		}
-		System.out.println(")");
+//		System.out.print("cUp = c(");
+//		int[] t = p.crossoverBetter();
+//		for(int i=1;i<t.length;i++){
+//			System.out.print(t[i]);
+//			if(i != t.length -1 ){
+//				System.out.print(",");
+//			}
+//		}
+//		System.out.println(")");
+//		
+//		System.out.print("cdown = c(");
+//		t = p.crossoverNotBetter();
+//		for(int i=1;i<t.length;i++){
+//			System.out.print(t[i]);
+//			if(i != t.length -1 ){
+//				System.out.print(",");
+//			}
+//		}
+//		System.out.println(")");
+//		
+//		System.out.print("mUp = c(");
+//		t = p.mutationBetter();
+//		for(int i=1;i<t.length;i++){
+//			System.out.print(t[i]);
+//			if(i != t.length -1 ){
+//				System.out.print(",");
+//			}
+//		}
+//		System.out.println(")");
+//		
+//		System.out.print("mdown = c(");
+//		t = p.mutationNotBetter();
+//		for(int i=1;i<t.length;i++){
+//			System.out.print(t[i]);
+//			if(i != t.length -1 ){
+//				System.out.print(",");
+//			}
+//		}
+//		System.out.println(")");
+//		
+//		System.out.print("eUp = c(");
+//		t = p.elitismBetter();
+//		for(int i=1;i<t.length;i++){
+//			System.out.print(t[i]);
+//			if(i != t.length -1 ){
+//				System.out.print(",");
+//			}
+//		}
+//		System.out.println(")");
+//		
+//		System.out.print("edown = c(");
+//		t = p.elitismNotBetter();
+//		for(int i=1;i<t.length;i++){
+//			System.out.print(t[i]);
+//			if(i != t.length -1 ){
+//				System.out.print(",");
+//			}
+//		}
+//		System.out.println(")");
 		
 	}
 

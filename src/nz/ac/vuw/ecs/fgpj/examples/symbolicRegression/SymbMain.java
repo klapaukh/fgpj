@@ -26,18 +26,18 @@ import nz.ac.vuw.ecs.fgpj.core.TournamentSelection;
 /**
  * The main entry class for the Symbolic Regression example. This class is intended to show a basic common use case of the GP library, as well as show
  * of how simple the parallelism features are to use.
- * 
+ *
  * This is the set up to find the formula to match a given list of points. This class contains only a main method as all of the core computation and
  * work is taken care of by other classes.
- * 
+ *
  * @author roma
- * 
+ *
  */
 public class SymbMain {
 
 	/**
 	 * The main method. This will run the GP algorithm for the symbolic regression example
-	 * 
+	 *
 	 * @param args
 	 *            The values passed in this array are ignored
 	 */
@@ -85,7 +85,7 @@ public class SymbMain {
 		// the fitness which is, lower is better. Roulette wheel is good for the
 		// opposite case,
 		// however, its general statement doesn't work as well for this case.
-		//conf.selectionOperator = new TournamentSelection(5);
+		conf.selectionOperator = new TournamentSelection(5);
 
 		// Add the terminals
 		// This is the X terminal. It takes a value from the input. Essentially,
@@ -188,8 +188,8 @@ public class SymbMain {
 		System.out.println(s);
 
 		System.out.println("Run time (excluding setup and tear down): " + (end - start) + "ms");
-		
-		
+
+
 //		System.out.print("cUp = c(");
 //		int[] t = p.crossoverBetter();
 //		for(int i=1;i<t.length;i++){
@@ -199,7 +199,7 @@ public class SymbMain {
 //			}
 //		}
 //		System.out.println(")");
-//		
+//
 //		System.out.print("cdown = c(");
 //		t = p.crossoverNotBetter();
 //		for(int i=1;i<t.length;i++){
@@ -209,7 +209,7 @@ public class SymbMain {
 //			}
 //		}
 //		System.out.println(")");
-//		
+//
 //		System.out.print("mUp = c(");
 //		t = p.mutationBetter();
 //		for(int i=1;i<t.length;i++){
@@ -219,7 +219,7 @@ public class SymbMain {
 //			}
 //		}
 //		System.out.println(")");
-//		
+//
 //		System.out.print("mdown = c(");
 //		t = p.mutationNotBetter();
 //		for(int i=1;i<t.length;i++){
@@ -229,7 +229,7 @@ public class SymbMain {
 //			}
 //		}
 //		System.out.println(")");
-//		
+//
 //		System.out.print("eUp = c(");
 //		t = p.elitismBetter();
 //		for(int i=1;i<t.length;i++){
@@ -239,7 +239,7 @@ public class SymbMain {
 //			}
 //		}
 //		System.out.println(")");
-//		
+//
 //		System.out.print("edown = c(");
 //		t = p.elitismNotBetter();
 //		for(int i=1;i<t.length;i++){
@@ -249,12 +249,12 @@ public class SymbMain {
 //			}
 //		}
 //		System.out.println(")");
-		
+
 	}
 
 	/**
 	 * Validate the results on a test set. This only happens once at the end of the program
-	 * 
+	 *
 	 * @param p
 	 *            The genetic program to evaluate on the test set
 	 * @return The fitness of the resulting program on the test set

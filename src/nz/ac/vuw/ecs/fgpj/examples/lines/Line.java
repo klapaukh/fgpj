@@ -29,9 +29,9 @@ import nz.ac.vuw.ecs.fgpj.core.ReturnData;
  * This represents a line with a fixed location in an image. It has 4 children.
  * 3 of which are other draw operations and one is the color that this line is
  * drawn in.
- * 
+ *
  * @author roma
- * 
+ *
  */
 public class Line extends Function {
 
@@ -44,7 +44,7 @@ public class Line extends Function {
 
 	/**
 	 * Create a line at a new valid place in the image
-	 * 
+	 *
 	 * @param conf
 	 *            The GPConfig being used for this run.
 	 */
@@ -80,6 +80,7 @@ public class Line extends Function {
 		x2 = scan.nextInt();
 		y1 = scan.nextInt();
 		y2 = scan.nextInt();
+		scan.close();
 		// Create a new line from the factory
 		Line l = new Line(conf);
 		// assign the read values

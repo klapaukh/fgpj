@@ -28,9 +28,9 @@ import nz.ac.vuw.ecs.fgpj.core.Terminal;
 /**
  * This is a terminal that represents a color (RGBA) that is used to draw a
  * shape
- * 
+ *
  * @author roma
- * 
+ *
  */
 public class SetColor extends Terminal {
 
@@ -64,6 +64,7 @@ public class SetColor extends Terminal {
 		g = scan.nextInt();
 		b = scan.nextInt();
 		a = scan.nextInt();
+		scan.close();
 
 		//Get a new SetColor node
 		SetColor c = new SetColor(conf);

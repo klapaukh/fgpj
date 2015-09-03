@@ -32,8 +32,8 @@ import nz.ac.vuw.ecs.fgpj.core.GeneticProgram;
  * An implementation of the Fitness interface. This class judges the quality of
  * a program by how close to a target image is the resulting image. It requires
  * a ppm image in P3 format as a target to compare against.
- * 
- * 
+ *
+ *
  * It has a static x and y size field. While having it static seems silly, it
  * allows for node classes like Line and Oval to be able to adjust their values
  * according to the scale. This is not an ideal implementation though. It would
@@ -42,9 +42,9 @@ import nz.ac.vuw.ecs.fgpj.core.GeneticProgram;
  * that the image could be scaled up and down. This is not the case, as the
  * spacing between lines would change, changing significantly how the image
  * looks.
- * 
+ *
  * @author roma
- * 
+ *
  */
 public class ImageFitness extends Fitness {
 
@@ -68,7 +68,7 @@ public class ImageFitness extends Fitness {
 	/**
 	 * Create a new ImageFitness with the specified filename pointing to the
 	 * target image
-	 * 
+	 *
 	 * @param filename
 	 *            PPM image in P3 format that is the "ideal" target
 	 */
@@ -92,6 +92,7 @@ public class ImageFitness extends Fitness {
 		// Ensure that it is a P3 ppm image (check magic number)
 		String type = scan.next();
 		if (!type.equals("P3")) {
+			scan.close();
 			throw new IllegalArgumentException(filename
 					+ " image is not a ppm image of type P3");
 		}
@@ -167,7 +168,7 @@ public class ImageFitness extends Fitness {
 	/**
 	 * Print out a given problem as an image to a file. The file produced will
 	 * be a ppm file in P3 form.
-	 * 
+	 *
 	 * @param gp
 	 *            The genetic program to draw
 	 * @param fname

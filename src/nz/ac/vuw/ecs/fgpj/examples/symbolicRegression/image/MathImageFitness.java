@@ -31,9 +31,9 @@ import nz.ac.vuw.ecs.fgpj.examples.symbolicRegression.ReturnDouble;
 /**
  * Fitness function to copy a given image using Math functions only. Essentially
  * the same as ImageFitness
- * 
+ *
  * @author roma
- * 
+ *
  */
 public class MathImageFitness extends Fitness {
 	/**
@@ -64,7 +64,7 @@ public class MathImageFitness extends Fitness {
 	/**
 	 * Create a new MathImage fitness that will try copy the specified image
 	 * which is a ppm image in P3 format
-	 * 
+	 *
 	 * @param filename image to copy
 	 */
 	public MathImageFitness(String filename) {
@@ -87,6 +87,7 @@ public class MathImageFitness extends Fitness {
 		String type = scan.next();
 
 		if (!type.equals("P3")) {
+			scan.close();
 			throw new RuntimeException("File " + filename + " has type " + type
 					+ " but should be P3");
 		}
@@ -122,7 +123,7 @@ public class MathImageFitness extends Fitness {
 		//Fitness function never changes
 		return false;
 	}
-	
+
 	public void assignFitness(GeneticProgram p, GPConfig config) {
 		double totalFitness;
 
@@ -306,7 +307,7 @@ public class MathImageFitness extends Fitness {
 
 	}
 
-	
+
 	public void finish() {
 		//No clean up
 	}

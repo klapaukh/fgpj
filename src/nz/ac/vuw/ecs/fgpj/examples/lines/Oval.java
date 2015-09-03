@@ -28,9 +28,9 @@ import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 /**
  * Function with draws an Oval. It has a child which represents its color, as
  * well as 3 other drawing node children
- * 
+ *
  * @author roma
- * 
+ *
  */
 public class Oval extends Function {
 
@@ -44,7 +44,7 @@ public class Oval extends Function {
 	{
 		//This node returns a ReturnImage, has 4 children and is called "oval"
 		super(ReturnImage.TYPENUM, 4, "oval");
-		
+
 		//generate a random position for the oval inside the image
 		x = conf.randomNumGenerator.nextInt(ImageFitness.xSize + 1);
 		width = conf.randomNumGenerator.nextInt(ImageFitness.xSize - x + 1);
@@ -53,7 +53,7 @@ public class Oval extends Function {
 
 		//Set the first child to be a color
 		setArgNReturnType(0, ReturnColor.TYPENUM);
-		
+
 		//Rest of the children are drawing nodes
 		for (int i = 1; i < numArgs; i++) {
 			setArgNReturnType(i, ReturnImage.TYPENUM);
@@ -61,7 +61,7 @@ public class Oval extends Function {
 	}
 
 	public Oval generate(String name, GPConfig conf) {
-		
+
 		int x, width, y, height;
 		//Create a scanner to read the string
 		Scanner scan = new Scanner(name);
@@ -72,15 +72,16 @@ public class Oval extends Function {
 		width = scan.nextInt();
 		y = scan.nextInt();
 		height = scan.nextInt();
-		
-		//Get a new oval from the factory 
+		scan.close();
+
+		//Get a new oval from the factory
 		Oval o = new Oval(conf);
 		//assign the values from the string
 		o.x = x;
 		o.width = width;
 		o.y = y;
 		o.height = height;
-		
+
 		//return the new oval
 		return o;
 	}

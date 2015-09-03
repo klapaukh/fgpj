@@ -28,9 +28,9 @@ import nz.ac.vuw.ecs.fgpj.core.ReturnData;
 /**
  * This draws a rectangle on the image. It has a color child and three other
  * drawing children.
- * 
+ *
  * @author roma
- * 
+ *
  */
 public class Rect extends Function {
 
@@ -43,7 +43,7 @@ public class Rect extends Function {
 
 	/**
 	 * Create a new Rect
-	 * 
+	 *
 	 * @param conf
 	 *            The current configuration
 	 */
@@ -83,6 +83,7 @@ public class Rect extends Function {
 		y = scan.nextInt();
 		height = scan.nextInt();
 
+		scan.close();
 		// Create a new Rect from the factory
 		Rect r = new Rect(conf);
 

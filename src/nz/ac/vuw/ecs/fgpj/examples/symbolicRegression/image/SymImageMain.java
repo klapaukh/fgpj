@@ -43,7 +43,7 @@ import nz.ac.vuw.ecs.fgpj.examples.symbolicRegression.Y;
 
 
 public class SymImageMain {
-	
+
 	@SuppressWarnings("unchecked")
 	private static void enlarge(String args[], GPConfig c) {
 		if (args.length != 2) {
@@ -60,27 +60,28 @@ public class SymImageMain {
 			e.printStackTrace();
 			throw new RuntimeException("File cannot be found to enlarge");
 		}
-		
+
 		String line;
 		scan.nextLine();
 		scan.nextLine();
 		line = scan.nextLine().substring(1);
+		scan.close();
 		GeneticProgram p = new GeneticProgram(c);
 		p.parseProgram(line, c);
-		
+
 		List<GeneticProgram> ll = new ArrayList<GeneticProgram>();
 		ll.add(p);
 		((ParallelFitness<MathImageFitness>) (c.fitnessObject)).fitness.initFitness();
 		((ParallelFitness<MathImageFitness>) (c.fitnessObject)).fitness.assignFitness(ll, c);
 		((ParallelFitness<MathImageFitness>) (c.fitnessObject)).fitness.getResult(p, size,size, c);
-		
+
 		System.out.println(p.getFitness());
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 
-		
+
 		long start = System.currentTimeMillis();
 
 		GPConfig conf = new GPConfig(3, 1, 8, 0.7, 0.28, 0.02);
@@ -104,8 +105,8 @@ public class SymImageMain {
 		conf.addFunction(new Tan());
 
 		conf.fitnessObject = new ParallelFitness<MathImageFitness>(new MathImageFitness("sample.pnm"), 4, 21);
-		
-		
+
+
 		if(args.length != 0){
 			enlarge(args, conf);
 			System.exit(0);
@@ -116,15 +117,15 @@ public class SymImageMain {
 		p.generateInitialPopulation();
 
 		p.evolve(10000);
-		
-		
+
+
 
 		GeneticProgram s = p.getBest();
 		System.out.println(s.getFitness());
 		System.out.println(s);
 
 		((ParallelFitness<MathImageFitness>)conf.fitnessObject).fitness.outputResults(s, "res.pnm", conf);
-				
+
 		long end = System.currentTimeMillis();
 		System.out.println(end - start);
 	}

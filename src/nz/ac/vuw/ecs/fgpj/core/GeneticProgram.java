@@ -20,7 +20,8 @@ package nz.ac.vuw.ecs.fgpj.core;
 import java.util.Scanner;
 
 /**
- * This is a GeneticProgram. It is a forest, where the number of trees is set in the GPConfig.
+ * This is a GeneticProgram. It is a forest, where the number of trees is set in
+ * the GPConfig.
  * 
  * @author Roman Klapaukh
  * 
@@ -67,17 +68,20 @@ public class GeneticProgram {
 	private long numElitisms;
 
 	/**
-	 * Stores the number of crossovers that were used to get this program along one path
+	 * Stores the number of crossovers that were used to get this program along
+	 * one path
 	 */
 	private long numCrossovers;
 
 	/**
-	 * Stores the number mutations that occurred to get this program along one path
+	 * Stores the number mutations that occurred to get this program along one
+	 * path
 	 */
 	private long numMutations;
 
 	/**
-	 * Number of generations since this was not selected by elitism along one path
+	 * Number of generations since this was not selected by elitism along one
+	 * path
 	 */
 	private long lastChange;
 
@@ -148,7 +152,8 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Sets the root of the tree to point to the new tree value. This does not delete the nodes
+	 * Sets the root of the tree to point to the new tree value. This does not
+	 * delete the nodes
 	 * 
 	 * @param value
 	 *            the new root node
@@ -182,7 +187,8 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Delete the current tree. Returns it to the node factory and sets the root to null
+	 * Delete the current tree. Returns it to the node factory and sets the root
+	 * to null
 	 * 
 	 * @param place
 	 *            which root to delete
@@ -193,7 +199,7 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Recursively deletes the tree whose root is pointed to by theRoot. 
+	 * Recursively deletes the tree whose root is pointed to by theRoot.
 	 * 
 	 * @param theRoot
 	 *            root node to delete from
@@ -271,7 +277,8 @@ public class GeneticProgram {
 	 *            the subtree to select from
 	 * @param config
 	 *            the config to use
-	 * @return a random node from the tree p with type typeNum or null if there is none
+	 * @return a random node from the tree p with type typeNum or null if there
+	 *         is none
 	 * 
 	 */
 	public Node getRandomNode(int typeNum, int p, GPConfig config) {
@@ -281,7 +288,8 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Prints the program to a string buffer. The program can be reconstructed from this string
+	 * Prints the program to a string buffer. The program can be reconstructed
+	 * from this string
 	 * 
 	 * @param s
 	 *            the StringBuffer to print to
@@ -342,7 +350,8 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Return the number of mutations along one path of the tree that occurred to produce this program
+	 * Return the number of mutations along one path of the tree that occurred
+	 * to produce this program
 	 * 
 	 * @return number of mutations
 	 */
@@ -351,7 +360,8 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Return the number of crossovers along one path of the tree that occurred to produce this program
+	 * Return the number of crossovers along one path of the tree that occurred
+	 * to produce this program
 	 * 
 	 * @return number of crossovers
 	 */
@@ -360,7 +370,8 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Return the number of elitisms along one path of the tree that were used to create this program
+	 * Return the number of elitisms along one path of the tree that were used
+	 * to create this program
 	 * 
 	 * @return number of elitisms
 	 */
@@ -369,7 +380,8 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Number of generations that this program has been continuously selected for by elitism
+	 * Number of generations that this program has been continuously selected
+	 * for by elitism
 	 * 
 	 * @return Number of generations that this program has not changed for
 	 */
@@ -378,7 +390,8 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Set the number mutations along one path of the tree used to produce this program
+	 * Set the number mutations along one path of the tree used to produce this
+	 * program
 	 * 
 	 * @param num
 	 *            number of mutations
@@ -388,7 +401,8 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Set the number of crossover along one path of the tree used to get this program
+	 * Set the number of crossover along one path of the tree used to get this
+	 * program
 	 * 
 	 * @param num
 	 *            number of crossovers
@@ -398,7 +412,8 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Set the number of elitisms along one path of the tree used to produce this program
+	 * Set the number of elitisms along one path of the tree used to produce
+	 * this program
 	 * 
 	 * @param num
 	 *            number of elitismss
@@ -408,21 +423,24 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * Says that the program has been modified to be created. Not selected by elitism
+	 * Says that the program has been modified to be created. Not selected by
+	 * elitism
 	 */
 	public void resetLastChange() {
 		this.lastChange = 0;
 	}
 
 	/**
-	 * Increments the last change counter to show that this program was selected by elitism
+	 * Increments the last change counter to show that this program was selected
+	 * by elitism
 	 */
 	public void incrementLastChange() {
 		this.lastChange++;
 	}
 
 	/**
-	 * Set what the last operation to get this program was. One of the constants CROSSOVER, MUTATION, ELITISM
+	 * Set what the last operation to get this program was. One of the constants
+	 * CROSSOVER, MUTATION, ELITISM
 	 * 
 	 * @param lastOperator
 	 *            the last operation used to generate this program
@@ -460,7 +478,8 @@ public class GeneticProgram {
 	}
 
 	/**
-	 * The copy method will create a new genetic program which is a copy of the current program
+	 * The copy method will create a new genetic program which is a copy of the
+	 * current program
 	 * 
 	 * @param config
 	 *            the config to create with
@@ -501,7 +520,9 @@ public class GeneticProgram {
 			Scanner scan = new Scanner(programString);
 			Node[] tmpRoot = buildTree(scan, config);
 			for (int i = 0; i < numRoots; i++) {
-				deleteTree(i);
+				if (root[i] != null) {
+					deleteTree(i);
+				}
 				setRoot(tmpRoot[i], i);
 			}
 		} catch (Exception e) {
